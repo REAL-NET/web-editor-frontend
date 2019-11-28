@@ -3,11 +3,11 @@
     private width: number;
     private height: number;
 
-    constructor(name: string, elementClass: string, type: string, imageSource: string) {
+    constructor(name: string, type: string, imageSource: string) {
         this.content = 
             `<li>` +
-            `   <div class="${elementClass}" type="${type}">` +
-            `       <img src="${imageSource}" width="${this.width}" height="${this.height}">` +
+            `   <div class="tree-element" type="${type}">` +
+            `       <img src="${imageSource}" class="element-img" width="${this.width}" height="${this.height}">` +
             `       ${name}` +
             `   </div>` +
             `</li>`;
