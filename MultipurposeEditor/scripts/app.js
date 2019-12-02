@@ -1,5 +1,6 @@
 import "jquery";
 import "jquery-ui";
+import { PaletteController } from "./controller/PaletteController";
 class Editor {
     constructor() {
         //var model = JSON.parse(requestSmth('GET', 'https://localhost:3626/api/Model/AirSimMetamodel'));
@@ -40,6 +41,9 @@ class Editor {
             this.conditions.append(div);
             $('.draggable').draggable();
         }
+        this.paletteController = new PaletteController();
+        this.paletteController.Drag();
+        this.paletteController.AppendPaletteElement();
     }
     start() {
     }

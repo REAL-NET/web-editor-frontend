@@ -1,4 +1,4 @@
-﻿import { NodeType } from "../model/NodeType"
+import { NodeType } from "../model/NodeType"
 
 export class PaletteElementView {
     private content: string;
