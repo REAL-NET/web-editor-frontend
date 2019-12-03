@@ -1,4 +1,4 @@
-﻿export class NodeType {
+export class NodeType {
     private name: string = "Node";
     get Name(): string {
         return this.name;

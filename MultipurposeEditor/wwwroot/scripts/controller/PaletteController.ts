@@ -1,4 +1,4 @@
-﻿import "jquery";
+import "jquery";
 import "jqueryui";
 import { PaletteElementView } from "../view/PaletteElementView"
 
