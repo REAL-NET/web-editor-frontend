@@ -18,9 +18,9 @@ export class PaletteController {
     AppendPaletteElement() {
         var paletteElement = new PaletteElementView();
         $(".tree-element").append(paletteElement.Content);
-        $(".tree-element").treeview({
-            persist: "location"
-        });
+        //$(".tree-element").treeview({
+        //    persist: "location"
+        //});
     }
     ClearContent() {
         $(".tree-element").empty();
