@@ -57,8 +57,8 @@ class Editor {
         }
 
         this.paletteController = new PaletteController();
-        this.paletteController.Drag();
         this.paletteController.AppendPaletteElement();
+        this.paletteController.Drag();
     }
 
     start() {

@@ -22,9 +22,9 @@ export class PaletteController {
         var paletteElement = new PaletteElementView();
         $(".tree-element").append(paletteElement.Content);
 
-        //$(".tree-element").treeview({
-        //    persist: "location"
-        //});
+        $(".tree-element").treeview({
+            persist: "location"
+        });
     }
 
     private ClearContent(): void {

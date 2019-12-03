@@ -42,8 +42,8 @@ class Editor {
             $('.draggable').draggable();
         }
         this.paletteController = new PaletteController();
-        this.paletteController.Drag();
         this.paletteController.AppendPaletteElement();
+        this.paletteController.Drag();
     }
     start() {
     }
