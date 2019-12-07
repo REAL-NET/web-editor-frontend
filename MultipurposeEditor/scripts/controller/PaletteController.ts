@@ -1,6 +1,4 @@
-﻿import "jquery";
-import "jqueryui";
-import { PaletteElementView } from "../view/PaletteElementView"
+﻿import { PaletteElementView } from "../view/PaletteElementView"
 
 export class PaletteController {
     public Drag(): void {

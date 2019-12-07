@@ -5,7 +5,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ActiveDebugProfile>IIS Express</ActiveDebugProfile>
-    <ToolsVersionPromptShown>3.4</ToolsVersionPromptShown>
+    <ToolsVersionPromptShown>3.7</ToolsVersionPromptShown>
   </PropertyGroup>
   <ItemGroup>
     <TypeScriptCompile Update="scripts\model\NodeType.ts">
