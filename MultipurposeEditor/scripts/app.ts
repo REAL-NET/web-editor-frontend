@@ -1,6 +1,5 @@
-﻿import "jquery";
-import "jquery-ui";
-import { PaletteController } from "./controller/PaletteController"
+﻿import { PaletteController } from "./controller/PaletteController"
+import './../scripts/app.css';
 
 class Editor {
     element: HTMLElement;
@@ -15,7 +14,7 @@ class Editor {
 
     constructor() {
         //var model = JSON.parse(requestSmth('GET', 'https://localhost:3626/api/Model/AirSimMetamodel'));
-        this.spaces = document.getElementById('spaces');
+        this.spaces = document.getElementById('metamodelElements');
         this.comforts = document.getElementById('comforts');
         this.conditions = document.getElementById('conditions');
 
@@ -32,29 +31,29 @@ class Editor {
             $('.draggable').draggable();
         }
 
-        var allComforts = ["Comf1", "Comf2"]; //elements from metamodel (comforts)
-        for (var i = 0; i < allComforts.length; i++) {
-            var div = document.createElement('div');
-            var p = document.createElement('p');
-            div.setAttribute('class', "draggable draggableStyle ui-widget-content");
-            div.setAttribute("style", "position: relative");
-            p.innerText = allComforts[i];
-            div.append(p);
-            this.comforts.append(div);
-            $('.draggable').draggable();
-        }
+        //var allComforts = ["Comf1", "Comf2"]; //elements from metamodel (comforts)
+        //for (var i = 0; i < allComforts.length; i++) {
+        //    var div = document.createElement('div');
+        //    var p = document.createElement('p');
+        //    div.setAttribute('class', "draggable draggableStyle ui-widget-content");
+        //    div.setAttribute("style", "position: relative");
+        //    p.innerText = allComforts[i];
+        //    div.append(p);
+        //    this.comforts.append(div);
+        //    $('.draggable').draggable();
+        //}
 
-        var allConditions = ["Condition1", "Condition2"]; //elements from metamodel (conditions)
-        for (var i = 0; i < allConditions.length; i++) {
-            var div = document.createElement('div');
-            var p = document.createElement('p');
-            div.setAttribute('class', "draggable draggableStyle ui-widget-content");
-            div.setAttribute("style", "position: relative");
-            p.innerText = allConditions[i];
-            div.append(p);
-            this.conditions.append(div);
-            $('.draggable').draggable();
-        }
+        //var allConditions = ["Condition1", "Condition2"]; //elements from metamodel (conditions)
+        //for (var i = 0; i < allConditions.length; i++) {
+        //    var div = document.createElement('div');
+        //    var p = document.createElement('p');
+        //    div.setAttribute('class', "draggable draggableStyle ui-widget-content");
+        //    div.setAttribute("style", "position: relative");
+        //    p.innerText = allConditions[i];
+        //    div.append(p);
+        //    this.conditions.append(div);
+        //    $('.draggable').draggable();
+        //}
 
         this.paletteController = new PaletteController();
         this.paletteController.AppendPaletteElement();

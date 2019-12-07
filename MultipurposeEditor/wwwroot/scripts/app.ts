@@ -1,6 +1,6 @@
 import "jquery";
 import "jquery-ui";
-import { PaletteController } from "./controller/PaletteController"
+//import { PaletteController } from "./controller/PaletteController"
 
 class Editor {
     element: HTMLElement;
@@ -11,11 +11,11 @@ class Editor {
     comforts: HTMLElement;
     conditions: HTMLElement;
     container: HTMLElement;
-    paletteController: PaletteController; 
+    //paletteController: PaletteController; 
 
     constructor() {
         //var model = JSON.parse(requestSmth('GET', 'https://localhost:3626/api/Model/AirSimMetamodel'));
-        this.spaces = document.getElementById('spaces');
+        this.spaces = document.getElementById('metamodelElements');
         this.comforts = document.getElementById('comforts');
         this.conditions = document.getElementById('conditions');
 
@@ -56,9 +56,9 @@ class Editor {
             $('.draggable').draggable();
         }
 
-        this.paletteController = new PaletteController();
-        this.paletteController.AppendPaletteElement();
-        this.paletteController.Drag();
+        //this.paletteController = new PaletteController();
+        //this.paletteController.AppendPaletteElement();
+        //this.paletteController.Drag();
     }
 
     start() {

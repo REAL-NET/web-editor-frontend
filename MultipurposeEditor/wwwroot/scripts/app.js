@@ -1,10 +1,11 @@
 import "jquery";
 import "jquery-ui";
-import { PaletteController } from "./controller/PaletteController";
+//import { PaletteController } from "./controller/PaletteController"
 class Editor {
+    //paletteController: PaletteController; 
     constructor() {
         //var model = JSON.parse(requestSmth('GET', 'https://localhost:3626/api/Model/AirSimMetamodel'));
-        this.spaces = document.getElementById('spaces');
+        this.spaces = document.getElementById('metamodelElements');
         this.comforts = document.getElementById('comforts');
         this.conditions = document.getElementById('conditions');
         var allSpaces = ["Room1", "Room2"]; //elements from metamodel (rooms)
@@ -41,9 +42,9 @@ class Editor {
             this.conditions.append(div);
             $('.draggable').draggable();
         }
-        this.paletteController = new PaletteController();
-        this.paletteController.AppendPaletteElement();
-        this.paletteController.Drag();
+        //this.paletteController = new PaletteController();
+        //this.paletteController.AppendPaletteElement();
+        //this.paletteController.Drag();
     }
     start() {
     }
