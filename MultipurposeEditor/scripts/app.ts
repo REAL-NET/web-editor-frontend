@@ -1,5 +1,6 @@
-﻿import { PaletteController } from "./controller/PaletteController"
-import './../scripts/app.css';
+﻿import { PaletteController } from "./controller/PaletteController";
+import '../scripts/app.css';
+import img from './view/node.png';
 
 class Editor {
     element: HTMLElement;
@@ -56,7 +57,7 @@ class Editor {
         //}
 
         this.paletteController = new PaletteController();
-        this.paletteController.AppendPaletteElement();
+        this.paletteController.AppendPaletteElement("node", img);
         this.paletteController.Drag();
     }
 

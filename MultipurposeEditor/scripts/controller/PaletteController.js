@@ -13,9 +13,10 @@ export class PaletteController {
             },
         });
     }
-    AppendPaletteElement() {
-        var paletteElement = new PaletteElementView();
-        $(".tree-element").append(paletteElement.Content);
+    AppendPaletteElement(name, image) {
+        var paletteElement = new PaletteElementView(name, image);
+        var submenu = document.getElementById("submenu-1");
+        submenu.insertAdjacentHTML("beforeend", paletteElement.Content);
         //$(".tree-element").treeview({
         //    persist: "location"
         //});

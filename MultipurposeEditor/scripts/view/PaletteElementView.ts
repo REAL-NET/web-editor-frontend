@@ -9,8 +9,8 @@ export class PaletteElementView {
     private width: number = 50;
     private height: number = 50;
 
-    constructor() {
-        var node = new NodeType();
+    constructor(name: string, image: string) {
+        var node = new NodeType(name, image);
         this.content = 
             `<li>` +
             `   <div class="tree-element"">` +

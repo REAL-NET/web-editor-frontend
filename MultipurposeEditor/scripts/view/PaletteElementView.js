@@ -1,9 +1,9 @@
 import { NodeType } from "../model/NodeType";
 export class PaletteElementView {
-    constructor() {
+    constructor(name, image) {
         this.width = 50;
         this.height = 50;
-        var node = new NodeType();
+        var node = new NodeType(name, image);
         this.content =
             `<li>` +
                 `   <div class="tree-element"">` +

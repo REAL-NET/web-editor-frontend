@@ -1,5 +1,6 @@
 import { PaletteController } from "./controller/PaletteController";
-import './../scripts/app.css';
+import '../scripts/app.css';
+import img from './view/node.png';
 class Editor {
     constructor() {
         //var model = JSON.parse(requestSmth('GET', 'https://localhost:3626/api/Model/AirSimMetamodel'));
@@ -41,7 +42,7 @@ class Editor {
         //    $('.draggable').draggable();
         //}
         this.paletteController = new PaletteController();
-        this.paletteController.AppendPaletteElement();
+        this.paletteController.AppendPaletteElement("node", img);
         this.paletteController.Drag();
     }
     start() {

@@ -1,27 +1,4 @@
-﻿//const path = require("path");
-
-//module.exports = {
-//    entry: "./scripts/app.ts",
-
-//    //output: {
-//    //    path: "./",
-//    //},
-
-//    resolve: {
-//        extensions: [".js", ".ts"]
-//    },
-
-//    module: {
-//        rules: [
-//            {
-//                use: 'ts-loader',
-//                exclude: /node_modules/
-//            },
-//        ],
-//    },
-//};
-
-const path = require("path");
+﻿const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -46,6 +23,10 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [MiniCssExtractPlugin.loader, "css-loader"]
+            },
+            {
+                test: /\.png$/,
+                use: "url-loader"
             }
         ]
     },
