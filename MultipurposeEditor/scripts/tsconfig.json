@@ -19,7 +19,8 @@
     "target": "es6"
   },
   "files": [
-    "./app.ts"
+    "./app.ts",
+    "./import/import-png.d.ts"
   ],
   "compileOnSave": true
 }

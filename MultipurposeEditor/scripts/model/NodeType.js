@@ -1,11 +1,7 @@
 export class NodeType {
-    constructor() {
-        this.name = "Node";
-        this.image = "node.png";
-        //constructor(name: string, image: string) {
-        //    this.name = name;
-        //    this.image = image;
-        //}
+    constructor(name, image) {
+        this.name = name;
+        this.image = image;
     }
     get Name() {
         return this.name;
