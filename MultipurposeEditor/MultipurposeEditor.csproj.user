@@ -8,6 +8,16 @@
     <ToolsVersionPromptShown>3.7</ToolsVersionPromptShown>
   </PropertyGroup>
   <ItemGroup>
+    <TypeScriptCompile Update="scripts\controller\KeyboardShortcutsController.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Update="scripts\model\Commands\CloneElementCommand.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+  </ItemGroup>
+  <ItemGroup>
     <TypeScriptCompile Update="scripts\model\NodeType.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

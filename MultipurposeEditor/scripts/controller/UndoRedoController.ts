@@ -1,6 +1,6 @@
-import { Command } from "./Command"
+import { Command } from "../model/Commands/Command"
 
-class UndoRedoManager {
+export class UndoRedoController {
     public stack: Command[];
     private pointer: number;
     private maxLength: number = 1000;

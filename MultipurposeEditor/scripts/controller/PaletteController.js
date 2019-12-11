@@ -1,4 +1,5 @@
 import { PaletteElementView } from "../view/PaletteElementView";
+// import { Command } from "../Command";
 export class PaletteController {
     Drag() {
         $(".tree-element").draggable({

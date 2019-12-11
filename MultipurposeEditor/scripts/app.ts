@@ -1,6 +1,10 @@
 ﻿import { PaletteController } from "./controller/PaletteController";
+import { UndoRedoController } from "./controller/UndoRedoController";
+import { KeyboardShortcutsController } from "./controller/KeyboardShortcutsController";
 import '../scripts/app.css';
-import img from './view/node.png';
+import node from './view/node.png';
+import github from './view/github.png';
+import trollface from './view/trollface.png';
 
 class Editor {
     element: HTMLElement;
@@ -11,7 +15,9 @@ class Editor {
     comforts: HTMLElement;
     conditions: HTMLElement;
     container: HTMLElement;
-    paletteController: PaletteController; 
+    paletteController: PaletteController;
+    undoRedoController: UndoRedoController;
+    keyboardShortcutsController: KeyboardShortcutsController;
 
     constructor() {
         //var model = JSON.parse(requestSmth('GET', 'https://localhost:3626/api/Model/AirSimMetamodel'));
@@ -57,8 +63,15 @@ class Editor {
         //}
 
         this.paletteController = new PaletteController();
-        this.paletteController.AppendPaletteElement("node", img);
+        this.paletteController.AppendPaletteElement("node", node);
+        this.paletteController.AppendPaletteElement("github", github);
+        this.paletteController.AppendPaletteElement("trollface", trollface);
         this.paletteController.Drag();
+
+        this.undoRedoController = new UndoRedoController();
+
+        this.keyboardShortcutsController = new KeyboardShortcutsController(this.undoRedoController);
+        this.keyboardShortcutsController.ActivateUndoRedoShortcuts();
     }
 
     start() {
