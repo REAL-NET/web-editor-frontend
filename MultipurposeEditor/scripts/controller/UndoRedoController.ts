@@ -10,7 +10,7 @@ export class UndoRedoController {
         this.pointer = -1;
     }
 
-    public AddCommand(command: Command) {
+    public AddCommand(command: Command): void {
         if (command.IsUndoable) {
             if (this.pointer < this.stack.length - 1) {
                 this.PopElements(this.stack.length - 1 - this.pointer);
@@ -22,10 +22,11 @@ export class UndoRedoController {
             else {
                 ++this.pointer;
             }
-        }   
+        }
+        this.stack[this.pointer].Undo();
     }
 
-    private PopElements(number: number) {
+    private PopElements(number: number): void {
         if (number > 0 && number < this.stack.length) {
             while (number > 0) {
                 this.stack.pop();
@@ -34,14 +35,15 @@ export class UndoRedoController {
         }
     }
 
-    public Undo() {
+    public Undo(): void {
+        alert("it works");
         if (this.pointer > -1) {
             this.stack[this.pointer].Undo();
             --this.pointer;
         }
     }
 
-    public Redo() {
+    public Redo(): void {
         if (this.pointer < this.stack.length - 1) {
             this.stack[this.pointer].Execute();
             ++this.pointer;

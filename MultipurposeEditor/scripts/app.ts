@@ -62,16 +62,16 @@ class Editor {
         //    $('.draggable').draggable();
         //}
 
-        this.paletteController = new PaletteController();
-        this.paletteController.AppendPaletteElement("node", node);
-        this.paletteController.AppendPaletteElement("github", github);
-        this.paletteController.AppendPaletteElement("trollface", trollface);
-        this.paletteController.Drag();
-
         this.undoRedoController = new UndoRedoController();
 
         this.keyboardShortcutsController = new KeyboardShortcutsController(this.undoRedoController);
         this.keyboardShortcutsController.ActivateUndoRedoShortcuts();
+
+        this.paletteController = new PaletteController();
+        this.paletteController.AppendPaletteElement("node", node);
+        this.paletteController.AppendPaletteElement("github", github);
+        this.paletteController.AppendPaletteElement("trollface", trollface);
+        this.paletteController.Drag(this.undoRedoController);
     }
 
     start() {

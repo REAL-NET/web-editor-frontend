@@ -1,20 +1,24 @@
-﻿import { PaletteElementView } from "../view/PaletteElementView"
-// import { Command } from "../Command";
+﻿import { PaletteElementView } from "../view/PaletteElementView";
+import { UndoRedoController } from "./UndoRedoController";
+import { AddElementCommand } from "../model/Commands/AddElementCommand";
 
 export class PaletteController {
-    public Drag(): void {
+    public Drag(undoRedoController: UndoRedoController): void {
         $(".tree-element").draggable({
             helper: function () {
                 var clone = $(this).find(".element-img").clone();
+                var addElementCommand = new AddElementCommand(clone, () => alert("redo"), () => alert("undo"));//(clone, () => clone.append(document.getElementById("scene")), () => clone.remove());
+                addElementCommand.Undo();
+                undoRedoController.AddCommand(addElementCommand);
                 // clone.css("position", "relative");
                 return clone;
             },
             cursorAt: {
                 top: 15,
                 left: 15
-            },
+            }
             // revert: "invalid"
-        })
+        });
     }
 
     public AppendPaletteElement(name: string, image: string): void {

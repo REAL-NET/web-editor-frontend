@@ -13,7 +13,7 @@
     </TypeScriptCompile>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Update="scripts\model\Commands\CloneElementCommand.ts">
+    <TypeScriptCompile Update="scripts\model\Commands\AddElementCommand.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
   </ItemGroup>

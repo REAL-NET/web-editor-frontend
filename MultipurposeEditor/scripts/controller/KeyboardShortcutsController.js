@@ -2,21 +2,17 @@ export class KeyboardShortcutsController {
     constructor(undoRedoController) {
         this.undoRedoController = undoRedoController;
     }
-    Undo(e) {
+    UndoRedo(e) {
         var evtobj = window.event ? event : e;
         if (evtobj.keyCode == 90 && evtobj.ctrlKey) {
             this.undoRedoController.Undo();
         }
-    }
-    Redo(e) {
-        var evtobj = window.event ? event : e;
-        if (evtobj.keyCode == 89 && evtobj.ctrlKey) {
+        else if (evtobj.keyCode == 89 && evtobj.ctrlKey) {
             this.undoRedoController.Redo();
         }
     }
     ActivateUndoRedoShortcuts() {
-        document.onkeydown = this.Undo;
-        document.onkeydown = this.Redo;
+        document.onkeydown = this.UndoRedo;
     }
 }
 //# sourceMappingURL=KeyboardShortcutsController.js.map
