@@ -18,6 +18,6 @@ export class KeyboardShortcutsController {
     }
 
     public ActivateUndoRedoShortcuts(): void {
-        document.onkeydown = this.UndoRedo;
+        document.onkeydown = this.UndoRedo.bind(this);
     }
 }

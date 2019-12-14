@@ -17,7 +17,6 @@ export class UndoRedoController {
                 ++this.pointer;
             }
         }
-        this.stack[this.pointer].Undo();
     }
     PopElements(number) {
         if (number > 0 && number < this.stack.length) {
@@ -28,7 +27,6 @@ export class UndoRedoController {
         }
     }
     Undo() {
-        alert("it works");
         if (this.pointer > -1) {
             this.stack[this.pointer].Undo();
             --this.pointer;

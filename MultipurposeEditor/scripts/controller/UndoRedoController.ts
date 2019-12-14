@@ -23,7 +23,6 @@ export class UndoRedoController {
                 ++this.pointer;
             }
         }
-        this.stack[this.pointer].Undo();
     }
 
     private PopElements(number: number): void {
@@ -36,7 +35,6 @@ export class UndoRedoController {
     }
 
     public Undo(): void {
-        alert("it works");
         if (this.pointer > -1) {
             this.stack[this.pointer].Undo();
             --this.pointer;

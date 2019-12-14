@@ -12,7 +12,7 @@ export class KeyboardShortcutsController {
         }
     }
     ActivateUndoRedoShortcuts() {
-        document.onkeydown = this.UndoRedo;
+        document.onkeydown = this.UndoRedo.bind(this);
     }
 }
 //# sourceMappingURL=KeyboardShortcutsController.js.map
