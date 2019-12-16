@@ -1,11 +1,12 @@
 import { PaletteController } from "./controller/PaletteController";
 import { UndoRedoController } from "./controller/UndoRedoController";
-import { KeyboardShortcutsController } from "./controller/KeyboardShortcutsController";
+//import { KeyboardShortcutsController } from "./controller/KeyboardShortcutsController";
 import '../scripts/app.css';
 import node from './view/node.png';
 import github from './view/github.png';
 import trollface from './view/trollface.png';
 class Editor {
+    //keyboardShortcutsController: KeyboardShortcutsController;
     constructor() {
         //var model = JSON.parse(requestSmth('GET', 'https://localhost:3626/api/Model/AirSimMetamodel'));
         this.spaces = document.getElementById('metamodelElements');
@@ -46,8 +47,8 @@ class Editor {
         //    $('.draggable').draggable();
         //}
         this.undoRedoController = new UndoRedoController();
-        this.keyboardShortcutsController = new KeyboardShortcutsController(this.undoRedoController);
-        this.keyboardShortcutsController.ActivateUndoRedoShortcuts();
+        //this.keyboardShortcutsController = new KeyboardShortcutsController(this.undoRedoController);
+        //this.keyboardShortcutsController.ActivateUndoRedoShortcuts();
         this.paletteController = new PaletteController();
         this.paletteController.AppendPaletteElement("node", node);
         this.paletteController.AppendPaletteElement("github", github);
@@ -63,6 +64,14 @@ class Editor {
 window.onload = () => {
     var editor = new Editor();
     editor.start();
+    document.addEventListener("keydown", function (event) {
+        if (event.code == "KeyZ" && (event.ctrlKey || event.metaKey)) {
+            editor.undoRedoController.Undo();
+        }
+        else if (event.code == "KeyY" && (event.ctrlKey || event.metaKey)) {
+            editor.undoRedoController.Redo();
+        }
+    });
 };
 function requestSmth(type, url) {
     var postRequest = new XMLHttpRequest();
