@@ -1,17 +1,16 @@
 import { PaletteElementView } from "../view/PaletteElementView";
 import { AddElementCommand } from "../model/Commands/AddElementCommand";
 export class PaletteController {
-    constructor() {
-        this.amount = 1;
-    }
     Drag(undoRedoController) {
         $(".tree-element").draggable({
             helper: function () {
                 var clone = $(this).find(".element-img").clone();
-                var id = this.amount;
-                //++this.amount;
-                clone.prop("id", id);
-                var addElementCommand = new AddElementCommand(clone, () => $("#" + id).append(document.getElementById("scene")), () => $("#" + id).remove());
+                clone.uniqueId();
+                var id = clone.attr("id");
+                //clone.prop("id", id);
+                //alert(id);
+                document.getElementById("submenu-1").insertAdjacentHTML("beforeend", '<div>' + `${id}` + '</div>');
+                var addElementCommand = new AddElementCommand(clone, () => $("#" + id).show(), () => $("#" + id).hide()); //=> document.getElementById("scene").append(document.getElementById("#" + id)), () => alert(id));// => $("#" + id).hide(), () => $("#" + id).show()); //
                 undoRedoController.AddCommand(addElementCommand);
                 clone.css("position", "relative");
                 return clone;

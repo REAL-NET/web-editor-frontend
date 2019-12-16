@@ -43,7 +43,7 @@ export class UndoRedoController {
 
     public Redo(): void {
         if (this.pointer < this.stack.length - 1) {
-            this.stack[this.pointer].Execute();
+            this.stack[this.pointer].Redo();
             ++this.pointer;
         }
     }
