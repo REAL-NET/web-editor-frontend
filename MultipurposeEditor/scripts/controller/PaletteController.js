@@ -7,11 +7,8 @@ export class PaletteController {
                 var clone = $(this).find(".element-img").clone();
                 clone.uniqueId();
                 var id = clone.attr("id");
-                //clone.prop("id", id);
-                //alert(id);
-                document.getElementById("submenu-1").insertAdjacentHTML("beforeend", '<div>' + `${id}` + '</div>');
                 var addElementCommand = new AddElementCommand(clone, () => $("#" + id).show(), () => $("#" + id).hide()); //=> document.getElementById("scene").append(document.getElementById("#" + id)), () => alert(id));// => $("#" + id).hide(), () => $("#" + id).show()); //
-                undoRedoController.AddCommand(addElementCommand);
+                undoRedoController.ExecuteCommand(addElementCommand);
                 clone.css("position", "relative");
                 return clone;
             },

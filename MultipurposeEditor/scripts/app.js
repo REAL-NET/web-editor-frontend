@@ -12,18 +12,18 @@ class Editor {
         this.spaces = document.getElementById('metamodelElements');
         this.comforts = document.getElementById('comforts');
         this.conditions = document.getElementById('conditions');
-        var allSpaces = ["Room1", "Room2"]; //elements from metamodel (rooms)
-        //var allSpaces = JSON.parse(requestSmth('GET', "http://localhost:3626/api/Model/AirSimMetamodel")).elements;
-        for (var i = 0; i < allSpaces.length; i++) {
-            var div = document.createElement('div');
-            var p = document.createElement('p');
-            div.setAttribute('class', "draggable draggableStyle ui-widget-content");
-            div.setAttribute("margine", "30px");
-            p.innerText = allSpaces[i];
-            div.append(p);
-            this.spaces.append(div);
-            $('.draggable').draggable();
-        }
+        //var allSpaces = ["Room1", "Room2"]; //elements from metamodel (rooms)
+        ////var allSpaces = JSON.parse(requestSmth('GET', "http://localhost:3626/api/Model/AirSimMetamodel")).elements;
+        //for (var i = 0; i < allSpaces.length; i++) {
+        //    var div = document.createElement('div');
+        //    var p = document.createElement('p');
+        //    div.setAttribute('class', "draggable draggableStyle ui-widget-content");
+        //    div.setAttribute("margine", "30px");
+        //    p.innerText = allSpaces[i];
+        //    div.append(p);
+        //    this.spaces.append(div);
+        //    $('.draggable').draggable();
+        //}
         //var allComforts = ["Comf1", "Comf2"]; //elements from metamodel (comforts)
         //for (var i = 0; i < allComforts.length; i++) {
         //    var div = document.createElement('div');

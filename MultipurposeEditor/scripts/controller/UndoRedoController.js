@@ -1,41 +1,25 @@
 export class UndoRedoController {
     constructor() {
-        this.maxLength = 1000;
-        this.stack = [];
-        this.pointer = -1;
+        this.undoList = [];
+        this.redoList = [];
     }
-    AddCommand(command) {
-        if (command.IsUndoable) {
-            if (this.pointer < this.stack.length - 1) {
-                this.PopElements(this.stack.length - 1 - this.pointer);
-            }
-            this.stack.push(command);
-            if (this.stack.length > this.maxLength) {
-                this.stack.shift();
-            }
-            else {
-                ++this.pointer;
-            }
-        }
-    }
-    PopElements(number) {
-        if (number > 0 && number < this.stack.length) {
-            while (number > 0) {
-                this.stack.pop();
-                --number;
-            }
-        }
+    ExecuteCommand(command) {
+        this.undoList.push(command);
+        this.redoList = [];
+        command.Execute();
     }
     Undo() {
-        if (this.pointer > -1) {
-            this.stack[this.pointer].Undo();
-            --this.pointer;
+        if (this.undoList.length > 0) {
+            var command = this.undoList.pop();
+            this.redoList.push(command);
+            command.Undo();
         }
     }
     Redo() {
-        if (this.pointer < this.stack.length - 1) {
-            this.stack[this.pointer].Redo();
-            ++this.pointer;
+        if (this.redoList.length > 0) {
+            var command = this.redoList.pop();
+            this.undoList.push(command);
+            command.Execute();
         }
     }
 }

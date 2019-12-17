@@ -8,6 +8,11 @@
     <ToolsVersionPromptShown>3.7</ToolsVersionPromptShown>
   </PropertyGroup>
   <ItemGroup>
+    <TypeScriptCompile Update="scripts\controller\UndoRedoController.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+  </ItemGroup>
+  <ItemGroup>
     <TypeScriptCompile Update="scripts\controller\KeyboardShortcutsController.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

@@ -15,7 +15,7 @@ export class AddElementCommand implements Command {
         this.revertFunction = revertFunction;
     }
 
-    public Redo(): void {
+    public Execute(): void {
         this.executeFunction();
     }
 

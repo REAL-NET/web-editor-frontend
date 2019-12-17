@@ -7,7 +7,7 @@ export class AddElementCommand {
     get IsUndoable() {
         return true;
     }
-    Redo() {
+    Execute() {
         this.executeFunction();
     }
     Undo() {

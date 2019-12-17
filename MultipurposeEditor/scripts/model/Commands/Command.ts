@@ -1,5 +1,5 @@
 export interface Command {
     IsUndoable: boolean;
-    Redo(): void;
+    Execute(): void;
     Undo(): void;
 }
