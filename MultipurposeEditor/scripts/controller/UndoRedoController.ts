@@ -10,8 +10,10 @@ export class UndoRedoController {
     }
 
     public ExecuteCommand(command: Command): void {
-        this.undoList.push(command);
-        this.redoList = [];
+        if (command.IsUndoable) {
+            this.undoList.push(command);
+            this.redoList = [];
+        }
         command.Execute();
     }
 
