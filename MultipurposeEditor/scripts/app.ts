@@ -1,71 +1,17 @@
 ﻿import { PaletteController } from "./controller/PaletteController";
 import { UndoRedoController } from "./controller/UndoRedoController";
-//import { KeyboardShortcutsController } from "./controller/KeyboardShortcutsController";
 import '../scripts/app.css';
 import node from './view/node.png';
 import github from './view/github.png';
 import trollface from './view/trollface.png';
 
 class Editor {
-    element: HTMLElement;
-    span: HTMLElement;
     timerToken: number;
-    tr: HTMLElement;
-    spaces: HTMLElement;
-    comforts: HTMLElement;
-    conditions: HTMLElement;
-    container: HTMLElement;
     paletteController: PaletteController;
     undoRedoController: UndoRedoController;
-    //keyboardShortcutsController: KeyboardShortcutsController;
 
     constructor() {
-        //var model = JSON.parse(requestSmth('GET', 'https://localhost:3626/api/Model/AirSimMetamodel'));
-        this.spaces = document.getElementById('metamodelElements');
-        this.comforts = document.getElementById('comforts');
-        this.conditions = document.getElementById('conditions');
-
-        //var allSpaces = ["Room1", "Room2"]; //elements from metamodel (rooms)
-        ////var allSpaces = JSON.parse(requestSmth('GET', "http://localhost:3626/api/Model/AirSimMetamodel")).elements;
-        //for (var i = 0; i < allSpaces.length; i++) {
-        //    var div = document.createElement('div');
-        //    var p = document.createElement('p');
-        //    div.setAttribute('class', "draggable draggableStyle ui-widget-content");
-        //    div.setAttribute("margine", "30px");
-        //    p.innerText = allSpaces[i];
-        //    div.append(p);
-        //    this.spaces.append(div);
-        //    $('.draggable').draggable();
-        //}
-
-        //var allComforts = ["Comf1", "Comf2"]; //elements from metamodel (comforts)
-        //for (var i = 0; i < allComforts.length; i++) {
-        //    var div = document.createElement('div');
-        //    var p = document.createElement('p');
-        //    div.setAttribute('class', "draggable draggableStyle ui-widget-content");
-        //    div.setAttribute("style", "position: relative");
-        //    p.innerText = allComforts[i];
-        //    div.append(p);
-        //    this.comforts.append(div);
-        //    $('.draggable').draggable();
-        //}
-
-        //var allConditions = ["Condition1", "Condition2"]; //elements from metamodel (conditions)
-        //for (var i = 0; i < allConditions.length; i++) {
-        //    var div = document.createElement('div');
-        //    var p = document.createElement('p');
-        //    div.setAttribute('class', "draggable draggableStyle ui-widget-content");
-        //    div.setAttribute("style", "position: relative");
-        //    p.innerText = allConditions[i];
-        //    div.append(p);
-        //    this.conditions.append(div);
-        //    $('.draggable').draggable();
-        //}
-
         this.undoRedoController = new UndoRedoController();
-
-        //this.keyboardShortcutsController = new KeyboardShortcutsController(this.undoRedoController);
-        //this.keyboardShortcutsController.ActivateUndoRedoShortcuts();
 
         this.paletteController = new PaletteController();
         this.paletteController.AppendPaletteElement("node", node);
