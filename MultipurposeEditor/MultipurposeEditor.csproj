@@ -3,28 +3,51 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-    <TypeScriptToolsVersion>3.6</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>3.4</TypeScriptToolsVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="scripts\Model.ts" />
-    <None Remove="scripts\model\NodeType.ts" />
-    <None Remove="scripts\PaletteController.ts" />
-    <None Remove="scripts\PaletteElementView.ts" />
+    <None Remove="src\GraphNode.js" />
+    <None Remove="src\GraphNode.js.map" />
+    <None Remove="src\GraphNode.ts" />
+    <None Remove="src\model\NodeType.ts" />
+    <None Remove="src\view\PaletteView.ts" />
+    <None Remove="scripts\**" />
+    <None Remove="src\view\PaletteElementView.js" />
+    <None Remove="src\view\PaletteElementView.js.map" />
+    <None Remove="src\app1.css" />
+    <None Remove="src\Greenhouse\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Remove="src\app.ts" />
+    <TypeScriptCompile Remove="src\GraphNode.ts" />
+    <TypeScriptCompile Remove="src\model\EdgeType.ts" />
+    <TypeScriptCompile Remove="src\model\ElementType.ts" />
+    <TypeScriptCompile Remove="src\model\Model.ts" />
+    <TypeScriptCompile Remove="src\model\PropertyType.ts" />
+    <TypeScriptCompile Include="scripts\controller\SceneController.ts" />
     <TypeScriptCompile Remove="scripts\app.ts" />
+    <TypeScriptCompile Remove="scripts\controller\PaletteController.ts" />
+    <TypeScriptCompile Remove="scripts\controller\SceneController.ts" />
+    <TypeScriptCompile Remove="scripts\model\NodeType.ts" />
+    <TypeScriptCompile Remove="scripts\view\PaletteElementView.ts" />
+    <TypeScriptCompile Remove="src\Command.ts" />
+    <TypeScriptCompile Remove="src\view\PaletteElementView.ts" />
+    <TypeScriptCompile Include="src\controller\commands\ChangeAttributeValueCommand.ts" />
+    <TypeScriptCompile Include="src\controller\UndoRedoController.ts" />
+    <TypeScriptCompile Include="src\model\SceneModel.ts" />
+    <TypeScriptCompile Include="src\Requests.ts" />
+    <TypeScriptCompile Remove="src\UndoRedoManager.ts" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\app.css" />
-    <None Include="wwwroot\index.html" />
+    <Content Remove="scripts\**" />
+    <Content Remove="src\Greenhouse\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="jQuery" Version="3.4.1" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="jQuery" Version="3.4.1" />    <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="3.7.2">
@@ -34,7 +57,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="scripts\webpack.config.js" />
+    <TypeScriptCompile Update="src\controller\PaletteController.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Update="src\model\NodeType.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Update="src\model\PaletteModel.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="scripts\**" />
+    <Compile Remove="src\Greenhouse\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="scripts\**" />
+    <EmbeddedResource Remove="src\Greenhouse\**" />
   </ItemGroup>
 
 </Project>

@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpack = require('webpack');
 
 module.exports = {
-    entry: "./scripts/app.ts",
+    entry: "./src/app.ts",
     output: {
         path: path.resolve(__dirname, "wwwroot"),
         filename: "main.js",
@@ -25,21 +25,29 @@ module.exports = {
                 use: [MiniCssExtractPlugin.loader, "css-loader"]
             },
             {
-                test: /\.png$/,
-                use: "url-loader"
+                test: /\.(png|jpe?g|gif)$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                    },
+                ],
             }
         ]
     },
     plugins: [
-        new CleanWebpackPlugin(["wwwroot/*"]),
+        //new CleanWebpackPlugin(["wwwroot/*"]),
         new HtmlWebpackPlugin({
-            template: "./scripts/index.html"
+            template: "./src/index.html"
         }),
         new MiniCssExtractPlugin({
             filename: "main.css"
         }),
+        //new webpack.ProvidePlugin({
+        //    mxgraph: 'mxgraph/javascript/mxClient.min.js',
+        //}),
     ],
     //externals: {
     //    jquery: 'jQuery'
     //}
+    devtool: 'cheap-module-eval-source-map'
 };
