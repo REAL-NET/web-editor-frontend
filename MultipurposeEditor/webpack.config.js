@@ -6,6 +6,7 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: "./src/app.ts",
+    mode: 'development',
     output: {
         path: path.resolve(__dirname, "wwwroot"),
         filename: "main.js",
@@ -25,26 +26,26 @@ module.exports = {
                 use: [MiniCssExtractPlugin.loader, "css-loader"]
             },
             {
-                test: /\.(png|jpe?g|gif)$/i,
+                test: /\.(svg|png|jpe?g|gif)$/i,
                 use: [
                     {
-                        loader: 'file-loader',
+                        loader: 'url-loader',
                     },
                 ],
             }
         ]
     },
     plugins: [
-        //new CleanWebpackPlugin(["wwwroot/*"]),
+        new CleanWebpackPlugin(["wwwroot/*.html", "wwwroot/*.css", "wwwroot/*.js"]),
         new HtmlWebpackPlugin({
             template: "./src/index.html"
         }),
         new MiniCssExtractPlugin({
             filename: "main.css"
         }),
-        //new webpack.ProvidePlugin({
+        // new webpack.ProvidePlugin({
         //    mxgraph: 'mxgraph/javascript/mxClient.min.js',
-        //}),
+        // }),
     ],
     //externals: {
     //    jquery: 'jQuery'
