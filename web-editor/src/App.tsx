@@ -1,14 +1,22 @@
-import React from 'react';
-import ReactFlow from 'react-flow-renderer';
+import React, {useState} from 'react';
+import ReactFlow, {addEdge, Background, Elements, removeElements, Edge, Connection} from 'react-flow-renderer';
 import "./App.css"
 
-const onLoad = (reactFlowInstance: { fitView: () => void; }) => {
-    console.log('flow loaded:', reactFlowInstance);
-};
-
-const initialElements = [
+const initialElements : Elements = [
     {
         id: '1',
+        type: 'input',
+        data: {
+            label: (
+                <>
+                    Welcome to <strong>React Flow!</strong>
+                </>
+            ),
+        },
+        position: { x: 250, y: 0 },
+    },
+    {
+        id: '2',
         data: {
             label: (
                 <>
@@ -16,46 +24,117 @@ const initialElements = [
                 </>
             ),
         },
-        position: {x: 100, y: 100},
-    },
-    {
-        id: '2',
-        data: {
-            label: (
-                <>
-                    This is a <strong>another default node</strong>
-                </>
-            ),
-        },
-        position: {x: 250, y: 300},
+        position: { x: 100, y: 100 },
     },
     {
         id: '3',
         data: {
-            label: 'Node id: 3',
+            label: (
+                <>
+                    This one has a <strong>custom style</strong>
+                </>
+            ),
         },
-        position: {x: 50, y: 400},
+        position: { x: 400, y: 100 },
+        style: {
+            background: '#D6D5E6',
+            color: '#333',
+            border: '1px solid #222138',
+            width: 180,
+        },
     },
     {
-        id: 'e1-2',
-        source: '1',
-        target: '2',
-        label: 'this is an edge label'
+        id: '4',
+        position: { x: 250, y: 200 },
+        data: {
+            label: 'Another default node',
+        },
     },
     {
-        id: 'e1-3',
-        source: '1',
-        target: '3'
-    }
+        id: '5',
+        data: {
+            label: 'Node id: 5',
+        },
+        position: { x: 250, y: 325 },
+    },
+    {
+        id: '6',
+        type: 'output',
+        data: {
+            label: (
+                <>
+                    An <strong>output node</strong>
+                </>
+            ),
+        },
+        position: { x: 100, y: 480 },
+    },
+    {
+        id: '7',
+        type: 'output',
+        data: { label: 'Another output node' },
+        position: { x: 400, y: 450 },
+    },
+    { id: 'e1-2', source: '1', target: '2', label: 'this is an edge label' },
+    { id: 'e1-3', source: '1', target: '3' },
+    {
+        id: 'e3-4',
+        source: '3',
+        target: '4',
+        animated: true,
+        label: 'animated edge',
+    },
+    {
+        id: 'e4-5',
+        source: '4',
+        target: '5',
+        label: 'edge with arrow head',
+    },
+    {
+        id: 'e5-6',
+        source: '5',
+        target: '6',
+        type: 'smoothstep',
+        label: 'smooth step edge',
+    },
+    {
+        id: 'e5-7',
+        source: '5',
+        target: '7',
+        type: 'step',
+        style: { stroke: '#f6ab6c' },
+        label: 'a step edge',
+        animated: true,
+        labelStyle: { fill: '#f6ab6c', fontWeight: 700 },
+    },
 ];
 
+const onLoad = (reactFlowInstance: { fitView: () => void; }) => {
+    console.log('flow loaded:', reactFlowInstance);
+    reactFlowInstance.fitView();
+};
+
 const OverviewFlow = () => {
+    const [elements, setElements] = useState(initialElements);
+    const onElementsRemove = (elementsToRemove: Elements) : void =>
+        setElements((elements: Elements) => removeElements(elementsToRemove, elements));
+    const onConnect = (edgeParas: Edge|Connection) : void => setElements((elements: Elements) => addEdge(edgeParas, elements));
+
     return (
         <div className="diagram-container">
             <ReactFlow
                 elements={initialElements}
+                onElementsRemove={onElementsRemove}
                 onLoad={onLoad}
+                onConnect={onConnect}
+                deleteKeyCode={46}
+                snapToGrid={true}
+                snapGrid={[25, 25]}
             >
+                <Background
+                    gap={25}
+                    size={1}
+                />
             </ReactFlow>
         </div>
     );
