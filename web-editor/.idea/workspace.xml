@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="282bcb7e-5f4d-4ccc-86c0-5c1261a37742" name="Default Changelist" comment="">
+    <list default="true" id="282bcb7e-5f4d-4ccc-86c0-5c1261a37742" name="Default Changelist" comment="Moved initial elements to a separate file">
       <change beforePath="$PROJECT_DIR$/.eslintcache" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintcache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
@@ -49,8 +49,23 @@
       <updated>1607692370548</updated>
       <workItem from="1607692371934" duration="4086000" />
       <workItem from="1607709570329" duration="1192000" />
-      <workItem from="1608585359326" duration="3648000" />
+      <workItem from="1608585359326" duration="5512000" />
     </task>
+    <task id="LOCAL-00001" summary="Tried to add actions: onElementsRemove &amp; onConnect">
+      <created>1608589656830</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1608589656830</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Moved initial elements to a separate file">
+      <created>1608590419650</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1608590419650</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -67,5 +82,10 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Tried to add actions: onElementsRemove &amp; onConnect" />
+    <MESSAGE value="Moved initial elements to a separate file" />
+    <option name="LAST_COMMIT_MESSAGE" value="Moved initial elements to a separate file" />
   </component>
 </project>
