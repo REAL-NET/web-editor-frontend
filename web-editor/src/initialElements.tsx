@@ -8,7 +8,7 @@ let initialElements : Elements = [
         data: {
             label: (
                 <>
-                    Welcome to <strong>React Flow!</strong>
+                    First <strong>node</strong>
                 </>
 ),
 },
@@ -36,8 +36,8 @@ position: { x: 250, y: 0 },
 },
     position: { x: 400, y: 100 },
     style: {
-        background: '#D6D5E6',
-            color: '#333',
+        background: '#407312',
+            color: '#fff',
             border: '1px solid #222138',
             width: 180,
     },
@@ -87,7 +87,7 @@ position: { x: 250, y: 0 },
     id: 'e4-5',
         source: '4',
     target: '5',
-    label: 'edge with arrow head',
+    label: 'edge without arrow head',
 },
 {
     id: 'e5-6',
