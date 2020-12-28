@@ -5,14 +5,10 @@ import './../src/app.css';
 import { Model } from "./model/Model";
 import { Requests } from "./Requests";
 import { NodeType } from "./model/NodeType";
-import {UndoRedoController} from "./controller/UndoRedoController";
+import { UndoRedoController } from "./controller/UndoRedoController";
+import 'regenerator-runtime/runtime';
 
-var mxgraph = require("mxgraph")({
-    mxImageBasePath: "./src/images",
-    mxBasePath: "./src"
-});
-
-class Editor {
+class MyEditor {
     public undoRedoController: UndoRedoController;
     private timerToken: number;
     private paletteController: PaletteController;
@@ -31,9 +27,8 @@ class Editor {
 
         this.sceneController = new SceneController(this.model);
         this.sceneController.InitGraph();
-        this.sceneController.AddPropertiesListeners();
         
-        this.paletteController = new PaletteController(this.sceneController.graph, this.metamodel, this.sceneController);
+        this.paletteController = new PaletteController(this.metamodel, this.sceneController);
 
         //document.getElementById('generate').addEventListener('click', this.gener);
     }
@@ -47,7 +42,7 @@ class Editor {
 }
 
 window.onload = () => {
-    var editor = new Editor();
+    var editor = new MyEditor();
     
     document.addEventListener("keydown", function (event) {
         if (event.code == "KeyZ" && (event.ctrlKey || event.metaKey)) {

@@ -3,11 +3,8 @@ import { SceneController } from "./controller/SceneController";
 import './../src/app.css';
 import { Model } from "./model/Model";
 import { UndoRedoController } from "./controller/UndoRedoController";
-var mxgraph = require("mxgraph")({
-    mxImageBasePath: "./src/images",
-    mxBasePath: "./src"
-});
-class Editor {
+import 'regenerator-runtime/runtime';
+class MyEditor {
     constructor() {
         this.undoRedoController = new UndoRedoController();
         //this.metamodel = Requests.RequestMetamodel("SHMetamodelForGraphEditor");
@@ -16,8 +13,7 @@ class Editor {
         this.model = Model.createTestModel();
         this.sceneController = new SceneController(this.model);
         this.sceneController.InitGraph();
-        this.sceneController.AddPropertiesListeners();
-        this.paletteController = new PaletteController(this.sceneController.graph, this.metamodel, this.sceneController);
+        this.paletteController = new PaletteController(this.metamodel, this.sceneController);
         //document.getElementById('generate').addEventListener('click', this.gener);
     }
     start() {
@@ -27,7 +23,7 @@ class Editor {
     }
 }
 window.onload = () => {
-    var editor = new Editor();
+    var editor = new MyEditor();
     document.addEventListener("keydown", function (event) {
         if (event.code == "KeyZ" && (event.ctrlKey || event.metaKey)) {
             editor.undoRedoController.Undo();

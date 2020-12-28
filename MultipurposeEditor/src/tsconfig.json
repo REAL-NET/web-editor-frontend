@@ -2,6 +2,8 @@
   "compilerOptions": {
     "noEmitOnError": true,
     "noImplicitAny": true,
+    "moduleResolution": "node",
+    "typeRoots": [ "./types", "../node_modules/@types" ],
     "sourceMap": true,
     "target": "es6"
   },

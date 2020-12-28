@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <TypeScriptToolsVersion>3.4</TypeScriptToolsVersion>
   </PropertyGroup>
@@ -11,6 +11,7 @@
     <None Remove="src\GraphNode.js.map" />
     <None Remove="src\GraphNode.ts" />
     <None Remove="src\model\NodeType.ts" />
+    <None Remove="src\controller\reteUtils\TextControl.ts" />
     <None Remove="src\view\PaletteView.ts" />
     <None Remove="scripts\**" />
     <None Remove="src\view\PaletteElementView.js" />
@@ -47,9 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="jQuery" Version="3.4.1" />    <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+    <PackageReference Include="jQuery" Version="3.4.1" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="3.7.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
