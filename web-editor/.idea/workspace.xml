@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="282bcb7e-5f4d-4ccc-86c0-5c1261a37742" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.eslintcache" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintcache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/initialElements.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/initialElements.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +66,8 @@
       <workItem from="1607692371934" duration="4086000" />
       <workItem from="1607709570329" duration="1192000" />
       <workItem from="1608585359326" duration="6008000" />
-      <workItem from="1608644868932" duration="308000" />
+      <workItem from="1608644868932" duration="1097000" />
+      <workItem from="1608795402556" duration="12000" />
     </task>
     <task id="LOCAL-00001" summary="Tried to add actions: onElementsRemove &amp; onConnect">
       <created>1608589656830</created>
@@ -91,7 +90,14 @@
       <option name="project" value="LOCAL" />
       <updated>1608591477054</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Updated elements">
+      <created>1608646433809</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1608646433810</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -113,6 +119,7 @@
     <MESSAGE value="Tried to add actions: onElementsRemove &amp; onConnect" />
     <MESSAGE value="Moved initial elements to a separate file" />
     <MESSAGE value="Fixed onElementsRemove &amp; onConnect" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed onElementsRemove &amp; onConnect" />
+    <MESSAGE value="Updated elements" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated elements" />
   </component>
 </project>
