@@ -1,42 +1,30 @@
-import React, {useState} from 'react';
-import ReactFlow, {addEdge, Background, Elements, removeElements, Edge, Connection} from 'react-flow-renderer';
-import {initialElements} from './initialElements';
-import "./App.css"
+import React, {useState, DragEvent} from 'react';
+import ReactFlow, {
+    OnLoadParams,
+    ReactFlowProvider,
+} from 'react-flow-renderer';
 
-const onLoad = (reactFlowInstance: { fitView: () => void; }) => {
-    console.log('flow loaded:', reactFlowInstance);
-    reactFlowInstance.fitView();
-};
+import "./App.css"
+import Palette from './DragNDrop/Palette';
+import './DragNDrop/dnd.css'
+import Scene from './Scene';
+import {initialElements} from "./initialElements";
 
 const OverviewFlow = () => {
+    const [reactFlowInstance, setReactFlowInstance] = useState<OnLoadParams>();
     const [elements, setElements] = useState(initialElements);
-    const onElementsRemove = (elementsToRemove: Elements) : void => {
-        setElements((elements: Elements) => removeElements(elementsToRemove, elements));
-        console.log('elements:', elements);
-    }
-    const onConnect = (edgeParas: Edge|Connection) : void => {
-        setElements((elements: Elements) => addEdge(edgeParas, elements));
-        console.log('elements:', elements);
-    }
-
     return (
-        <div className="diagram-container">
-            <ReactFlow
-                elements={elements}
-                onElementsRemove={onElementsRemove}
-                onLoad={onLoad}
-                onConnect={onConnect}
-                deleteKeyCode={46}
-                snapToGrid={true}
-                snapGrid={[25, 25]}
-            >
-                <Background
-                    gap={25}
-                    size={1}
-                />
-            </ReactFlow>
+        <div className="OverviewFlow">
+            <ReactFlowProvider>
+                <Scene elements={elements}
+                       setElements={setElements}
+                       reactFlowInstance={reactFlowInstance}
+                       setReactFlowInstance={setReactFlowInstance}/>
+                <Palette/>
+            </ReactFlowProvider>
         </div>
     );
 };
+
 
 export default OverviewFlow;
