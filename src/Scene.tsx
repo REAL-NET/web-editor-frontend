@@ -1,8 +1,8 @@
-import React, {DragEvent, useState, MouseEvent} from 'react';
+import React, {DragEvent, useState} from 'react';
 import ReactFlow, {
     addEdge,
     Background,
-    Elements,FlowElement,
+    Elements,
     removeElements,
     Edge,
     Connection,
@@ -26,9 +26,8 @@ let id = 0;
 const getId = (): ElementId => `dndnode_${id++}`;
 
 
-
 const Scene: React.FC<SceneProps> = ({elements, setElements, reactFlowInstance, setReactFlowInstance}) => {
-    const [captureElementClick, setCaptureElementClick] = useState<boolean>(true);
+
     const onDragOver = (event: DragEvent) => {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
@@ -45,7 +44,7 @@ const Scene: React.FC<SceneProps> = ({elements, setElements, reactFlowInstance, 
         setElements((elements: Elements) => addEdge(edgeParas, elements));
         console.log('elements:', elements);
     }
-    const onElementClick = (_: MouseEvent, element: FlowElement) => console.log('click', element);
+
     const onDrop = (event: DragEvent) => {
 
         event.preventDefault();
@@ -75,7 +74,6 @@ const Scene: React.FC<SceneProps> = ({elements, setElements, reactFlowInstance, 
                 snapGrid={[25, 25]}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
-                onElementClick={captureElementClick ? onElementClick : undefined}
             >
                 <Controls/>
                 <Background>
