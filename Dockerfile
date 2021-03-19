@@ -5,6 +5,6 @@ WORKDIR /app
 RUN npm install
 COPY . /app
 
-EXPOSE PORT
+EXPOSE 3000
 
 CMD npm start
