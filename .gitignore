@@ -1,7 +1,6 @@
 # Visual Studio 2015 cache/options directory
 .vs/
 
-
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -17,3 +16,6 @@ bld/
 # Dependency directory
 node_modules
 bower_components
+
+# Cache
+.eslintcache
