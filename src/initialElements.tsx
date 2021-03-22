@@ -1,7 +1,7 @@
 import React from 'react';
-import {Elements} from 'react-flow-renderer';
+import { Elements } from 'react-flow-renderer';
 
-let initialElements: Elements = [
+let initialElements : Elements = [
     {
         id: '1',
         type: 'input',
@@ -12,7 +12,7 @@ let initialElements: Elements = [
                 </>
             ),
         },
-        position: {x: 250, y: 0},
+        position: { x: 250, y: 0 },
     },
     {
         id: '2',
@@ -23,7 +23,7 @@ let initialElements: Elements = [
                 </>
             ),
         },
-        position: {x: 100, y: 100},
+        position: { x: 100, y: 100 },
     },
     {
         id: '3',
@@ -34,7 +34,7 @@ let initialElements: Elements = [
                 </>
             ),
         },
-        position: {x: 400, y: 100},
+        position: { x: 400, y: 100 },
         style: {
             background: '#407312',
             color: '#fff',
@@ -44,7 +44,7 @@ let initialElements: Elements = [
     },
     {
         id: '4',
-        position: {x: 250, y: 200},
+        position: { x: 250, y: 200 },
         data: {
             label: 'Another default node',
         },
@@ -54,7 +54,7 @@ let initialElements: Elements = [
         data: {
             label: 'Node id: 5',
         },
-        position: {x: 250, y: 325},
+        position: { x: 250, y: 325 },
     },
     {
         id: '6',
@@ -66,16 +66,16 @@ let initialElements: Elements = [
                 </>
             ),
         },
-        position: {x: 100, y: 480},
+        position: { x: 100, y: 480 },
     },
     {
         id: '7',
         type: 'output',
-        data: {label: 'Another output node'},
-        position: {x: 400, y: 450},
+        data: { label: 'Another output node' },
+        position: { x: 400, y: 450 },
     },
-    {id: 'e1-2', source: '1', target: '2', label: 'this is an edge label'},
-    {id: 'e1-3', source: '1', target: '3'},
+    { id: 'e1-2', source: '1', target: '2', label: 'this is an edge label' },
+    { id: 'e1-3', source: '1', target: '3' },
     {
         id: 'e3-4',
         source: '3',
@@ -101,12 +101,11 @@ let initialElements: Elements = [
         source: '5',
         target: '7',
         type: 'step',
-        style: {stroke: '#f6ab6c'},
+        style: { stroke: '#f6ab6c' },
         label: 'a step edge',
         animated: true,
-        labelStyle: {fill: '#f6ab6c', fontWeight: 700},
+        labelStyle: { fill: '#f6ab6c', fontWeight: 700 },
     },
-
 ];
 
 export {initialElements};

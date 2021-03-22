@@ -1,14 +1,12 @@
-import React, {useState, DragEvent} from 'react';
-import ReactFlow, {
-    OnLoadParams,
-    ReactFlowProvider,
-} from 'react-flow-renderer';
+import React, { useState } from 'react';
+import { OnLoadParams, ReactFlowProvider } from 'react-flow-renderer';
 
-import "./App.css"
-import Palette from './DragNDrop/Palette';
-import './DragNDrop/dnd.css'
+import Palette from './Palette';
 import Scene from './Scene';
-import {initialElements} from "./initialElements";
+import { initialElements } from './initialElements';
+
+import './App.css'
+
 
 const OverviewFlow = () => {
     const [reactFlowInstance, setReactFlowInstance] = useState<OnLoadParams>();

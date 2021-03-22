@@ -1,7 +1,8 @@
-import React, {DragEvent} from 'react';
-
+import React, { DragEvent } from 'react';
+import './Palette.css'
+import './Nodes.css'
 const onDragStart = (event: DragEvent, nodeType: string) => {
-    event.dataTransfer.setData('application/reactflow', nodeType);//!!!!!
+    event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
 };
 

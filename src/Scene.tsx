@@ -1,4 +1,4 @@
-import React, {DragEvent, useState} from 'react';
+import React, { DragEvent } from 'react';
 import ReactFlow, {
     addEdge,
     Background,
@@ -12,8 +12,7 @@ import ReactFlow, {
     Node,
 } from 'react-flow-renderer';
 
-import "./App.css"
-import './DragNDrop/dnd.css'
+import './Scene.css'
 
 type SceneProps = {
     elements: Elements
@@ -26,24 +25,24 @@ let id = 0;
 const getId = (): ElementId => `dndnode_${id++}`;
 
 
-const Scene: React.FC<SceneProps> = ({elements, setElements, reactFlowInstance, setReactFlowInstance}) => {
+const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance, setReactFlowInstance }) => {
 
     const onDragOver = (event: DragEvent) => {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
     };
 
-
     const onElementsRemove = (elementsToRemove: Elements): void => {
         setElements((elements: Elements) => removeElements(elementsToRemove, elements));
         console.log('elements:', elements);
-    }
+    };
+
     const onLoad = (_reactFlowInstance: OnLoadParams) => setReactFlowInstance(_reactFlowInstance);
 
     const onConnect = (edgeParas: Edge | Connection): void => {
         setElements((elements: Elements) => addEdge(edgeParas, elements));
         console.log('elements:', elements);
-    }
+    };
 
     const onDrop = (event: DragEvent) => {
 
@@ -62,6 +61,7 @@ const Scene: React.FC<SceneProps> = ({elements, setElements, reactFlowInstance, 
         }
 
     };
+
     return (
         <div className="Scene">
             <ReactFlow
