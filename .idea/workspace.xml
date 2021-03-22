@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c5975f99-cf70-4dce-9ccf-f7b0d9dc83f9" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-    </list>
+    <list default="true" id="282bcb7e-5f4d-4ccc-86c0-5c1261a37742" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+      </list>
+    </option>
   </component>
-  <component name="ProjectId" id="1lVoLGL8En8LDQAidvnFkSkW62s" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1lVpyzitDqFVeNtVfZNjANnyfGm" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -22,61 +27,71 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/web-editor" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
     <property name="ts.external.directory.path" value="D:\Yuniya\Documents\Multipurpose-editor\web-editor\node_modules\typescript\lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RunManager">
+    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.start" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="c5975f99-cf70-4dce-9ccf-f7b0d9dc83f9" name="Default Changelist" comment="" />
-      <created>1607691562062</created>
+      <changelist id="282bcb7e-5f4d-4ccc-86c0-5c1261a37742" name="Default Changelist" comment="" />
+      <created>1607692370548</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1607691562062</updated>
-      <workItem from="1607691563423" duration="796000" />
+      <updated>1607692370548</updated>
+      <workItem from="1607692371934" duration="4086000" />
+      <workItem from="1607709570329" duration="1192000" />
+      <workItem from="1608585359326" duration="6008000" />
+      <workItem from="1608644868932" duration="308000" />
     </task>
+    <task id="LOCAL-00001" summary="Tried to add actions: onElementsRemove &amp; onConnect">
+      <created>1608589656830</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1608589656830</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Moved initial elements to a separate file">
+      <created>1608590419650</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1608590419650</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Fixed onElementsRemove &amp; onConnect">
+      <created>1608591477054</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1608591477054</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-    <option name="exactExcludedFiles">
-      <list>
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/view/PaletteView.js.map" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/view/PaletteView.js" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/model/SceneModel.js.map" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/model/SceneModel.js" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/model/PropertyType.js.map" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/model/PropertyType.js" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/model/PaletteModel.js.map" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/model/PaletteModel.js" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/model/NodeType.js.map" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/model/NodeType.js" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/model/Model.js.map" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/model/Model.js" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/model/ElementType.js.map" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/model/ElementType.js" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/model/EdgeType.js.map" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/model/EdgeType.js" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/controller/commands/CreateDeleteElementCommand.js.map" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/controller/commands/CreateDeleteElementCommand.js" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/controller/commands/Command.js.map" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/controller/commands/Command.js" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/controller/commands/ChangeAttributeValueCommand.js.map" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/controller/commands/ChangeAttributeValueCommand.js" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/controller/UndoRedoController.js.map" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/controller/UndoRedoController.js" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/controller/SceneController.js.map" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/controller/SceneController.js" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/controller/PaletteController.js.map" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/controller/PaletteController.js" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/app.js.map" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/app.js" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/Requests.js.map" />
-        <option value="$PROJECT_DIR$/MultipurposeEditor/src/Requests.js" />
-      </list>
-    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -89,5 +104,11 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Tried to add actions: onElementsRemove &amp; onConnect" />
+    <MESSAGE value="Moved initial elements to a separate file" />
+    <MESSAGE value="Fixed onElementsRemove &amp; onConnect" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed onElementsRemove &amp; onConnect" />
   </component>
 </project>

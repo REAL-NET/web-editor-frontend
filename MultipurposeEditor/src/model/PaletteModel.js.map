@@ -1,1 +1,0 @@
-{"version":3,"file":"PaletteModel.js","sourceRoot":"","sources":["PaletteModel.ts"],"names":[],"mappings":"AAIA,MAAM,OAAO,YAAY;IAOrB,YAAY,YAAmB,IAAI;QAC/B,IAAI,CAAC,UAAU,GAAG,SAAS,CAAC;IAChC,CAAC;IAND,IAAW,SAAS;QAChB,OAAO,IAAI,CAAC,UAAU,CAAC;IAC3B,CAAC;CAKJ"}
