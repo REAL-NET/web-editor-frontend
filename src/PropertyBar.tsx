@@ -1,7 +1,5 @@
 import React, { useEffect, useState, DragEvent } from "react";
-
 import { Elements, isNode, isEdge } from "react-flow-renderer";
-
 import { MenuItem, Select, Checkbox, TextField, InputLabel } from "@material-ui/core";
 
 import './Palette.css'

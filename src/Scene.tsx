@@ -28,9 +28,8 @@ type SceneProps = {
 }
 
 
-const Scene: React.FC<SceneProps> = ({ elements, setElements,
-                                         reactFlowInstance, setReactFlowInstance,
-                                         setCurrentElementId, captureElementClick }) => {
+const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
+                                         setReactFlowInstance, setCurrentElementId, captureElementClick }) => {
 
 
     const onElementClick = (_: MouseEvent, element: FlowElement) => {
