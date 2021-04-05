@@ -1,15 +1,23 @@
 import {Requests} from "./Requests";
 import {ModelInfo} from "../model/ModelInfo";
+import {Model} from "../model/Model";
 
 export class RepoAPI {
     static host: string = "http://localhost:8000/api/repo"
+
+
+    // Models
 
     public static AllModels(): ModelInfo[] | undefined {
         return this.ParseJson(Requests.Request("GET", `${RepoAPI.host}/Model/all`));
     }
 
-    public static GetModel(modelName: string) {
-        return Requests.Request("GET", `${RepoAPI.host}/Model/${modelName}`)
+    public static GetModel(modelName: string): Model | undefined {
+        return this.ParseJson(Requests.Request("GET", `${RepoAPI.host}/Model/${modelName}`));
+    }
+
+    public static DeleteModel(modelName: string) {
+        Requests.Request("DETELE", "${RepoAPI.host}/Model/${modelName}")
     }
 
     public static CreateDeepMetamodel(modelName: string) {
