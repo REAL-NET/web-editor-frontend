@@ -1,4 +1,39 @@
+body {
+    margin: 0;
+}
+
 .diagram-container {
     width: 100%;
-    height: 750px;
+    height: 92vh;
 }
+
+.topnav ul {
+    background-color: #f3f3f3;
+    overflow: hidden;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 8vh;
+    display: flex;
+    flex-direction: row;
+  }
+  
+.topnav ul a {
+    float: left;
+    color: #666;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+  
+.topnav ul a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+  
+.topnav ul a.selected {
+    background-color: #008CBA;
+    color: white;
+  }

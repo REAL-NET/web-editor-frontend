@@ -1,42 +1,28 @@
 import React, {useState} from 'react';
-import ReactFlow, {addEdge, Background, Elements, removeElements, Edge, Connection} from 'react-flow-renderer';
-import {initialElements} from './initialElements';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import "./App.css"
+import Home from './editor/Home';
+import MirfEditor from './mirf-editor/components/MirfEditor';
+import Navbar from "./common/Navbar"
 
-const onLoad = (reactFlowInstance: { fitView: () => void; }) => {
-    console.log('flow loaded:', reactFlowInstance);
-    reactFlowInstance.fitView();
-};
+const App = () => {
+  return (
+    <Router>
+      <div className="app">
+        <Navbar />
+        <Switch>
+            <Route exact path="/">
+              <Home/>
+            </Route>
+            <Route exact path="/mirf-editor">
+              <div>
+                <MirfEditor/>
+              </div>
+            </Route>
+        </Switch>
+      </div>
+    </Router>
+  );
+}
 
-const OverviewFlow = () => {
-    const [elements, setElements] = useState(initialElements);
-    const onElementsRemove = (elementsToRemove: Elements) : void => {
-        setElements((elements: Elements) => removeElements(elementsToRemove, elements));
-        console.log('elements:', elements);
-    }
-    const onConnect = (edgeParas: Edge|Connection) : void => {
-        setElements((elements: Elements) => addEdge(edgeParas, elements));
-        console.log('elements:', elements);
-    }
-
-    return (
-        <div className="diagram-container">
-            <ReactFlow
-                elements={elements}
-                onElementsRemove={onElementsRemove}
-                onLoad={onLoad}
-                onConnect={onConnect}
-                deleteKeyCode={46}
-                snapToGrid={true}
-                snapGrid={[25, 25]}
-            >
-                <Background
-                    gap={25}
-                    size={1}
-                />
-            </ReactFlow>
-        </div>
-    );
-};
-
-export default OverviewFlow;
+export default App;
