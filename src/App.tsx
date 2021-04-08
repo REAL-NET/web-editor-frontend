@@ -1,42 +1,38 @@
-import React, {useState} from 'react';
-import ReactFlow, {addEdge, Background, Elements, removeElements, Edge, Connection} from 'react-flow-renderer';
-import {initialElements} from './initialElements';
-import "./App.css"
+import React, { useState } from 'react';
+import { OnLoadParams, ReactFlowProvider } from 'react-flow-renderer';
 
-const onLoad = (reactFlowInstance: { fitView: () => void; }) => {
-    console.log('flow loaded:', reactFlowInstance);
-    reactFlowInstance.fitView();
-};
+import PropertyBar from './PropertyBar'
+import Palette from './Palette';
+import Scene from './Scene';
+import { initialElements } from './initialElements';
+
+import './App.css'
+
+document.addEventListener('click', e => (e.target));
 
 const OverviewFlow = () => {
+    const [reactFlowInstance, setReactFlowInstance] = useState<OnLoadParams>();
     const [elements, setElements] = useState(initialElements);
-    const onElementsRemove = (elementsToRemove: Elements) : void => {
-        setElements((elements: Elements) => removeElements(elementsToRemove, elements));
-        console.log('elements:', elements);
-    }
-    const onConnect = (edgeParas: Edge|Connection) : void => {
-        setElements((elements: Elements) => addEdge(edgeParas, elements));
-        console.log('elements:', elements);
-    }
+    const [captureElementClick, setCaptureElementClick] = useState<boolean>(true);
+    const [currentElementId, setCurrentElementId] = useState<string>("");
 
     return (
-        <div className="diagram-container">
-            <ReactFlow
-                elements={elements}
-                onElementsRemove={onElementsRemove}
-                onLoad={onLoad}
-                onConnect={onConnect}
-                deleteKeyCode={46}
-                snapToGrid={true}
-                snapGrid={[25, 25]}
-            >
-                <Background
-                    gap={25}
-                    size={1}
+        <div className="OverviewFlow">
+            <ReactFlowProvider>
+                <PropertyBar id={currentElementId} setElements={setElements} elements={elements}></PropertyBar>
+                <Scene
+                    elements={elements}
+                    setElements={setElements}
+                    reactFlowInstance={reactFlowInstance}
+                    setReactFlowInstance={setReactFlowInstance}
+                    setCurrentElementId={setCurrentElementId}
+                    captureElementClick={captureElementClick}
                 />
-            </ReactFlow>
+                <Palette/>
+            </ReactFlowProvider>
         </div>
     );
 };
+
 
 export default OverviewFlow;
