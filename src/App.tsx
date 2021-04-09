@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { OnLoadParams, ReactFlowProvider } from 'react-flow-renderer';
@@ -7,15 +7,10 @@ import PropertyBar from './PropertyBar'
 import Palette from './Palette';
 import Scene from './Scene';
 import { initialElements } from './initialElements';
-import customNode from './customNodes';
 
 import './App.css'
 
-document.addEventListener('click', e => (e.target));\
-
-const nodeTypes = {
-    exampleNode: customNode,
-};
+document.addEventListener('click', e => (e.target));
 
 const OverviewFlow = () => {
     const [reactFlowInstance, setReactFlowInstance] = useState<OnLoadParams>();
@@ -37,7 +32,6 @@ const OverviewFlow = () => {
                 <PropertyBar id={currentElementId} setElements={setElements} elements={elements}></PropertyBar>
                 <Scene
                     elements={elements}
-					nodeTypes={nodeTypes}
                     setElements={setElements}
                     reactFlowInstance={reactFlowInstance}
                     setReactFlowInstance={setReactFlowInstance}

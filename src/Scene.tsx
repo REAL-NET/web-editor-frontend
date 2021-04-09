@@ -13,6 +13,8 @@ import ReactFlow, {
     FlowElement,
 } from 'react-flow-renderer';
 
+import customNode from './customNodes';
+
 import './Scene.css'
 
 let id = 0;
@@ -27,6 +29,9 @@ type SceneProps = {
     captureElementClick: boolean
 }
 
+const nodeTypes = {
+    exampleNode: customNode,
+};
 
 const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
                                          setReactFlowInstance, setCurrentElementId, captureElementClick }) => {
@@ -85,6 +90,7 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
                 onElementsRemove={onElementsRemove}
                 onLoad={onLoad}
                 onConnect={onConnect}
+                nodeTypes={nodeTypes}
                 deleteKeyCode={46}
                 snapToGrid={true}
                 snapGrid={[25, 25]}
