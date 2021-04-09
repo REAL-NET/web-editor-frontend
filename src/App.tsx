@@ -22,7 +22,7 @@ const OverviewFlow = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:8004/api/Model/all")
+            .get("http://localhost:9000/test")
             .then(response => console.log(response.data));
     }, []);
 
