@@ -14,6 +14,7 @@ import ReactFlow, {
 } from 'react-flow-renderer';
 
 import './Scene.css'
+import {RepoAPI} from "./repo/RepoAPI";
 
 let id = 0;
 const getId = (): ElementId => `dndnode_${id++}`;
@@ -50,9 +51,12 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
         console.log('elements:', elements);
     };
 
-
-    const onLoad = (_reactFlowInstance: OnLoadParams) => setReactFlowInstance(_reactFlowInstance);
-
+    const onLoad = (_reactFlowInstance: OnLoadParams) => {
+        console.log(RepoAPI.AllModels());
+        console.log(RepoAPI.GetModel("DeepMetamodel"))
+        console.log('flow loaded:', reactFlowInstance);
+        setReactFlowInstance(_reactFlowInstance)
+    };
 
     const onConnect = (edgeParas: Edge | Connection): void => {
         setElements((elements: Elements) => addEdge(edgeParas, elements));
