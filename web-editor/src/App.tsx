@@ -5,7 +5,9 @@ import "./App.css"
 import {RepoAPI} from "./repo/RepoAPI";
 
 const onLoad = (reactFlowInstance: { fitView: () => void; }) => {
+    RepoAPI.CreateModel("DeepMetamodel", "TestModel")
     console.log(RepoAPI.AllModels());
+    console.log(RepoAPI.GetModel("TestModel"))
     console.log('flow loaded:', reactFlowInstance);
     reactFlowInstance.fitView();
 };
