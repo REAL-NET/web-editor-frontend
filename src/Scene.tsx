@@ -42,12 +42,14 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
 
 
     const onDragOver = (event: DragEvent) => {
+        console.debug("On drag over")
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
     };
 
 
     const onElementsRemove = (elementsToRemove: Elements): void => {
+        console.debug("On elements remove")
         setElements((elements: Elements) => removeElements(elementsToRemove, elements));
         console.log('elements:', elements);
     };
@@ -73,13 +75,14 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
     };
 
     const onConnect = (edgeParas: Edge | Connection): void => {
+        console.debug("On elements connect")
         setElements((elements: Elements) => addEdge(edgeParas, elements));
         console.log('elements:', elements);
     };
 
 
     const onDrop = (event: DragEvent) => {
-
+        console.log("On elements drop")
         event.preventDefault();
         if (reactFlowInstance) {
             const type = event.dataTransfer.getData('application/reactflow');
