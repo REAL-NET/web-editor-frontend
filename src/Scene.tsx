@@ -49,6 +49,9 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
 
     const onElementsRemove = (elementsToRemove: Elements): void => {
         console.debug("On elements remove")
+        elementsToRemove.forEach(value => {
+           RepoAPI.DeleteElement("TestModel", value.id);
+        });
         setElements((elements: Elements) => removeElements(elementsToRemove, elements));
         console.log('elements:', elements);
     };
