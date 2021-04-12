@@ -1,15 +1,19 @@
 export class Requests
 {
     public static Request(type : any, url : any): string | undefined {
-        var postRequest = new XMLHttpRequest();
-        postRequest.open(type, url, false);
-        var result;
-        postRequest.onload = function () {
-            result = this.response;
-        };
-        
-        postRequest.send();
-        return result;
+        try {
+            var postRequest = new XMLHttpRequest();
+            postRequest.open(type, url, false);
+            var result;
+            postRequest.onload = function () {
+                result = this.response;
+            };
+
+            postRequest.send();
+            return result;
+        } catch (e) {
+            return undefined;
+        }
     };
 }
 

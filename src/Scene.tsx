@@ -85,7 +85,7 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
         event.preventDefault();
         if (reactFlowInstance) {
             const metaType = event.dataTransfer.getData('application/reactflow');
-            const id = getId();
+            const id = Math.round(Math.random() * 10000000).toString();
             const name = metaType + "_" + id
             let node = RepoAPI.InstantiateNode("TestModel", name, metaType, 0, 0);
             if (node !== undefined) {

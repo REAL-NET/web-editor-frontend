@@ -118,10 +118,14 @@ export class RepoAPI {
     }
 
     private static ParseJson<Type>(json: string | undefined): Type | undefined {
-        if (json === undefined) {
+        try {
+            if (json === undefined) {
+                return undefined;
+            }
+            return JSON.parse(json)
+        } catch (e) {
             return undefined;
         }
-        return JSON.parse(json)
     }
 
 }
