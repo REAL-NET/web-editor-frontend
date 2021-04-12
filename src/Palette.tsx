@@ -2,8 +2,8 @@ import React, { DragEvent } from 'react';
 import './PropertyBar.css'
 import './Nodes.css'
 import {RepoAPI} from "./repo/RepoAPI";
-const onDragStart = (event: DragEvent, nodeType: string) => {
-    event.dataTransfer.setData('application/reactflow', nodeType);
+const onDragStart = (event: DragEvent, metaType: string) => {
+    event.dataTransfer.setData('application/reactflow', metaType);
     event.dataTransfer.effectAllowed = 'move';
 };
 
@@ -16,7 +16,7 @@ const Palette = () => {
             <aside>
                 <div className="description">palette.</div>
                 {metaNodes.map(value => {
-                    return <div className="dndnode" onDragStart={(event: DragEvent) => onDragStart(event, 'default')} draggable>
+                    return <div className="dndnode" onDragStart={(event: DragEvent) => onDragStart(event, value.name)} draggable>
                         {value.name}
                     </div>
                 })}

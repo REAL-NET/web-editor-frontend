@@ -15,7 +15,6 @@ import ReactFlow, {
 
 import './Scene.css'
 import {RepoAPI} from "./repo/RepoAPI";
-import {ModelInfo} from "./model/ModelInfo";
 
 let id = 0;
 const getId = (): ElementId => `dndnode_${id++}`;
@@ -85,16 +84,22 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
         console.log("On elements drop")
         event.preventDefault();
         if (reactFlowInstance) {
-            const type = event.dataTransfer.getData('application/reactflow');
-            const position = reactFlowInstance.project({ x: event.clientX, y: event.clientY - 40 });
-            const newNode: Node = {
-                id: getId(),
-                type,
-                position,
-                data: { label: `${ type } node` },
-            };
-
-            setElements((es: Elements) => es.concat(newNode));
+            const metaType = event.dataTransfer.getData('application/reactflow');
+            const id = getId();
+            const name = metaType + "_" + id
+            let node = RepoAPI.InstantiateNode("TestModel", name, metaType, 0, 0);
+            if (node !== undefined) {
+                const position = reactFlowInstance.project({ x: event.clientX, y: event.clientY - 40 });
+                const newNode: Node = {
+                    id,
+                    type: 'default',
+                    position,
+                    data: { label: node.name },
+                };
+                setElements((es: Elements) => es.concat(newNode));
+            } else {
+                console.error("Some error on adding element");
+            }
         }
 
     };
