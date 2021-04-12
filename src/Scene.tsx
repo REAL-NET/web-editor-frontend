@@ -15,6 +15,7 @@ import ReactFlow, {
 
 import './Scene.css'
 import {RepoAPI} from "./repo/RepoAPI";
+import {ModelInfo} from "./model/ModelInfo";
 
 let id = 0;
 const getId = (): ElementId => `dndnode_${id++}`;
@@ -52,10 +53,23 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
     };
 
     const onLoad = (_reactFlowInstance: OnLoadParams) => {
-        console.log(RepoAPI.AllModels());
-        console.log(RepoAPI.GetModel("DeepMetamodel"))
+        let models = RepoAPI.AllModels();
+        if (models !== undefined) {
+            let elem = models.find(x => x.name === "TestMetamodel");
+            if (elem === undefined) {
+                RepoAPI.CreateDeepMetamodel("TestMetamodel");
+                RepoAPI.CreateNode("TestMetamodel", "MetaNode1", 0, 0);
+                RepoAPI.CreateNode("TestMetamodel", "MetaNode2", 0, 0);
+                RepoAPI.CreateModel("TestMetamodel", "TestModel");
+                RepoAPI.InstantiateNode("TestModel", "Node1", "MetaNode1", 0, 0);
+            }
+            console.log(RepoAPI.GetModel("TestMetamodel"));
+            console.log(RepoAPI.GetModel("TestModel"));
+            console.log(RepoAPI.GetNode("TestModel", "Node1"));
+        }
+        console.log(models);
         console.log('flow loaded:', reactFlowInstance);
-        setReactFlowInstance(_reactFlowInstance)
+        setReactFlowInstance(_reactFlowInstance);
     };
 
     const onConnect = (edgeParas: Edge | Connection): void => {

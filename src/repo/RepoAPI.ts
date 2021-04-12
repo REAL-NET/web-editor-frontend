@@ -23,7 +23,7 @@ export class RepoAPI {
     }
 
     public static DeleteModel(modelName: string) {
-        Requests.Request("DETELE", `${RepoAPI.host}/Model/${modelName}`)
+        Requests.Request("DELETE", `${RepoAPI.host}/Model/${modelName}`)
     }
 
     public static CreateDeepMetamodel(modelName: string) {
