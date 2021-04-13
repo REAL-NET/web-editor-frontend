@@ -1,6 +1,8 @@
 import React, { DragEvent } from 'react';
 import './PropertyBar.css'
 import './Nodes.css'
+import { Elements } from "react-flow-renderer";
+
 const onDragStart = (event: DragEvent, nodeType: string) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';

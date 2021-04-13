@@ -7,8 +7,9 @@ import PropertyBar from './PropertyBar'
 import Palette from './Palette';
 import Scene from './Scene';
 import { initialElements } from './initialElements';
+import api from './api';
 
-import './App.css'
+import './App.css';
 
 document.addEventListener('click', e => (e.target));
 
@@ -17,19 +18,26 @@ const OverviewFlow = () => {
     const [elements, setElements] = useState(initialElements);
     const [captureElementClick, setCaptureElementClick] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
-	
+
     useHotkeys('delete', () => console.log("Delete pressed"));
 
-    useEffect(() => {
-        axios
-            .get("http://localhost:9000/test")
-            .then(response => console.log(response.data));
-    }, []);
+    let getPaletteElements = async () => {
+        try {
+            const response = await api.get('model/metamodelElements');
+            return response.data.name;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    console.log(getPaletteElements().then(data => {
+        console.log(data)
+    }));
 
     return (
         <div className="OverviewFlow">
             <ReactFlowProvider>
-                <PropertyBar id={currentElementId} setElements={setElements} elements={elements}></PropertyBar>
+                <PropertyBar id={currentElementId} setElements={setElements} elements={elements}/>
                 <Scene
                     elements={elements}
                     setElements={setElements}
