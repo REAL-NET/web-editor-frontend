@@ -1,22 +1,22 @@
 import { Router } from 'express';
-import axios from "axios";
+import axios from 'axios';
 
-const modelRouter =  Router();
-const model = "RobotsTestModel";
-let metamodel;
+const modelRouter = Router();
+const model = 'RobotsTestModel';
+const metamodel = 'RobotsMetamodel';
 
-modelRouter.get("/model", function(req, res, next) {
+modelRouter.get('/model', function (req, res, next) {
     axios
-        .get("http://localhost:8000/api/Repo/Model/" + model)
+        .get('http://localhost:8000/api/Repo/Model/' + model)
         .then(response => {
-            metamodel = response.data.metamodelName;
+            // metamodel = response.data.metamodelName;
             res.send(response.data);
         });
 });
 
-modelRouter.get("/metamodel", function(req, res, next) {
+modelRouter.get('/metamodel', function (req, res, next) {
     axios
-        .get("http://localhost:8000/api/Repo/Model/" + metamodel)
+        .get('http://localhost:8000/api/Repo/Model/' + metamodel)
         .then(response => {
             res.send(response.data)
         });

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import api from './api'
 
-let getModel = async () => {
+export const getModel = async () => {
     try {
         const response = await api.get('model/model');
         return response.data.elements;
@@ -10,7 +10,7 @@ let getModel = async () => {
     }
 };
 
-let getMetamodel = async () => {
+export const getMetamodel = async () => {
     try {
         const response = await api.get('model/metamodel');
         return response.data.elements;

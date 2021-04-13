@@ -8,6 +8,7 @@ import Palette from './Palette';
 import Scene from './Scene';
 import { initialElements } from './initialElements';
 import api from './api';
+import { getModel, getMetamodel } from "./modelRequests";
 
 import './App.css';
 
@@ -18,21 +19,26 @@ const OverviewFlow = () => {
     const [elements, setElements] = useState(initialElements);
     const [captureElementClick, setCaptureElementClick] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
+    const [metamodel, setMetamodel] = useState<Array<{ id: number, name: string }>>([]);
+    const [model, setModel] = useState<Array<{ id: number, name: string }>>([]);
 
     useHotkeys('delete', () => console.log("Delete pressed"));
 
-    let getPaletteElements = async () => {
-        try {
-            const response = await api.get('model/metamodelElements');
-            return response.data.name;
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    useEffect(() => {
+        getMetamodel().then(data => {
+            let newMetamodel: Array<{ id: number, name: string }> = [];
+            data.map((element: { id: number, name: string }) => {
+                newMetamodel.push(element);
+            })
+            setMetamodel(newMetamodel);
+        });
+    }, []);
 
-    console.log(getPaletteElements().then(data => {
-        console.log(data)
-    }));
+    getModel().then(data => {
+        data.map((element: { id: number, name: string }) => {
+            model.push(element);
+        })
+    });
 
     return (
         <div className="OverviewFlow">
@@ -46,11 +52,10 @@ const OverviewFlow = () => {
                     setCurrentElementId={setCurrentElementId}
                     captureElementClick={captureElementClick}
                 />
-                <Palette/>
+                <Palette metamodel={metamodel}/>
             </ReactFlowProvider>
         </div>
     );
 };
-
 
 export default OverviewFlow;

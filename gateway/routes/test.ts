@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import axios from "axios";
+import axios from 'axios';
 
 const testRouter =  Router();
 
-testRouter.get("/", function(req, res, next) {
+testRouter.get('/', function(req, res, next) {
     axios
-        .get("http://localhost:8000/api/Repo/Model/all")
+        .get('http://localhost:8000/api/Repo/Model/all')
         .then(response => res.send(response.data));
 });
 
