@@ -77,7 +77,12 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
     };
 
     const onConnect = (edgeParas: Edge | Connection): void => {
-        console.debug("On elements connect")
+        console.debug("On elements connect");
+        const name = "Association_" + Math.round(Math.random() * 10000000).toString();
+        if (edgeParas.source != null && edgeParas.target != null) {
+            console.debug(edgeParas);
+            RepoAPI.CreateAssociations("TestModel", name, edgeParas.source, edgeParas.target, 0, 0, 0, 0, 0, 0);
+        }
         setElements((elements: Elements) => addEdge(edgeParas, elements));
         console.log('elements:', elements);
     };
@@ -94,7 +99,7 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
             if (node !== undefined) {
                 const position = reactFlowInstance.project({ x: event.clientX, y: event.clientY - 40 });
                 const newNode: Node = {
-                    id,
+                    id: name,
                     type: 'default',
                     position,
                     data: { label: node.name },
