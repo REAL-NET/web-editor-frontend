@@ -65,11 +65,9 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
                 RepoAPI.CreateNode("TestMetamodel", "MetaNode1", 0, 0);
                 RepoAPI.CreateNode("TestMetamodel", "MetaNode2", 0, 0);
                 RepoAPI.CreateModel("TestMetamodel", "TestModel");
-                RepoAPI.InstantiateNode("TestModel", "Node1", "MetaNode1", 0, 0);
             }
             console.log(RepoAPI.GetModel("TestMetamodel"));
             console.log(RepoAPI.GetModel("TestModel"));
-            console.log(RepoAPI.GetNode("TestModel", "Node1"));
         }
         console.log(models);
         console.log('flow loaded:', reactFlowInstance);
@@ -83,6 +81,9 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
             console.debug(edgeParas);
             RepoAPI.CreateAssociations("TestModel", name, edgeParas.source, edgeParas.target, 0, 0, 0, 0, 0, 0);
         }
+        const edge = edgeParas as Edge;
+        edge.id = name;
+        edge.label = name;
         setElements((elements: Elements) => addEdge(edgeParas, elements));
         console.log('elements:', elements);
     };
