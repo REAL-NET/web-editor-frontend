@@ -1,40 +1,69 @@
-import React, { DragEvent } from 'react';
+import React, {DragEvent, useEffect} from 'react';
 import './PropertyBar.css'
 import './Nodes.css'
 import {RepoAPI} from "./repo/RepoAPI";
+import {ElementInfo} from "./model/ElementInfo";
+import {InputLabel, MenuItem, Select} from "@material-ui/core";
+import {getElements} from "./initialElements";
 const onDragStart = (event: DragEvent, metaType: string) => {
     event.dataTransfer.setData('application/reactflow', metaType);
     event.dataTransfer.effectAllowed = 'move';
 };
 
-
-const Palette = () => {
-    let metamodel = RepoAPI.GetModel("TestMetamodel");
-    if (metamodel !== undefined) {
-        let metaNodes = metamodel.nodes;
-        return (
-            <aside>
-                <div className="description">palette.</div>
-                {metaNodes.map(value => {
-                    return <div className="dndnode" onDragStart={(event: DragEvent) => onDragStart(event, value.name)} draggable>
-                        {value.name}
-                    </div>
-                })}
-            </aside>
-        );
+const getMetamodelElements = (modelName: string): ElementInfo[] => {
+    const model = RepoAPI.GetModel(modelName);
+    if (model === undefined) {
+        console.error("Model is not retrieved from repo");
+        return [];
     }
+    let metamodel = RepoAPI.GetModel(model.metamodel.name);
+    if (metamodel === undefined) {
+        console.error("Metamodel is not retrieved from repo");
+        return [];
+    }
+    return metamodel.nodes
+}
+
+const getModelsMenuItems = () => {
+    const models = RepoAPI.AllModels();
+    if (models === undefined) {
+        console.error("Models is not retrieved from repo");
+        return [];
+    }
+    return models.map(value => value.name);
+}
+
+type PaletteBarProps = {
+    setElements: Function,
+    modelName: string,
+    setModelName: Function
+}
+
+const Palette: React.FC<PaletteBarProps>  = ({ setElements, modelName, setModelName }) => {
+
+    useEffect(() => {
+        setElements(() => getElements(modelName));
+    }, [modelName, setElements])
+
     return (
         <aside>
-            <div className="description">palette.</div>
-            <div className="dndnode input" onDragStart={(event: DragEvent) => onDragStart(event, 'input')} draggable>
-                Input Node
+            <div>
+                <InputLabel>Model:</InputLabel>
+                <Select
+                    id="modelName"
+                    value={modelName}
+                    onChange={(evt) => {
+                        setModelName(evt.target.value as string);
+                    }}>
+                    {getModelsMenuItems().map(value => <MenuItem value={value}>{value}</MenuItem>)}
+                </Select>
             </div>
-            <div className="dndnode" onDragStart={(event: DragEvent) => onDragStart(event, 'default')} draggable>
-                Default Node
-            </div>
-            <div className="dndnode output" onDragStart={(event: DragEvent) => onDragStart(event, 'output')} draggable>
-                Output Node
-            </div>
+            <div className="description"><br/>Elements:</div>
+            {getMetamodelElements(modelName).map(value => {
+                return <div className="dndnode" onDragStart={(event: DragEvent) => onDragStart(event, value.name)} draggable>
+                    {value.name}
+                </div>
+            })}
         </aside>
     );
 };

@@ -8,16 +8,12 @@ import ReactFlow, {
     Connection,
     Controls,
     OnLoadParams,
-    ElementId,
     Node,
     FlowElement,
 } from 'react-flow-renderer';
 
 import './Scene.css'
 import {RepoAPI} from "./repo/RepoAPI";
-
-let id = 0;
-const getId = (): ElementId => `dndnode_${id++}`;
 
 type SceneProps = {
     elements: Elements
@@ -26,11 +22,12 @@ type SceneProps = {
     setReactFlowInstance: Function
     setCurrentElementId: Function
     captureElementClick: boolean
+    modelName: string
 }
 
 
 const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
-                                         setReactFlowInstance, setCurrentElementId, captureElementClick }) => {
+                                         setReactFlowInstance, setCurrentElementId, captureElementClick, modelName }) => {
 
 
     const onElementClick = (_: MouseEvent, element: FlowElement) => {
@@ -50,7 +47,7 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
     const onElementsRemove = (elementsToRemove: Elements): void => {
         console.debug("On elements remove")
         elementsToRemove.forEach(value => {
-           RepoAPI.DeleteElement("TestModel", value.id);
+           RepoAPI.DeleteElement(modelName, value.id);
         });
         setElements((elements: Elements) => removeElements(elementsToRemove, elements));
         console.log('elements:', elements);
@@ -68,6 +65,7 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
             }
             console.log(RepoAPI.GetModel("TestMetamodel"));
             console.log(RepoAPI.GetModel("TestModel"));
+            console.log(RepoAPI.GetModel(modelName));
         }
         console.log(models);
         console.log('flow loaded:', reactFlowInstance);
@@ -79,7 +77,7 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
         const name = "Association_" + Math.round(Math.random() * 10000000).toString();
         if (edgeParas.source != null && edgeParas.target != null) {
             console.debug(edgeParas);
-            RepoAPI.CreateAssociations("TestModel", name, edgeParas.source, edgeParas.target, 0, 0, 0, 0, 0, 0);
+            RepoAPI.CreateAssociations(modelName, name, edgeParas.source, edgeParas.target, 0, 0, 0, 0, 0, 0);
         }
         const edge = edgeParas as Edge;
         edge.id = name;
@@ -96,7 +94,7 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
             const metaType = event.dataTransfer.getData('application/reactflow');
             const id = Math.round(Math.random() * 10000000).toString();
             const name = metaType + "_" + id
-            let node = RepoAPI.InstantiateNode("TestModel", name, metaType, 0, 0);
+            let node = RepoAPI.InstantiateNode(modelName, name, metaType, 0, 0);
             if (node !== undefined) {
                 const position = reactFlowInstance.project({ x: event.clientX, y: event.clientY - 40 });
                 const newNode: Node = {

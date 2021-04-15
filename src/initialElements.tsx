@@ -1,9 +1,8 @@
-import React from 'react';
 import {Elements, FlowElement} from 'react-flow-renderer';
 import {RepoAPI} from "./repo/RepoAPI";
 
-function getElements() : Elements {
-    const model = RepoAPI.GetModel("TestModel");
+const getElements = (modelName: string) : Elements => {
+    const model = RepoAPI.GetModel(modelName);
     if (model !== undefined) {
         const nodes = model.nodes.map((value, index) => {
             return {
@@ -12,7 +11,7 @@ function getElements() : Elements {
                 data: {
                     label: value.name
                 },
-                position: { x: 100, y: 60 * index}
+                position: { x: 100, y: 60 * index }
             }
         }) as Array<FlowElement>;
         const edges = model.relationships.map(value => {
@@ -32,6 +31,6 @@ function getElements() : Elements {
     return [];
 }
 
-let initialElements : Elements = getElements();
+let initialElements : Elements = getElements("TestModel");
 
-export {initialElements};
+export {initialElements, getElements};

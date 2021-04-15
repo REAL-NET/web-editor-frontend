@@ -15,11 +15,12 @@ const OverviewFlow = () => {
     const [elements, setElements] = useState(initialElements);
     const [captureElementClick, setCaptureElementClick] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
+    const [modelName, setModelName] = useState("TestModel");
 
     return (
         <div className="OverviewFlow">
             <ReactFlowProvider>
-                <PropertyBar id={currentElementId} setElements={setElements} elements={elements}></PropertyBar>
+                <PropertyBar id={currentElementId} setElements={setElements} elements={elements} />
                 <Scene
                     elements={elements}
                     setElements={setElements}
@@ -27,8 +28,9 @@ const OverviewFlow = () => {
                     setReactFlowInstance={setReactFlowInstance}
                     setCurrentElementId={setCurrentElementId}
                     captureElementClick={captureElementClick}
+                    modelName={modelName}
                 />
-                <Palette/>
+                <Palette setElements={setElements} modelName={modelName} setModelName={setModelName} />
             </ReactFlowProvider>
         </div>
     );
