@@ -15,7 +15,7 @@ const getElements = (modelName: string) : Elements => {
             }
         }) as Array<FlowElement>;
         const edges = model.relationships.map(value => {
-            const currentRelationship = RepoAPI.GetRelationship("TestModel", value.name);
+            const currentRelationship = RepoAPI.GetRelationship(modelName, value.name);
             if (currentRelationship !== undefined) {
                 return {
                     id: currentRelationship.name,
