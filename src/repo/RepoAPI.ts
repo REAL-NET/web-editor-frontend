@@ -79,10 +79,10 @@ export class RepoAPI {
         return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/node/${modelName}/${parentName}/${name}/${level}/${potency}`))
     }
     
-    public static InstantiateAssociation(modelName: string, parentName: string, sourceName: string, targetName: string,
+    public static InstantiateAssociation(modelName: string, name: string, parentName: string, sourceName: string, targetName: string,
                                          level: number, potency: number,
                                          minSource: number, maxSource: number, minTarget: number, maxTarget: number): Association | undefined {
-        return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/association/${modelName}/${parentName}/${sourceName}/${targetName}/${level}/${potency}/${minSource}/${maxSource}/${minTarget}/${maxTarget}`))
+        return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/association/${modelName}/${name}/${parentName}/${sourceName}/${targetName}/${level}/${potency}/${minSource}/${maxSource}/${minTarget}/${maxTarget}`))
     }
 
     public static GetAttributes(modelName: string, name: string): Attribute[] | undefined {
