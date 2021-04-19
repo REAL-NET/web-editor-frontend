@@ -15,7 +15,7 @@ const OverviewFlow = () => {
     const [elements, setElements] = useState(initialElements);
     const [captureElementClick, setCaptureElementClick] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
-    const [modelName, setModelName] = useState("TestModel");
+    const [modelName, setModelName] = useState("TestModel2");
 
     return (
         <div className="OverviewFlow">

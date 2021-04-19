@@ -5,23 +5,28 @@ import {RepoAPI} from "./repo/RepoAPI";
 import {ElementInfo} from "./model/ElementInfo";
 import {InputLabel, MenuItem, Select} from "@material-ui/core";
 import {getElements} from "./initialElements";
-const onDragStart = (event: DragEvent, metaType: string) => {
-    event.dataTransfer.setData('application/reactflow', metaType);
+const onDragStart = (event: DragEvent, metaInfo: string) => {
+    event.dataTransfer.setData('application/reactflow', metaInfo);
     event.dataTransfer.effectAllowed = 'move';
 };
 
 const getMetamodelElements = (modelName: string): ElementInfo[] => {
-    const model = RepoAPI.GetModel(modelName);
-    if (model === undefined) {
-        console.error("Model is not retrieved from repo");
-        return [];
+    const nodes = RepoAPI.GetModelMetaNodes(modelName);
+    if (nodes === undefined || nodes.length === 0) {
+        console.error("No meta nodes retrieved");
+        const model = RepoAPI.GetModel(modelName);
+        if (model === undefined) {
+            console.error("Model is not retrieved from repo");
+            return [];
+        }
+        let metamodel = RepoAPI.GetModel(model.metamodel.name);
+        if (metamodel === undefined) {
+            console.error("Metamodel is not retrieved from repo");
+            return [];
+        }
+        return metamodel.nodes;
     }
-    let metamodel = RepoAPI.GetModel(model.metamodel.name);
-    if (metamodel === undefined) {
-        console.error("Metamodel is not retrieved from repo");
-        return [];
-    }
-    return metamodel.nodes
+    return nodes;
 }
 
 const getModelsMenuItems = () => {
@@ -60,8 +65,9 @@ const Palette: React.FC<PaletteBarProps>  = ({ setElements, modelName, setModelN
             </div>
             <div className="description"><br/>Elements:</div>
             {getMetamodelElements(modelName).map(value => {
-                return <div className="dndnode" onDragStart={(event: DragEvent) => onDragStart(event, value.name)} draggable>
-                    {value.name}
+                return <div className="dndnode" onDragStart={(event: DragEvent) =>
+                    onDragStart(event, value.model.name + "$$" +value.name)} draggable>
+                    {value.model.name + "::" + value.name}
                 </div>
             })}
         </aside>

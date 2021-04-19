@@ -55,18 +55,6 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
 
     const onLoad = (_reactFlowInstance: OnLoadParams) => {
         let models = RepoAPI.AllModels();
-        if (models !== undefined) {
-            let elem = models.find(x => x.name === "TestMetamodel");
-            if (elem === undefined) {
-                RepoAPI.CreateDeepMetamodel("TestMetamodel");
-                RepoAPI.CreateNode("TestMetamodel", "MetaNode1", 0, 0);
-                RepoAPI.CreateNode("TestMetamodel", "MetaNode2", 0, 0);
-                RepoAPI.CreateModel("TestMetamodel", "TestModel");
-            }
-            console.log(RepoAPI.GetModel("TestMetamodel"));
-            console.log(RepoAPI.GetModel("TestModel"));
-            console.log(RepoAPI.GetModel(modelName));
-        }
         console.log(models);
         console.log('flow loaded:', reactFlowInstance);
         setReactFlowInstance(_reactFlowInstance);
@@ -91,10 +79,13 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
         console.log("On elements drop")
         event.preventDefault();
         if (reactFlowInstance) {
-            const metaType = event.dataTransfer.getData('application/reactflow');
+            const metaInfo = event.dataTransfer.getData('application/reactflow');
+            const sepIndex = metaInfo.indexOf("$$");
+            const metaType = metaInfo.substr(sepIndex + 2);
+            const metaModel = metaInfo.substr(0, sepIndex);
             const id = Math.round(Math.random() * 10000000).toString();
             const name = metaType + "_" + id
-            let node = RepoAPI.InstantiateNode(modelName, name, metaType, 0, 0);
+            let node = RepoAPI.InstantiateNode(modelName, name, metaModel, metaType, 0, 0);
             if (node !== undefined) {
                 const position = reactFlowInstance.project({ x: event.clientX, y: event.clientY - 40 });
                 const newNode: Node = {

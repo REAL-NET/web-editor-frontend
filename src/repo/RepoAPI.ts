@@ -7,6 +7,7 @@ import {Node} from "../model/Node"
 import {Generalization} from "../model/Generalization";
 import {Attribute} from "../model/Attribute";
 import {Slot} from "../model/Slot";
+import {ElementInfo} from "../model/ElementInfo";
 
 export class RepoAPI {
     static host: string = "http://localhost:8000/api/repo"
@@ -20,6 +21,10 @@ export class RepoAPI {
 
     public static GetModel(modelName: string): Model | undefined {
         return this.ParseJson(Requests.Request("GET", `${RepoAPI.host}/Model/${modelName}`));
+    }
+
+    public static GetModelMetaNodes(modelName: string): ElementInfo[] | undefined {
+        return this.ParseJson(Requests.Request("GET", `${RepoAPI.host}/Model/${modelName}/metanodes`));
     }
 
     public static DeleteModel(modelName: string) {
@@ -75,14 +80,14 @@ export class RepoAPI {
         return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/association/${modelName}/${name}/${sourceName}/${targetName}/${level}/${potency}/${minSource}/${maxSource}/${minTarget}/${maxTarget}`))
     }
 
-    public static InstantiateNode(modelName: string, name: string, parentName: string, level: number, potency: number): Node | undefined {
-        return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/node/${modelName}/${parentName}/${name}/${level}/${potency}`))
+    public static InstantiateNode(modelName: string, name: string, parentModel: string, parentName: string, level: number, potency: number): Node | undefined {
+        return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/node/${modelName}/${parentModel}/${parentName}/${name}/${level}/${potency}`))
     }
     
-    public static InstantiateAssociation(modelName: string, name: string, parentName: string, sourceName: string, targetName: string,
-                                         level: number, potency: number,
+    public static InstantiateAssociation(modelName: string, name: string, parentModel: string, parentName: string,
+                                         sourceName: string, targetName: string,level: number, potency: number,
                                          minSource: number, maxSource: number, minTarget: number, maxTarget: number): Association | undefined {
-        return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/association/${modelName}/${name}/${parentName}/${sourceName}/${targetName}/${level}/${potency}/${minSource}/${maxSource}/${minTarget}/${maxTarget}`))
+        return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/association/${modelName}/${name}/${parentModel}/${parentName}/${sourceName}/${targetName}/${level}/${potency}/${minSource}/${maxSource}/${minTarget}/${maxTarget}`))
     }
 
     public static GetAttributes(modelName: string, name: string): Attribute[] | undefined {
