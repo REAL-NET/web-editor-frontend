@@ -20,7 +20,8 @@ const OverviewFlow = () => {
     return (
         <div className="OverviewFlow">
             <ReactFlowProvider>
-                <PropertyBar id={currentElementId} setElements={setElements} elements={elements} />
+                <PropertyBar id={currentElementId} setElements={setElements} elements={elements}
+                             modelName={modelName} setCurrentElementId={setCurrentElementId} />
                 <Scene
                     elements={elements}
                     setElements={setElements}

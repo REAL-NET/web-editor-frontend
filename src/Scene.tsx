@@ -14,6 +14,7 @@ import ReactFlow, {
 
 import './Scene.css'
 import {RepoAPI} from "./repo/RepoAPI";
+import {FlowTransform} from "react-flow-renderer/dist/types";
 
 type SceneProps = {
     elements: Elements
@@ -47,7 +48,7 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
     const onElementsRemove = (elementsToRemove: Elements): void => {
         console.debug("On elements remove")
         elementsToRemove.forEach(value => {
-           RepoAPI.DeleteElement(modelName, value.id);
+            RepoAPI.DeleteElement(modelName, value.id);
         });
         setElements((elements: Elements) => removeElements(elementsToRemove, elements));
         console.log('elements:', elements);
@@ -102,6 +103,12 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
 
     };
 
+    const onNodeDragStop = (event: MouseEvent, node: Node) => {
+        elements
+            .filter(e => e.id === node.id)
+            .forEach(e => (e as Node).position = node.position);
+    }
+
     return (
         <div className="Scene">
             <ReactFlow
@@ -115,6 +122,7 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onElementClick={captureElementClick ? onElementClick : undefined}
+                onNodeDragStop={onNodeDragStop}
             >
                 <Controls/>
                 <Background>

@@ -50,6 +50,10 @@ export class RepoAPI {
         return this.ParseJson(Requests.Request("GET", `${RepoAPI.host}/Element/${modelName}/${elementName}`))
     }
 
+    public static SetElementName(modelName: string, oldName: string, newName: string): ElementInfo | undefined {
+        return this.ParseJson(Requests.Request("PUT", `${RepoAPI.host}/Element/${modelName}/${oldName}/name/${newName}`));
+    }
+
     public static DeleteElement(modelName: string, elementName: string) {
         Requests.Request("DELETE", `${RepoAPI.host}/Element/${modelName}/${elementName}`)
     }

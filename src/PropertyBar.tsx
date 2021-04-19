@@ -1,18 +1,21 @@
-import React, { useEffect, useState, DragEvent } from "react";
-import { Elements, isNode, isEdge } from "react-flow-renderer";
+import React, {useEffect, useState, DragEvent, useRef} from "react";
+import {Elements, isNode, isEdge, Edge, Node} from "react-flow-renderer";
 import { MenuItem, Select, Checkbox, TextField, InputLabel } from "@material-ui/core";
 
 import './Palette.css'
 import './Nodes.css'
+import {RepoAPI} from "./repo/RepoAPI";
 
 
 type PropertyBarProps = {
     elements: Elements
     setElements: Function
-    id: string
+    id: string,
+    modelName: string,
+    setCurrentElementId: Function
 }
 
-const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) => {
+const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, modelName, setCurrentElementId }) => {
 
     const element = elements.find(item => item.id === id)
 
@@ -60,34 +63,40 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
         );
     }, [isHidden, setElements]);
 
-
     useEffect(() => {
         setElements((els: Elements) =>
             els.map((el) => {
                 if (el.id === id) {
+                    if (els.filter(e => e.id === Name).length > 0) {
+                        console.warn("Duplicated name");
+                        return el;
+                    }
                     // it's important that you create a new object here
                     // in order to notify react flow about the change
-                    el.data = {
-                        ...el.data,
-                        label: Name,
-                    };
-                }
-                return el;
-            })
-        );
-    }, [Name, setElements]);
-
-
-    useEffect(() => {
-        setElements((els: Elements) =>
-            els.map((el) => {
-                if (el.id === id) {
-                    // it's important that you create a new object here
-                    // in order to notify react flow about the change
+                    const newElem = RepoAPI.SetElementName(modelName, el.id, Name);
+                    if (newElem === undefined) {
+                        console.error("Error while applying new name");
+                        return el;
+                    }
                     el = {
                         ...el,
-                        label: Name,
+                        id: Name
                     };
+                    if (isEdge(el)) {
+                        (el as Edge).label = Name;
+                    }
+                    if (((el as Node).data !== undefined) && ((el as Node).data.label !== undefined)) {
+                        el.data.label = Name;
+                    }
+                    els.filter(e => isEdge(e)).forEach(edge => {
+                        if ((edge as Edge).source === id) {
+                            (edge as Edge).source = Name
+                        }
+                        if ((edge as Edge).target === id) {
+                            (edge as Edge).target = Name
+                        }
+                    })
+                    setCurrentElementId(Name);
                 }
                 return el;
             })
@@ -168,7 +177,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
     if (element !== undefined && isNode(element)) {
         return (
             <aside>
-
                 <div>
                     <TextField label="Label: " value={element.data.label}
                                onChange={(evt) => setName(evt.target.value)}/>
