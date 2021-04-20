@@ -8,21 +8,20 @@ const onDragStart = (event: DragEvent, nodeType: string, elementName: string) =>
 };
 
 const Palette = (props: {metamodel: Array<{ id: number, name: string }>}) => {
-
     let metamodelElements = () => {
         let metamodel = props.metamodel.filter((element) => element.name !== '')
 
         return metamodel.map((element) => (
-            <div className='dndnode' onDragStart={(event: DragEvent) => onDragStart(event, 'default', element.name)} draggable>
-                { element.name }
+            <div className="dndnode" key={ element.id } onDragStart={(event: DragEvent) => onDragStart(event, 'default', element.name)} draggable>
+                {element.name}
             </div>
         ));
     }
 
     return (
         <aside>
-            <div className='description'>palette.</div>
-            { metamodelElements() }
+            <div className="description">palette.</div>
+            {metamodelElements()}
         </aside>
     );
 };

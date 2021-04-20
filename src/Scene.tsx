@@ -35,38 +35,29 @@ const nodeTypes = {
 
 const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
                                          setReactFlowInstance, setCurrentElementId, captureElementClick }) => {
-
-
     const onElementClick = (_: MouseEvent, element: FlowElement) => {
         console.log('click', element);
         setCurrentElementId(element.id);
-
     }
-
 
     const onDragOver = (event: DragEvent) => {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
     };
 
-
     const onElementsRemove = (elementsToRemove: Elements): void => {
         setElements((elements: Elements) => removeElements(elementsToRemove, elements));
         console.log('elements:', elements);
     };
 
-
     const onLoad = (_reactFlowInstance: OnLoadParams) => setReactFlowInstance(_reactFlowInstance);
-
 
     const onConnect = (edgeParas: Edge | Connection): void => {
         setElements((elements: Elements) => addEdge(edgeParas, elements));
         console.log('elements:', elements);
     };
 
-
     const onDrop = (event: DragEvent) => {
-
         event.preventDefault();
         if (reactFlowInstance) {
             const type = event.dataTransfer.getData('text').split(' ')[0];
@@ -81,7 +72,6 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
 
             setElements((es: Elements) => es.concat(newNode));
         }
-
     };
 
     return (
@@ -93,7 +83,7 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
                 onConnect={onConnect}
                 nodeTypes={nodeTypes}
                 deleteKeyCode={46}
-                snapToGrid={true}
+                snapToGrid
                 snapGrid={[25, 25]}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
@@ -108,4 +98,5 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
         </div>
     );
 };
+
 export default Scene;

@@ -13,7 +13,6 @@ type PropertyBarProps = {
 }
 
 const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) => {
-
     const element = elements.find(item => item.id === id)
 
     //common states
@@ -30,7 +29,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
     const [edgeType, setEdgeType] = useState('');
 
     //common effects
-
     useEffect(() => { // sets states for chosen element
         if ((element !== undefined) && isNode(element)) {
 
@@ -47,7 +45,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
         }
     }, [element])
 
-
     useEffect(() => {
         setElements((els: Elements) =>
             els.map((el) => {
@@ -59,7 +56,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
             })
         );
     }, [isHidden, setElements]);
-
 
     useEffect(() => {
         setElements((els: Elements) =>
@@ -77,7 +73,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
         );
     }, [Name, setElements]);
 
-
     useEffect(() => {
         setElements((els: Elements) =>
             els.map((el) => {
@@ -94,8 +89,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
         );
     }, [Name, setElements]);
 
-
-
     useEffect(() => {
         setElements((els: Elements) =>
             els.map((el) => {
@@ -108,9 +101,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
         );
     }, [nodeIsConnectable, setElements]);
 
-
     //node effects
-
     useEffect(() => {
         setElements((els: Elements) =>
             els.map((el) => {
@@ -122,7 +113,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
             })
         );
     }, [nodeIsDraggable, setElements]);
-
 
     useEffect(() => {
         setElements((els: Elements) =>
@@ -137,7 +127,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
         );
     }, [nodeBg, setElements]);
 
-
     //edge effects
     useEffect(() => {
         setElements((els: Elements) =>
@@ -151,7 +140,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
         );
     }, [edgeIsAnimated, setElements]);
 
-
     useEffect(() => {
         setElements((els: Elements) =>
             els.map((el) => {
@@ -164,96 +152,80 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
         );
     }, [edgeType, setElements]);
 
-
-    if (element !== undefined && isNode(element)) {
-        return (
+    if (element !== undefined && isNode(element)) return (
             <aside>
-
                 <div>
                     <TextField label="Label: " value={element.data.label}
                                onChange={(evt) => setName(evt.target.value)}/>
                 </div>
-
                 <div>
                     <TextField label="Background:" value={nodeBg} onChange={(evt) => setNodeBg(evt.target.value)}/>
                 </div>
-
                 <div>
                     <label>Hidden:</label>
                     <Checkbox
                         checked={isHidden}
                         onChange={(evt) => setIsHidden(evt.target.checked)}
-                        size='small'
+                        size="small"
                     />
                 </div>
-
                 <div>
                     <label>Draggable:</label>
                     <Checkbox
                         checked={nodeIsDraggable}
                         onChange={(evt) => setNodeIsDraggable(evt.target.checked)}
-                        size='small'
+                        size="small"
                     />
                 </div>
-
                 <div>
                     <label>Connectable:</label>
                     <Checkbox
-                        size='small'
+                        size="small"
                         checked={nodeIsConnectable}
                         onChange={(evt) => setNodeIsConnectable(evt.target.checked)}
                     />
                 </div>
-
             </aside>)
-    } else if (element !== undefined && isEdge(element)) {
-        return (
-            <aside>
-
-                <div>
-                    <TextField label="Label: " value={element.label}
-                               onChange={(evt) => setName(evt.target.value)}/>
-                </div>
-
-                <div>
-                    <label>Hidden:</label>
-                    <Checkbox
-                        checked={isHidden}
-                        onChange={(evt) => setIsHidden(evt.target.checked)}
-                        size='small'
-                    />
-                </div>
-
-                <div>
-                    <label>Animated:</label>
-                    <Checkbox
-                        checked={edgeIsAnimated}
-                        onChange={(evt) => setEdgeIsAnimated(evt.target.checked)}
-                        size='small'
-                    />
-                </div>
-
-                <div>
-                    <InputLabel>Type</InputLabel>
-                    <Select
-                        id="edgeType"
-                        value={edgeType}
-                        onChange={(evt) => setEdgeType(evt.target.value as string)}
-                    >
-                        <MenuItem value={'default'}>default</MenuItem>
-                        <MenuItem value={'straight'}>straight</MenuItem>
-                        <MenuItem value={'step'}>step</MenuItem>
-                        <MenuItem value={'smoothstep'}>smoothstep</MenuItem>
-                    </Select>
-                </div>
-
-            </aside>)
-    } else {
-        return (
-            <aside>
-                <label>This part will be corrected soon</label>
-            </aside>)
-    }
+    else if (element !== undefined && isEdge(element)) return (
+        <aside>
+            <div>
+                <TextField label="Label: " value={element.label}
+                           onChange={(evt) => setName(evt.target.value)}/>
+            </div>
+            <div>
+                <label>Hidden:</label>
+                <Checkbox
+                    checked={isHidden}
+                    onChange={(evt) => setIsHidden(evt.target.checked)}
+                    size="small"
+                />
+            </div>
+            <div>
+                <label>Animated:</label>
+                <Checkbox
+                    checked={edgeIsAnimated}
+                    onChange={(evt) => setEdgeIsAnimated(evt.target.checked)}
+                    size="small"
+                />
+            </div>
+            <div>
+                <InputLabel>Type</InputLabel>
+                <Select
+                    id="edgeType"
+                    value={edgeType}
+                    onChange={(evt) => setEdgeType(evt.target.value as string)}
+                >
+                    <MenuItem value={'default'}>default</MenuItem>
+                    <MenuItem value={'straight'}>straight</MenuItem>
+                    <MenuItem value={'step'}>step</MenuItem>
+                    <MenuItem value={'smoothstep'}>smoothstep</MenuItem>
+                </Select>
+            </div>
+        </aside>)
+    else return (
+        <aside>
+            <label>This part will be corrected soon</label>
+        </aside>)
 };
 
 export default PropertyBar;

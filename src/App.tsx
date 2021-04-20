@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { OnLoadParams, ReactFlowProvider } from 'react-flow-renderer';
 
 import PropertyBar from './PropertyBar'
 import Palette from './Palette';
 import Scene from './Scene';
 import { initialElements } from './initialElements';
-import api from './api';
 import { getModel, getMetamodel } from "./modelRequests";
 
 import './App.css';
@@ -21,8 +18,6 @@ const OverviewFlow = () => {
     const [currentElementId, setCurrentElementId] = useState<string>("");
     const [metamodel, setMetamodel] = useState<Array<{ id: number, name: string }>>([]);
     const [model, setModel] = useState<Array<{ id: number, name: string }>>([]);
-
-    useHotkeys('delete', () => console.log("Delete pressed"));
 
     useEffect(() => {
         getMetamodel().then(data => {
