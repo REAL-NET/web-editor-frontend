@@ -1,4 +1,4 @@
-import React, { DragEvent } from 'react';
+import React, {DragEvent} from 'react';
 import './PropertyBar.css'
 import './Nodes.css'
 
@@ -7,12 +7,13 @@ const onDragStart = (event: DragEvent, nodeType: string, elementName: string) =>
     event.dataTransfer.effectAllowed = 'move';
 };
 
-const Palette = (props: {metamodel: Array<{ id: number, name: string }>}) => {
+const Palette = (props: { metamodel: Array<{ id: number, name: string }> }) => {
     let metamodelElements = () => {
         let metamodel = props.metamodel.filter((element) => element.name !== '')
 
         return metamodel.map((element) => (
-            <div className="dndnode" key={ element.id } onDragStart={(event: DragEvent) => onDragStart(event, 'default', element.name)} draggable>
+            <div className="dndnode" key={element.id}
+                 onDragStart={(event: DragEvent) => onDragStart(event, 'default', element.name)} draggable>
                 {element.name}
             </div>
         ));

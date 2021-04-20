@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { OnLoadParams, ReactFlowProvider } from 'react-flow-renderer';
+import React, {useState, useEffect} from 'react';
+import {OnLoadParams, ReactFlowProvider} from 'react-flow-renderer';
 
 import PropertyBar from './PropertyBar'
 import Palette from './Palette';
 import Scene from './Scene';
-import { initialElements } from './initialElements';
-import { getModel, getMetamodel } from "./modelRequests";
+import {initialElements} from './initialElements';
+import {getModel, getMetamodel} from "./modelRequests";
 
 import './App.css';
 
@@ -19,6 +19,7 @@ const OverviewFlow = () => {
     const [metamodel, setMetamodel] = useState<Array<{ id: number, name: string }>>([]);
     const [model, setModel] = useState<Array<{ id: number, name: string }>>([]);
 
+    // metamodel
     useEffect(() => {
         getMetamodel().then(data => {
             let newMetamodel: Array<{ id: number, name: string }> = [];
@@ -29,11 +30,16 @@ const OverviewFlow = () => {
         });
     }, []);
 
-    getModel().then(data => {
-        data.map((element: { id: number, name: string }) => {
-            model.push(element);
-        })
-    });
+    // model
+    useEffect(() => {
+        getModel().then(data => {
+            let newModel: Array<{ id: number, name: string }> = [];
+            data.map((element: { id: number, name: string }) => {
+                newModel.push(element);
+            })
+            setModel(newModel);
+        });
+    }, []);
 
     return (
         <div className="OverviewFlow">

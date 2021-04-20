@@ -1,6 +1,6 @@
-import React, { useEffect, useState, DragEvent } from "react";
-import { Elements, isNode, isEdge } from "react-flow-renderer";
-import { MenuItem, Select, Checkbox, TextField, InputLabel } from "@material-ui/core";
+import React, {useEffect, useState, DragEvent} from "react";
+import {Elements, isNode, isEdge} from "react-flow-renderer";
+import {MenuItem, Select, Checkbox, TextField, InputLabel} from "@material-ui/core";
 
 import './Palette.css'
 import './Nodes.css'
@@ -12,7 +12,7 @@ type PropertyBarProps = {
     id: string
 }
 
-const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) => {
+const PropertyBar: React.FC<PropertyBarProps> = ({elements, setElements, id}) => {
     const element = elements.find(item => item.id === id)
 
     //common states
@@ -153,39 +153,39 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
     }, [edgeType, setElements]);
 
     if (element !== undefined && isNode(element)) return (
-            <aside>
-                <div>
-                    <TextField label="Label: " value={element.data.label}
-                               onChange={(evt) => setName(evt.target.value)}/>
-                </div>
-                <div>
-                    <TextField label="Background:" value={nodeBg} onChange={(evt) => setNodeBg(evt.target.value)}/>
-                </div>
-                <div>
-                    <label>Hidden:</label>
-                    <Checkbox
-                        checked={isHidden}
-                        onChange={(evt) => setIsHidden(evt.target.checked)}
-                        size="small"
-                    />
-                </div>
-                <div>
-                    <label>Draggable:</label>
-                    <Checkbox
-                        checked={nodeIsDraggable}
-                        onChange={(evt) => setNodeIsDraggable(evt.target.checked)}
-                        size="small"
-                    />
-                </div>
-                <div>
-                    <label>Connectable:</label>
-                    <Checkbox
-                        size="small"
-                        checked={nodeIsConnectable}
-                        onChange={(evt) => setNodeIsConnectable(evt.target.checked)}
-                    />
-                </div>
-            </aside>)
+        <aside>
+            <div>
+                <TextField label="Label: " value={element.data.label}
+                           onChange={(evt) => setName(evt.target.value)}/>
+            </div>
+            <div>
+                <TextField label="Background:" value={nodeBg} onChange={(evt) => setNodeBg(evt.target.value)}/>
+            </div>
+            <div>
+                <label>Hidden:</label>
+                <Checkbox
+                    checked={isHidden}
+                    onChange={(evt) => setIsHidden(evt.target.checked)}
+                    size="small"
+                />
+            </div>
+            <div>
+                <label>Draggable:</label>
+                <Checkbox
+                    checked={nodeIsDraggable}
+                    onChange={(evt) => setNodeIsDraggable(evt.target.checked)}
+                    size="small"
+                />
+            </div>
+            <div>
+                <label>Connectable:</label>
+                <Checkbox
+                    size="small"
+                    checked={nodeIsConnectable}
+                    onChange={(evt) => setNodeIsConnectable(evt.target.checked)}
+                />
+            </div>
+        </aside>)
     else if (element !== undefined && isEdge(element)) return (
         <aside>
             <div>
@@ -223,9 +223,9 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
             </div>
         </aside>)
     else return (
-        <aside>
-            <label>This part will be corrected soon</label>
-        </aside>)
+            <aside>
+                <label>This part will be corrected soon</label>
+            </aside>)
 };
 
 export default PropertyBar;

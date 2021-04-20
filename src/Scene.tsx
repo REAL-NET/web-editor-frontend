@@ -1,4 +1,4 @@
-import React, { DragEvent, MouseEvent } from 'react';
+import React, {DragEvent, MouseEvent} from 'react';
 import ReactFlow, {
     addEdge,
     Background,
@@ -33,8 +33,10 @@ const nodeTypes = {
     exampleNode: customNode,
 };
 
-const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
-                                         setReactFlowInstance, setCurrentElementId, captureElementClick }) => {
+const Scene: React.FC<SceneProps> = ({
+                                         elements, setElements, reactFlowInstance,
+                                         setReactFlowInstance, setCurrentElementId, captureElementClick
+                                     }) => {
     const onElementClick = (_: MouseEvent, element: FlowElement) => {
         console.log('click', element);
         setCurrentElementId(element.id);
@@ -62,12 +64,12 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
         if (reactFlowInstance) {
             const type = event.dataTransfer.getData('text').split(' ')[0];
             const name = event.dataTransfer.getData('text').split(' ')[1];
-            const position = reactFlowInstance.project({ x: event.clientX - 280, y: event.clientY - 40 });
+            const position = reactFlowInstance.project({x: event.clientX - 280, y: event.clientY - 40});
             const newNode: Node = {
                 id: getId(),
                 type,
                 position,
-                data: { label: `${ name }` },
+                data: {label: `${name}`},
             };
 
             setElements((es: Elements) => es.concat(newNode));
@@ -77,7 +79,7 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
     return (
         <div className="Scene">
             <ReactFlow
-                elements = {elements}
+                elements={elements}
                 onElementsRemove={onElementsRemove}
                 onLoad={onLoad}
                 onConnect={onConnect}

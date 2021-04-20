@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import {Router} from 'express';
 import axios from 'axios';
 
 const modelRouter = Router();
