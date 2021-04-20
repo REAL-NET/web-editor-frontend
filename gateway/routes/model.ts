@@ -2,8 +2,8 @@ import { Router } from 'express';
 import axios from 'axios';
 
 const modelRouter = Router();
-const model = 'RobotsTestModel';
-const metamodel = 'RobotsMetamodel';
+const model = 'AirSimModel';
+const metamodel = 'AirSimMetamodel';
 
 modelRouter.get('/model', function (req, res, next) {
     axios

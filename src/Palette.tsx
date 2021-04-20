@@ -2,17 +2,18 @@ import React, { DragEvent } from 'react';
 import './PropertyBar.css'
 import './Nodes.css'
 
-const onDragStart = (event: DragEvent, nodeType: string) => {
-    event.dataTransfer.setData('application/reactflow', nodeType);
+const onDragStart = (event: DragEvent, nodeType: string, elementName: string) => {
+    event.dataTransfer.setData('text/plain', nodeType + ' ' + elementName);
     event.dataTransfer.effectAllowed = 'move';
 };
 
 const Palette = (props: {metamodel: Array<{ id: number, name: string }>}) => {
+    let metamodel = props.metamodel.filter((element) => element.name !== '');
     return (
         <aside>
-            <div className="description">palette.</div>
-            {props.metamodel.map((element) => (
-                <div className="dndnode input" onDragStart={(event: DragEvent) => onDragStart(event, 'input')} draggable>
+            <div className='description'>palette.</div>
+            {metamodel.map((element) => (
+                <div className='dndnode' onDragStart={(event: DragEvent) => onDragStart(event, 'default', element.name)} draggable>
                     {element.name}
                 </div>
             ))}
@@ -22,7 +23,6 @@ const Palette = (props: {metamodel: Array<{ id: number, name: string }>}) => {
             {/*<div className="dndnode output" onDragStart={(event: DragEvent) => onDragStart(event, 'output')} draggable>*/}
             {/*    Output Node*/}
             {/*</div>*/}
-            {console.log('lalala')}
         </aside>
     );
 };

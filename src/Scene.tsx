@@ -69,13 +69,14 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
 
         event.preventDefault();
         if (reactFlowInstance) {
-            const type = event.dataTransfer.getData('application/reactflow');
-            const position = reactFlowInstance.project({ x: event.clientX, y: event.clientY - 40 });
+            const type = event.dataTransfer.getData('text').split(' ')[0];
+            const name = event.dataTransfer.getData('text').split(' ')[1];
+            const position = reactFlowInstance.project({ x: event.clientX - 280, y: event.clientY - 40 });
             const newNode: Node = {
                 id: getId(),
                 type,
                 position,
-                data: { label: `${ type } node` },
+                data: { label: `${ name }` },
             };
 
             setElements((es: Elements) => es.concat(newNode));
