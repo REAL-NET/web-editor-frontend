@@ -46,8 +46,7 @@ const OverviewFlow = () => {
             value[1].forEach((element: { id: number, name: string }) => {
                 edges.push(element);
             });
-            const modelElements = getModelElements(modelName, nodes, edges);
-            setElements(modelElements);
+            getModelElements(modelName, nodes, edges).then(data => setElements(data));
         });
     }, [elements]);
 
