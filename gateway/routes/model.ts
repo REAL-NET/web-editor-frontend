@@ -11,7 +11,8 @@ modelRouter.get('/model/:modelName', function (req, res) {
             res.send(response.data);
         })
         .catch(error => {
-        console.log(error.message)
+            console.log(error.message);
+            res.send([]);
         });
 });
 
@@ -23,7 +24,8 @@ modelRouter.get('/metamodel/:metamodelName', function (req, res) {
             res.send(response.data)
         })
         .catch(error => {
-            console.log(error.message)
+            console.log(error.message);
+            res.send([]);
         });
 });
 

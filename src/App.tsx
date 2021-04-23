@@ -8,7 +8,6 @@ import {getMetamodel, getModelNodes, getModelEdges} from './requests/modelReques
 import {getModelElements} from './getModelElements';
 
 import './App.css';
-import model from "../gateway/routes/model";
 
 document.addEventListener('click', e => (e.target));
 
