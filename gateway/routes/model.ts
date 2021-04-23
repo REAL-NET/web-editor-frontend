@@ -2,21 +2,20 @@ import {Router} from 'express';
 import axios from 'axios';
 
 const modelRouter = Router();
-const model = 'AirSimModel';
-const metamodel = 'AirSimMetamodel';
 
-modelRouter.get('/model', function (req, res, next) {
+modelRouter.get('/model/:modelName', function (req, res) {
+    const modelName = req.params.modelName;
     axios
-        .get('http://localhost:8000/api/Repo/Model/' + model)
+        .get('http://localhost:8000/api/Repo/Model/' + modelName)
         .then(response => {
-            // metamodel = response.data.metamodelName;
             res.send(response.data);
         });
 });
 
-modelRouter.get('/metamodel', function (req, res, next) {
+modelRouter.get('/metamodel/:metamodelName', function (req, res) {
+    const metamodelName = req.params.metamodelName;
     axios
-        .get('http://localhost:8000/api/Repo/Model/' + metamodel)
+        .get('http://localhost:8000/api/Repo/Model/' + metamodelName)
         .then(response => {
             res.send(response.data)
         });

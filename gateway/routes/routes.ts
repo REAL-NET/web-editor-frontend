@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import testRouter from './test';
-import modelRouter from "./model";
+import modelRouter from './model';
+import elementRouter from './element';
 
 const routes = Router();
 
-routes.use('/test', testRouter);
+routes.use('/element', elementRouter);
 routes.use('/model', modelRouter);
 
 export default routes;
