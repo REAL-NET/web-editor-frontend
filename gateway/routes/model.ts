@@ -9,6 +9,9 @@ modelRouter.get('/model/:modelName', function (req, res) {
         .get('http://localhost:8000/api/Repo/Model/' + modelName)
         .then(response => {
             res.send(response.data);
+        })
+        .catch(error => {
+        console.log(error.message)
         });
 });
 
@@ -18,6 +21,9 @@ modelRouter.get('/metamodel/:metamodelName', function (req, res) {
         .get('http://localhost:8000/api/Repo/Model/' + metamodelName)
         .then(response => {
             res.send(response.data)
+        })
+        .catch(error => {
+            console.log(error.message)
         });
 });
 
