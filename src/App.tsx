@@ -5,7 +5,7 @@ import PropertyBar from './PropertyBar'
 import Palette from './Palette';
 import Scene from './Scene';
 import {getMetamodel, getModelNodes, getModelEdges} from './requests/modelRequests';
-import {getModelElements} from './getModelElements';
+import {getModelElements} from './requests/elementRequests';
 
 import './App.css';
 
