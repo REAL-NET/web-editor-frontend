@@ -20,11 +20,17 @@ export class RepoAPI {
     }
 
     public static GetModel(modelName: string): Model | undefined {
-        return this.ParseJson(Requests.Request("GET", `${RepoAPI.host}/Model/${modelName}`));
+        let result: Model | undefined = this.ParseJson(Requests.Request("GET", `${RepoAPI.host}/Model/${modelName}`));
+        console.debug(result);
+        return result;
     }
 
     public static GetModelMetaNodes(modelName: string): ElementInfo[] | undefined {
         return this.ParseJson(Requests.Request("GET", `${RepoAPI.host}/Model/${modelName}/metanodes`));
+    }
+
+    public static GetModelMetaEdges(modelName: string): ElementInfo[] | undefined {
+        return this.ParseJson(Requests.Request("GET", `${RepoAPI.host}/Model/${modelName}/metaedges`));
     }
 
     public static DeleteModel(modelName: string) {

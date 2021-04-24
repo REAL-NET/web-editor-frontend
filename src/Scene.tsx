@@ -23,12 +23,13 @@ type SceneProps = {
     setReactFlowInstance: Function
     setCurrentElementId: Function
     captureElementClick: boolean
-    modelName: string
+    modelName: string,
+    edgeType: string
 }
 
 
 const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
-                                         setReactFlowInstance, setCurrentElementId, captureElementClick, modelName }) => {
+                                         setReactFlowInstance, setCurrentElementId, captureElementClick, modelName, edgeType }) => {
 
 
     const onElementClick = (_: MouseEvent, element: FlowElement) => {

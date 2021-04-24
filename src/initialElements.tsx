@@ -31,6 +31,4 @@ const getElements = (modelName: string) : Elements => {
     return [];
 }
 
-let initialElements : Elements = getElements("TestModel");
-
-export {initialElements, getElements};
+export  {getElements};
