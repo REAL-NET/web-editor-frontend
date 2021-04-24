@@ -1,5 +1,6 @@
 import {Elements, FlowElement} from 'react-flow-renderer';
 import {RepoAPI} from "./repo/RepoAPI";
+import {GeneralizationEdgeStyle, GeneralizationEdgeType, GeneralizationMetatype} from "./Constants";
 
 const getElements = (modelName: string) : Elements => {
     const model = RepoAPI.GetModel(modelName);
@@ -17,12 +18,21 @@ const getElements = (modelName: string) : Elements => {
         const edges = model.relationships.map(value => {
             const currentRelationship = RepoAPI.GetRelationship(modelName, value.name);
             if (currentRelationship !== undefined) {
-                return {
+                let edge = {
                     id: currentRelationship.name,
                     source: currentRelationship.source.name,
                     target: currentRelationship.target.name,
                     label: currentRelationship.name
+                };
+                if (currentRelationship.type === GeneralizationMetatype) {
+                    return  {
+                        ...edge,
+                        type: GeneralizationEdgeType,
+                        style: GeneralizationEdgeStyle
+                    }
                 }
+                return edge;
+
             }
             return undefined
         }).filter(value => value !== undefined) as Array<FlowElement>;

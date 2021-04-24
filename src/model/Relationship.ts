@@ -6,8 +6,9 @@ import {ModelInfo} from "./ModelInfo";
 export class Relationship extends Element {
     readonly source: ElementInfo;
     readonly target: ElementInfo;
+    readonly type: string;
 
-    constructor(source: ElementInfo, target: ElementInfo,
+    constructor(source: ElementInfo, target: ElementInfo, type: string,
                 name: string, outgoingEdges: ElementInfo[], outgoingAssociations: ElementInfo[],
                 incomingEdges: ElementInfo[], directSupertypes: ElementInfo[], slots: Slot,
                 model: ModelInfo, hasMetamodel: boolean, metatype: ElementInfo, level: number, potency: number) {
@@ -15,5 +16,6 @@ export class Relationship extends Element {
             slots, model, hasMetamodel, metatype, level, potency);
         this.source = source;
         this.target = target;
+        this.type = type;
     }
 }
