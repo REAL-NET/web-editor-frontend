@@ -7,6 +7,7 @@ import Scene from './Scene';
 import { getElements } from './initialElements';
 
 import './App.css'
+import {AssociationMetatype} from "./Constants";
 
 document.addEventListener('click', e => (e.target));
 
@@ -16,7 +17,7 @@ const OverviewFlow = () => {
     const [elements, setElements] = useState(getElements(modelName));
     const [captureElementClick, setCaptureElementClick] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
-    const [edgeType, setEdgeType] = useState("");
+    const [edgeType, setEdgeType] = useState(AssociationMetatype);
 
     return (
         <div className="OverviewFlow">

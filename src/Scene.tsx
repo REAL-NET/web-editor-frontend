@@ -15,6 +15,12 @@ import ReactFlow, {
 import './Scene.css'
 import {RepoAPI} from "./repo/RepoAPI";
 import {FlowTransform} from "react-flow-renderer/dist/types";
+import {
+    AssociationMetatype,
+    GeneralizationEdgeStyle,
+    GeneralizationEdgeType,
+    GeneralizationMetatype
+} from "./Constants";
 
 type SceneProps = {
     elements: Elements
@@ -64,12 +70,29 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
 
     const onConnect = (edgeParas: Edge | Connection): void => {
         console.debug("On elements connect");
-        const name = "Association_" + Math.round(Math.random() * 10000000).toString();
-        if (edgeParas.source != null && edgeParas.target != null) {
-            console.debug(edgeParas);
-            RepoAPI.CreateAssociations(modelName, name, edgeParas.source, edgeParas.target, 0, 0, 0, 0, 0, 0);
-        }
         const edge = edgeParas as Edge;
+        let name: string, metaType: string = "", metaModel: string = "";
+        if (edgeType === AssociationMetatype || edgeType === GeneralizationMetatype) {
+            name = `${edgeType}_${Math.round(Math.random() * 10000000).toString()}`;
+        } else {
+            const sepIndex = edgeType.indexOf("$$");
+            metaType = edgeType.substr(sepIndex + 2);
+            metaModel = edgeType.substr(0, sepIndex);
+            name = `${metaType}_${Math.round(Math.random() * 10000000).toString()}`;
+        }
+        if (edgeParas.source != null && edgeParas.target != null) {
+            if (edgeType === AssociationMetatype) {
+                RepoAPI.CreateAssociations(modelName, name, edgeParas.source, edgeParas.target, 0, 0, 0, 0, 0, 0);
+            } else if (edgeType === GeneralizationMetatype) {
+                RepoAPI.CreateGeneralization(modelName, name, edgeParas.source, edgeParas.target, 0, 0);
+                edge.style = GeneralizationEdgeStyle;
+                edge.type = GeneralizationEdgeType;
+            } else {
+                RepoAPI.InstantiateAssociation(modelName, name, metaModel, metaType, edgeParas.source, edgeParas.target,
+                    0, 0, 0, 0, 0, 0);
+            }
+            console.debug(edgeParas);
+        }
         edge.id = name;
         edge.label = name;
         setElements((elements: Elements) => addEdge(edgeParas, elements));

@@ -6,6 +6,8 @@ import {ElementInfo} from "./model/ElementInfo";
 import {InputLabel, MenuItem, Select} from "@material-ui/core";
 import {getElements} from "./initialElements";
 import {MiniMap} from "react-flow-renderer";
+import {AssociationMetatype, GeneralizationMetatype} from "./Constants";
+
 const onDragStart = (event: DragEvent, metaInfo: string) => {
     event.dataTransfer.setData('application/reactflow', metaInfo);
     event.dataTransfer.effectAllowed = 'move';
@@ -93,9 +95,11 @@ const Palette: React.FC<PaletteBarProps>  = ({ setElements, modelName, setModelN
                     value={edgeType}
                     onChange={(event => {setEdgeType(event.target.value as string)})}
                 >
+                    <MenuItem value={AssociationMetatype}>{AssociationMetatype}</MenuItem>
+                    <MenuItem value={GeneralizationMetatype}>{GeneralizationMetatype}</MenuItem>
                     {
                         getEdgesMetatypes(modelName).map(value =>
-                            <MenuItem value={value.name}>{value.model.name + "::" +value.name}</MenuItem> )
+                            <MenuItem value={value.model.name + "$$" +value.name}>{value.model.name + "::" +value.name}</MenuItem> )
                     }
                 </Select>
             </div>

@@ -80,8 +80,8 @@ export class RepoAPI {
         return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/node/${modelName}/${name}/${level}/${potency}`))
     }
 
-    public static CreateGeneralization(modelName: string, sourceName: string, targetName: string, level: number, potency: number): Generalization | undefined {
-        return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/generalization/${modelName}/${sourceName}/${targetName}/${level}/${potency}`))
+    public static CreateGeneralization(modelName: string, name: string, sourceName: string, targetName: string, level: number, potency: number): Generalization | undefined {
+        return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/generalization/${modelName}/${name}/${sourceName}/${targetName}/${level}/${potency}`))
     }
 
     public static CreateAssociations(modelName: string, name: string, sourceName: string, targetName: string,
