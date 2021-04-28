@@ -38,7 +38,6 @@ const Scene: React.FC<SceneProps> = ({
                                          setReactFlowInstance, setCurrentElementId, captureElementClick
                                      }) => {
     const onElementClick = (_: MouseEvent, element: FlowElement) => {
-        console.log('click', element);
         setCurrentElementId(element.id);
     }
 
@@ -49,14 +48,12 @@ const Scene: React.FC<SceneProps> = ({
 
     const onElementsRemove = (elementsToRemove: Elements): void => {
         setElements((elements: Elements) => removeElements(elementsToRemove, elements));
-        console.log('elements:', elements);
     };
 
     const onLoad = (_reactFlowInstance: OnLoadParams) => setReactFlowInstance(_reactFlowInstance);
 
     const onConnect = (edgeParas: Edge | Connection): void => {
         setElements((elements: Elements) => addEdge(edgeParas, elements));
-        console.log('elements:', elements);
     };
 
     const onDrop = (event: DragEvent) => {

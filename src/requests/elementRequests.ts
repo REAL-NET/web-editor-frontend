@@ -23,29 +23,49 @@ export const getModelElements = async (modelName: string, nodes: Array<{ id: num
     let elements: Elements = [];
     for (let i = 0, len = nodes.length; i < len; ++i) {
         await getNode(modelName, nodes[i].id).then(data => {
-            elements.push(
-                {
-                    id: `${data.id}`,
-                    type: 'default',
-                    data: {label: data.name},
-                    position: {x: 100 + data.id * 10, y: 150 + data.id * 10},
-                }
-            );
+            if (data !== undefined) {
+                elements.push(
+                    {
+                        id: `${data.id}`,
+                        type: 'default',
+                        data: {label: data.name},
+                        position: {x: 100 + data.id * 10, y: 150 + data.id * 10},
+                    }
+                );
+            }
         })
     }
     for (let i = 0, len = edges.length; i < len; ++i)
     {
         await getEdge(modelName, edges[i].id).then(data => {
-            elements.push(
-                {
-                    id: `${data.id}`,
-                    source: `${data.from.id}`,
-                    target: `${data.to.id}`,
-                    label: `${data.name}`
-                }
-            );
+            if (data !== undefined) {
+                elements.push(
+                    {
+                        id: `${data.id}`,
+                        source: `${data.from.id}`,
+                        target: `${data.to.id}`,
+                        label: `${data.name}`
+                    }
+                );
+            }
         })
     }
 
     return elements;
 };
+
+export const getNodeAttributes = async (modelName: string, id: number) => {
+    await getNode(modelName, id).then(data => {
+        if (data !== undefined) {
+            return data.attributes;
+        }
+    });
+}
+
+export const getEdgeAttributes = async (modelName: string, id: number) => {
+    await getEdge(modelName, id).then(data => {
+        if (data !== undefined) {
+            return data.attributes;
+        }
+    });
+}

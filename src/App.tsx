@@ -34,26 +34,29 @@ const OverviewFlow = () => {
         });
     }, []);
 
+    // model
     useEffect(() => {
-        let nodes: Array<{ id: number, name: string }> = [];
-        let edges: Array<{ id: number, name: string }> = [];
-        let promise1 = getModelNodes(modelName);
-        let promise2 = getModelEdges(modelName);
-        Promise.all([promise1, promise2]).then(value => {
-            value[0].forEach((element: { id: number, name: string }) => {
-                nodes.push(element);
-            });
-            value[1].forEach((element: { id: number, name: string }) => {
-                edges.push(element);
-            });
-            getModelElements(modelName, nodes, edges).then(data => setElements(data));
+        Promise.all([getModelNodes(modelName), getModelEdges(modelName)]).then(value => {
+                let nodes: Array<{ id: number, name: string }> = [];
+                let edges: Array<{ id: number, name: string }> = [];
+                if (value[0] !== undefined) {
+                    value[0].forEach((element: { id: number, name: string }) => {
+                        nodes.push(element);
+                    });
+                }
+                if (value[1] !== undefined) {
+                    value[1].forEach((element: { id: number, name: string }) => {
+                        edges.push(element);
+                    });
+                }
+                getModelElements(modelName, nodes, edges).then(data => setElements(data));
         });
-    }, [elements]);
+    }, []);
 
     return (
         <div className="OverviewFlow">
             <ReactFlowProvider>
-                <PropertyBar id={currentElementId} setElements={setElements} elements={elements}/>
+                <PropertyBar modelName={modelName} id={currentElementId} setElements={setElements} elements={elements}/>
                 <Scene
                     elements={elements}
                     setElements={setElements}

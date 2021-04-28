@@ -1,19 +1,22 @@
-import React, {useEffect, useState, DragEvent} from "react";
+import React, {ChangeEvent, useEffect, useState} from "react";
 import {Elements, isNode, isEdge} from "react-flow-renderer";
 import {MenuItem, Select, Checkbox, TextField, InputLabel} from "@material-ui/core";
 
-import './Palette.css'
+import {getNodeAttributes, getEdgeAttributes} from "./requests/elementRequests";
+
+import './PropertyBar.css'
 import './Nodes.css'
 
-
 type PropertyBarProps = {
+    modelName: string
     elements: Elements
     setElements: Function
     id: string
 }
 
-const PropertyBar: React.FC<PropertyBarProps> = ({elements, setElements, id}) => {
+const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElements, id}) => {
     const element = elements.find(item => item.id === id)
+    const idNumber: number = +id;
 
     //common states
     const [Name, setName] = useState("");
@@ -152,62 +155,48 @@ const PropertyBar: React.FC<PropertyBarProps> = ({elements, setElements, id}) =>
         );
     }, [edgeType, setElements]);
 
+    const CheckboxItem = (props: { label: string, value: boolean, setFunc: (isRequired: boolean) => void }) => {
+        return (
+            <div>
+                <label>{props.label}:</label>
+                <Checkbox
+                    checked={props.value}
+                    onChange={(event) => props.setFunc(event.target.checked)}
+                    size="small"
+                />
+            </div>
+        );
+    }
+
     if (element !== undefined && isNode(element)) return (
         <aside>
+            <div className="description">Property bar</div>
             <div>
-                <TextField label="Label: " value={element.data.label}
+                <label>Id: {id}</label>
+            </div>
+            <div>
+                <TextField label="Label:" value={element.data.label}
                            onChange={(evt) => setName(evt.target.value)}/>
             </div>
             <div>
                 <TextField label="Background:" value={nodeBg} onChange={(evt) => setNodeBg(evt.target.value)}/>
             </div>
-            <div>
-                <label>Hidden:</label>
-                <Checkbox
-                    checked={isHidden}
-                    onChange={(evt) => setIsHidden(evt.target.checked)}
-                    size="small"
-                />
-            </div>
-            <div>
-                <label>Draggable:</label>
-                <Checkbox
-                    checked={nodeIsDraggable}
-                    onChange={(evt) => setNodeIsDraggable(evt.target.checked)}
-                    size="small"
-                />
-            </div>
-            <div>
-                <label>Connectable:</label>
-                <Checkbox
-                    size="small"
-                    checked={nodeIsConnectable}
-                    onChange={(evt) => setNodeIsConnectable(evt.target.checked)}
-                />
-            </div>
+            <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden} />
+            <CheckboxItem label="Draggable" setFunc={setNodeIsDraggable} value={nodeIsDraggable} />
+            <CheckboxItem label="Connectable" setFunc={setNodeIsConnectable} value={nodeIsConnectable} />
         </aside>)
     else if (element !== undefined && isEdge(element)) return (
         <aside>
+            <div className="description">Property bar</div>
+            <div>
+                <label>Id: {id}</label>
+            </div>
             <div>
                 <TextField label="Label: " value={element.label}
                            onChange={(evt) => setName(evt.target.value)}/>
             </div>
-            <div>
-                <label>Hidden:</label>
-                <Checkbox
-                    checked={isHidden}
-                    onChange={(evt) => setIsHidden(evt.target.checked)}
-                    size="small"
-                />
-            </div>
-            <div>
-                <label>Animated:</label>
-                <Checkbox
-                    checked={edgeIsAnimated}
-                    onChange={(evt) => setEdgeIsAnimated(evt.target.checked)}
-                    size="small"
-                />
-            </div>
+            <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden} />
+            <CheckboxItem label="Animated" setFunc={setEdgeIsAnimated} value={edgeIsAnimated} />
             <div>
                 <InputLabel>Type</InputLabel>
                 <Select
@@ -224,7 +213,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({elements, setElements, id}) =>
         </aside>)
     else return (
             <aside>
-                <label>This part will be corrected soon</label>
+                <div className="description">Property bar</div>
             </aside>)
 };
 
