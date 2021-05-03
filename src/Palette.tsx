@@ -17,8 +17,8 @@ const Palette = (props: { metamodel: Array<{ id: number, name: string }> }) => {
         );
     }
 
-    let metamodel = props.metamodel.filter((element) => element.name !== '');
-    let metamodelElements = metamodel.map(element => <PaletteItem element={element} key={element.name + element.id} />);
+    const metamodel = props.metamodel.filter((element) => element.name !== '');
+    const metamodelElements = metamodel.map(element => <PaletteItem element={element} key={element.name + element.id} />);
 
     return (
         <aside>

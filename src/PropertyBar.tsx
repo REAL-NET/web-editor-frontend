@@ -1,8 +1,9 @@
-import React, {ChangeEvent, useEffect, useState} from "react";
+import React, {ChangeEvent, JSXElementConstructor, useEffect, useState} from "react";
 import {Elements, isNode, isEdge} from "react-flow-renderer";
 import {MenuItem, Select, Checkbox, TextField, InputLabel} from "@material-ui/core";
 
 import {getNodeAttributes, getEdgeAttributes} from "./requests/elementRequests";
+import {Attribute} from "./Attribute";
 
 import './PropertyBar.css'
 import './Nodes.css'
@@ -26,10 +27,12 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
     const [nodeBg, setNodeBg] = useState("");
     const [nodeIsDraggable, setNodeIsDraggable] = useState(true);
     const [nodeIsConnectable, setNodeIsConnectable] = useState(true);
+    const [nodeAttributes, setNodeAttributes] = useState<Array<JSX.Element>>([]);
 
     //edge states
     const [edgeIsAnimated, setEdgeIsAnimated] = useState(false);
     const [edgeType, setEdgeType] = useState('');
+    const [edgeAttributes, setEdgeAttributes] = useState<Array<JSX.Element>>([]);
 
     //common effects
     useEffect(() => { // sets states for chosen element
@@ -155,6 +158,44 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
         );
     }, [edgeType, setElements]);
 
+    useEffect(() => {
+        if (element !== undefined && isNode(element)) {
+            let attributes: Array<Attribute> = [];
+            getNodeAttributes(modelName, idNumber).then(data => {
+                if (data !== undefined) {
+                    data.map(attribute => attributes.push(attribute));
+                }
+
+                const attributeElements: Array<JSX.Element> = [];
+                const setAttribute = (newValue: string) => {}
+                attributes.forEach(attribute => {
+                    attributeElements.push(<TextFieldItem key={attribute.name + attribute.stringValue} label={attribute.name} value={attribute.stringValue}
+                                                               setFunc={setAttribute}/>);
+                });
+                setNodeAttributes(attributeElements);
+            });
+        }
+    }, [element]);
+
+    useEffect(() => {
+        if (element !== undefined && isEdge(element)) {
+            let attributes: Array<Attribute> = [];
+            getEdgeAttributes(modelName, idNumber).then(data => {
+                if (data !== undefined) {
+                    data.map(attribute => attributes.push(attribute));
+                }
+
+                const attributeElements: Array<JSX.Element> = [];
+                const setAttribute = (newValue: string) => {}
+                attributes.forEach(attribute => {
+                    attributeElements.push(<TextFieldItem key={attribute.name + attribute.stringValue} label={attribute.name} value={attribute.stringValue}
+                                                               setFunc={setAttribute}/>);
+                });
+                setEdgeAttributes(attributeElements);
+            });
+        }
+    }, [element]);
+
     const CheckboxItem = (props: { label: string, value: boolean, setFunc: (isRequired: boolean) => void }) => {
         return (
             <div>
@@ -168,33 +209,37 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
         );
     }
 
+    const TextFieldItem = (props: {label: string, value: string, setFunc: (newValue: string) => void}) => {
+        return (
+            <div>
+                <TextField
+                    label={props.label + ': '}
+                    value={props.value}
+                    onChange={(event) => props.setFunc(event.target.value)}/>
+            </div>
+        );
+    }
+
     if (element !== undefined && isNode(element)) return (
         <aside>
             <div className="description">Property bar</div>
             <div>
-                <label>Id: {id}</label>
+                <label>Id: {idNumber}</label>
             </div>
-            <div>
-                <TextField label="Label:" value={element.data.label}
-                           onChange={(evt) => setName(evt.target.value)}/>
-            </div>
-            <div>
-                <TextField label="Background:" value={nodeBg} onChange={(evt) => setNodeBg(evt.target.value)}/>
-            </div>
+            <TextFieldItem label="Label" value={element.data.label} setFunc={setName} />
+            <TextFieldItem label="Background" value={nodeBg} setFunc={setNodeBg} />
             <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden} />
             <CheckboxItem label="Draggable" setFunc={setNodeIsDraggable} value={nodeIsDraggable} />
             <CheckboxItem label="Connectable" setFunc={setNodeIsConnectable} value={nodeIsConnectable} />
+            {nodeAttributes}
         </aside>)
     else if (element !== undefined && isEdge(element)) return (
         <aside>
             <div className="description">Property bar</div>
             <div>
-                <label>Id: {id}</label>
+                <label>Id: {idNumber}</label>
             </div>
-            <div>
-                <TextField label="Label: " value={element.label}
-                           onChange={(evt) => setName(evt.target.value)}/>
-            </div>
+            <TextFieldItem label="Label" value={element.label !== undefined ? element.label : ""} setFunc={setName} />
             <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden} />
             <CheckboxItem label="Animated" setFunc={setEdgeIsAnimated} value={edgeIsAnimated} />
             <div>
@@ -210,11 +255,12 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
                     <MenuItem value={'smoothstep'}>smoothstep</MenuItem>
                 </Select>
             </div>
+            {edgeAttributes}
         </aside>)
     else return (
-            <aside>
-                <div className="description">Property bar</div>
-            </aside>)
+        <aside>
+            <div className="description">Property bar</div>
+        </aside>)
 };
 
 export default PropertyBar;

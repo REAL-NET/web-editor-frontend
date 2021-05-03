@@ -15,10 +15,8 @@ const OverviewFlow = () => {
     const modelName = 'RobotsTestModel';
     const metamodelName = 'RobotsMetamodel';
 
-    let initialElements: Elements = [];
-
     const [reactFlowInstance, setReactFlowInstance] = useState<OnLoadParams>();
-    const [elements, setElements] = useState(initialElements);
+    const [elements, setElements] = useState<Elements>([]);
     const [captureElementClick, setCaptureElementClick] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
     const [metamodel, setMetamodel] = useState<Array<{ id: number, name: string }>>([]);

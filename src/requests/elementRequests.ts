@@ -1,6 +1,8 @@
 import api from './api'
 import {Elements} from "react-flow-renderer";
 
+import {Attribute} from "../Attribute";
+
 export const getEdge = async (modelName: string, id: number) => {
     try {
         const response = await api.get(`element/${modelName}/edge/${id}`);
@@ -55,17 +57,25 @@ export const getModelElements = async (modelName: string, nodes: Array<{ id: num
 };
 
 export const getNodeAttributes = async (modelName: string, id: number) => {
+    let attributes: Array<Attribute> = [];
     await getNode(modelName, id).then(data => {
-        if (data !== undefined) {
-            return data.attributes;
+        if (data.attributes !== undefined) {
+            data.attributes.forEach((attribute: Attribute) => {
+                attributes.push(attribute);
+            });
         }
     });
+    return attributes;
 }
 
 export const getEdgeAttributes = async (modelName: string, id: number) => {
+    let attributes: Array<Attribute> = [];
     await getEdge(modelName, id).then(data => {
-        if (data !== undefined) {
-            return data.attributes;
+        if (data.attributes !== undefined) {
+            data.attributes.forEach((attribute: Attribute) => {
+                attributes.push(attribute);
+            });
         }
     });
+    return attributes;
 }
