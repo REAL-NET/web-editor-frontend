@@ -1,4 +1,4 @@
-import React, {ChangeEvent, JSXElementConstructor, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Elements, isNode, isEdge} from "react-flow-renderer";
 import {MenuItem, Select, Checkbox, TextField, InputLabel} from "@material-ui/core";
 
@@ -20,7 +20,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
     const idNumber: number = +id;
 
     //common states
-    const [Name, setName] = useState("");
+    const [name, setName] = useState("");
     const [isHidden, setIsHidden] = useState(false);
 
     //node states
@@ -71,13 +71,13 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
                     // in order to notify react flow about the change
                     el.data = {
                         ...el.data,
-                        label: Name,
+                        label: name,
                     };
                 }
                 return el;
             })
         );
-    }, [Name, setElements]);
+    }, [name, setElements]);
 
     useEffect(() => {
         setElements((els: Elements) =>
@@ -87,13 +87,13 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
                     // in order to notify react flow about the change
                     el = {
                         ...el,
-                        label: Name,
+                        label: name,
                     };
                 }
                 return el;
             })
         );
-    }, [Name, setElements]);
+    }, [name, setElements]);
 
     useEffect(() => {
         setElements((els: Elements) =>
@@ -167,10 +167,12 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
                 }
 
                 const attributeElements: Array<JSX.Element> = [];
-                const setAttribute = (newValue: string) => {}
+                const setAttribute = (newValue: string) => {
+                }
                 attributes.forEach(attribute => {
-                    attributeElements.push(<TextFieldItem key={attribute.name + attribute.stringValue} label={attribute.name} value={attribute.stringValue}
-                                                               setFunc={setAttribute}/>);
+                    attributeElements.push(<TextFieldItem key={attribute.name + attribute.stringValue}
+                                                          label={attribute.name} value={attribute.stringValue}
+                                                          setFunc={setAttribute}/>);
                 });
                 setNodeAttributes(attributeElements);
             });
@@ -186,10 +188,12 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
                 }
 
                 const attributeElements: Array<JSX.Element> = [];
-                const setAttribute = (newValue: string) => {}
+                const setAttribute = (newValue: string) => {
+                }
                 attributes.forEach(attribute => {
-                    attributeElements.push(<TextFieldItem key={attribute.name + attribute.stringValue} label={attribute.name} value={attribute.stringValue}
-                                                               setFunc={setAttribute}/>);
+                    attributeElements.push(<TextFieldItem key={attribute.name + attribute.stringValue}
+                                                          label={attribute.name} value={attribute.stringValue}
+                                                          setFunc={setAttribute}/>);
                 });
                 setEdgeAttributes(attributeElements);
             });
@@ -209,13 +213,24 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
         );
     }
 
-    const TextFieldItem = (props: {label: string, value: string, setFunc: (newValue: string) => void}) => {
+    const TextFieldItem = (props: { label: string, value: string, setFunc: (newValue: string) => void }) => {
+        const [textFieldValue, setTextFieldValue] = useState(props.value);
+
         return (
             <div>
                 <TextField
                     label={props.label + ': '}
-                    value={props.value}
-                    onChange={(event) => props.setFunc(event.target.value)}/>
+                    value={textFieldValue}
+                    onChange={(event) => setTextFieldValue(event.target.value)}
+                    onBlur={() => {
+                        props.setFunc(textFieldValue);
+                    }}
+                    onKeyPress={(event) => {
+                        if (event.key === 'Enter') {
+                            props.setFunc(textFieldValue);
+                        }
+                    }}
+                />
             </div>
         );
     }
@@ -226,11 +241,11 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
             <div>
                 <label>Id: {idNumber}</label>
             </div>
-            <TextFieldItem label="Label" value={element.data.label} setFunc={setName} />
-            <TextFieldItem label="Background" value={nodeBg} setFunc={setNodeBg} />
-            <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden} />
-            <CheckboxItem label="Draggable" setFunc={setNodeIsDraggable} value={nodeIsDraggable} />
-            <CheckboxItem label="Connectable" setFunc={setNodeIsConnectable} value={nodeIsConnectable} />
+            <TextFieldItem label="Label" value={element.data.label} setFunc={setName}/>
+            <TextFieldItem label="Background" value={nodeBg} setFunc={setNodeBg}/>
+            <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden}/>
+            <CheckboxItem label="Draggable" setFunc={setNodeIsDraggable} value={nodeIsDraggable}/>
+            <CheckboxItem label="Connectable" setFunc={setNodeIsConnectable} value={nodeIsConnectable}/>
             {nodeAttributes}
         </aside>)
     else if (element !== undefined && isEdge(element)) return (
@@ -239,9 +254,9 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
             <div>
                 <label>Id: {idNumber}</label>
             </div>
-            <TextFieldItem label="Label" value={element.label !== undefined ? element.label : ""} setFunc={setName} />
-            <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden} />
-            <CheckboxItem label="Animated" setFunc={setEdgeIsAnimated} value={edgeIsAnimated} />
+            <TextFieldItem label="Label" value={element.label !== undefined ? element.label : ""} setFunc={setName}/>
+            <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden}/>
+            <CheckboxItem label="Animated" setFunc={setEdgeIsAnimated} value={edgeIsAnimated}/>
             <div>
                 <InputLabel>Type</InputLabel>
                 <Select
@@ -258,9 +273,9 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
             {edgeAttributes}
         </aside>)
     else return (
-        <aside>
-            <div className="description">Property bar</div>
-        </aside>)
+            <aside>
+                <div className="description">Property bar</div>
+            </aside>)
 };
 
 export default PropertyBar;

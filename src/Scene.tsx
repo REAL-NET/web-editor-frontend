@@ -16,9 +16,7 @@ import ReactFlow, {
 import customNode from './customNodes';
 
 import './Scene.css'
-
-let id = 0;
-const getId = (): ElementId => `dndnode_${id++}`;
+import {strict} from "assert";
 
 type SceneProps = {
     elements: Elements
@@ -54,6 +52,14 @@ const Scene: React.FC<SceneProps> = ({
 
     const onConnect = (edgeParas: Edge | Connection): void => {
         setElements((elements: Elements) => addEdge(edgeParas, elements));
+    };
+
+    let id = 0;
+    const getId = function (): string {
+        while (elements.find(item => item.id === `${id}`) !== undefined) {
+            ++id;
+        }
+        return `${id}`;
     };
 
     const onDrop = (event: DragEvent) => {
