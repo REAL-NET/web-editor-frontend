@@ -3,7 +3,12 @@ FROM node:latest
 WORKDIR /app
 
 COPY package.json /app
-RUN npm install --force
+COPY gateway/package.json /app/gateway
+
+RUN npm install --force \
+    && cd gateway \
+    && npm install --force
+
 COPY . /app
 
 EXPOSE 5000
