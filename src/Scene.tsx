@@ -8,7 +8,6 @@ import ReactFlow, {
     Connection,
     Controls,
     OnLoadParams,
-    ElementId,
     Node,
     FlowElement,
 } from 'react-flow-renderer';
@@ -16,7 +15,6 @@ import ReactFlow, {
 import customNode from './customNodes';
 
 import './Scene.css'
-import {strict} from "assert";
 
 type SceneProps = {
     elements: Elements

@@ -168,6 +168,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
 
                 const attributeElements: Array<JSX.Element> = [];
                 const setAttribute = (newValue: string) => {
+                    // ADD CODE HERE LATER
                 }
                 attributes.forEach(attribute => {
                     attributeElements.push(<TextFieldItem key={attribute.name + attribute.stringValue}
@@ -191,9 +192,11 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
                 const setAttribute = (newValue: string) => {
                 }
                 attributes.forEach(attribute => {
-                    attributeElements.push(<TextFieldItem key={attribute.name + attribute.stringValue}
-                                                          label={attribute.name} value={attribute.stringValue}
-                                                          setFunc={setAttribute}/>);
+                    attributeElements.push(<TextFieldItem
+                        key={attribute.name + attribute.stringValue}
+                        label={attribute.name} value={attribute.stringValue}
+                        setFunc={setAttribute}
+                    />);
                 });
                 setEdgeAttributes(attributeElements);
             });

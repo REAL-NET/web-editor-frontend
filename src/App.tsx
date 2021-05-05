@@ -4,7 +4,7 @@ import {Elements, OnLoadParams, ReactFlowProvider} from 'react-flow-renderer';
 import PropertyBar from './PropertyBar'
 import Palette from './Palette';
 import Scene from './Scene';
-import {getMetamodel, getModelNodes, getModelEdges} from './requests/modelRequests';
+import {getModelNodes, getModelEdges} from './requests/modelRequests';
 import {getModelElements} from './requests/elementRequests';
 
 import './App.css';
@@ -19,18 +19,6 @@ const OverviewFlow = () => {
     const [elements, setElements] = useState<Elements>([]);
     const [captureElementClick, setCaptureElementClick] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
-    const [metamodel, setMetamodel] = useState<Array<{ id: number, name: string }>>([]);
-
-    // metamodel
-    useEffect(() => {
-        getMetamodel(metamodelName).then(data => {
-            let newMetamodel: Array<{ id: number, name: string }> = [];
-            data.map((element: { id: number, name: string }) => {
-                newMetamodel.push(element);
-            })
-            setMetamodel(newMetamodel);
-        });
-    }, []);
 
     // model
     useEffect(() => {
@@ -63,7 +51,7 @@ const OverviewFlow = () => {
                     setCurrentElementId={setCurrentElementId}
                     captureElementClick={captureElementClick}
                 />
-                <Palette metamodel={metamodel}/>
+                <Palette metamodelName={metamodelName}/>
             </ReactFlowProvider>
         </div>
     );
