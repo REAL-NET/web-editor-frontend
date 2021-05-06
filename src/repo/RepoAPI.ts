@@ -90,14 +90,13 @@ export class RepoAPI {
         return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/association/${modelName}/${name}/${sourceName}/${targetName}/${level}/${potency}/${minSource}/${maxSource}/${minTarget}/${maxTarget}`))
     }
 
-    public static InstantiateNode(modelName: string, name: string, parentModel: string, parentName: string, level: number, potency: number): Node | undefined {
-        return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/node/${modelName}/${parentModel}/${parentName}/${name}/${level}/${potency}`))
+    public static InstantiateNode(modelName: string, name: string, parentModel: string, parentName: string): Node | undefined {
+        return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/node/${modelName}/${parentModel}/${parentName}/${name}`))
     }
     
     public static InstantiateAssociation(modelName: string, name: string, parentModel: string, parentName: string,
-                                         sourceName: string, targetName: string,level: number, potency: number,
-                                         minSource: number, maxSource: number, minTarget: number, maxTarget: number): Association | undefined {
-        return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/association/${modelName}/${name}/${parentModel}/${parentName}/${sourceName}/${targetName}/${level}/${potency}/${minSource}/${maxSource}/${minTarget}/${maxTarget}`))
+                                         sourceName: string, targetName: string): Association | undefined {
+        return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/association/${modelName}/${name}/${parentModel}/${parentName}/${sourceName}/${targetName}`))
     }
 
     public static GetAttributes(modelName: string, name: string): Attribute[] | undefined {

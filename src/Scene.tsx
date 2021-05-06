@@ -82,14 +82,13 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
         }
         if (edgeParas.source != null && edgeParas.target != null) {
             if (edgeType === AssociationMetatype) {
-                RepoAPI.CreateAssociations(modelName, name, edgeParas.source, edgeParas.target, 0, 0, 0, 0, 0, 0);
+                RepoAPI.CreateAssociations(modelName, name, edgeParas.source, edgeParas.target, -1, -1, -1, -1, -1, -1);
             } else if (edgeType === GeneralizationMetatype) {
-                RepoAPI.CreateGeneralization(modelName, name, edgeParas.source, edgeParas.target, 0, 0);
+                RepoAPI.CreateGeneralization(modelName, name, edgeParas.source, edgeParas.target, -1, -1);
                 edge.style = GeneralizationEdgeStyle;
                 edge.type = GeneralizationEdgeType;
             } else {
-                RepoAPI.InstantiateAssociation(modelName, name, metaModel, metaType, edgeParas.source, edgeParas.target,
-                    0, 0, 0, 0, 0, 0);
+                RepoAPI.InstantiateAssociation(modelName, name, metaModel, metaType, edgeParas.source, edgeParas.target);
             }
             console.debug(edgeParas);
         }
@@ -110,7 +109,7 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
             const metaModel = metaInfo.substr(0, sepIndex);
             const id = Math.round(Math.random() * 10000000).toString();
             const name = metaType + "_" + id
-            let node = RepoAPI.InstantiateNode(modelName, name, metaModel, metaType, 0, 0);
+            let node = RepoAPI.InstantiateNode(modelName, name, metaModel, metaType);
             if (node !== undefined) {
                 const position = reactFlowInstance.project({ x: event.clientX, y: event.clientY - 40 });
                 const newNode: Node = {
