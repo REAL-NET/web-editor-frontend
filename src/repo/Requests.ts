@@ -10,6 +10,7 @@ export class Requests
             };
 
             postRequest.send();
+            console.debug(url);
             return result;
         } catch (e) {
             return undefined;

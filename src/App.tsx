@@ -18,6 +18,9 @@ const OverviewFlow = () => {
     const [captureElementClick, setCaptureElementClick] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
     const [edgeType, setEdgeType] = useState(AssociationMetatype);
+    const [level, setLevel] = useState(-1);
+    const [potency, setPotency] = useState(-1);
+
 
     return (
         <div className="OverviewFlow">
@@ -27,6 +30,10 @@ const OverviewFlow = () => {
                              elements={elements}
                              modelName={modelName}
                              setCurrentElementId={setCurrentElementId}
+                             level={level}
+                             setLevel={setLevel}
+                             potency={potency}
+                             setPotency={setPotency}
                 />
                 <Scene
                     elements={elements}
@@ -37,6 +44,8 @@ const OverviewFlow = () => {
                     captureElementClick={captureElementClick}
                     modelName={modelName}
                     edgeType={edgeType}
+                    setLevel={setLevel}
+                    setPotency={setPotency}
                 />
                 <Palette
                     setElements={setElements}

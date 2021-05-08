@@ -30,18 +30,27 @@ type SceneProps = {
     setCurrentElementId: Function
     captureElementClick: boolean
     modelName: string,
-    edgeType: string
+    edgeType: string,
+    setLevel: Function,
+    setPotency: Function
 }
 
 
 const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
-                                         setReactFlowInstance, setCurrentElementId, captureElementClick, modelName, edgeType }) => {
+                                         setReactFlowInstance, setCurrentElementId, captureElementClick, modelName, edgeType,
+                                     setLevel, setPotency}) => {
 
 
     const onElementClick = (_: MouseEvent, element: FlowElement) => {
         console.log('click', element);
         setCurrentElementId(element.id);
-
+        const repoElement = RepoAPI.GetElement(modelName, element.id);
+        if (repoElement === undefined) {
+            console.error("No element retrieved from repo");
+            return;
+        }
+        setLevel(repoElement.level);
+        setPotency(repoElement.potency);
     }
 
 

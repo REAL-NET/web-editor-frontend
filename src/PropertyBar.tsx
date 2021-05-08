@@ -12,10 +12,15 @@ type PropertyBarProps = {
     setElements: Function
     id: string,
     modelName: string,
-    setCurrentElementId: Function
+    setCurrentElementId: Function,
+    level: number,
+    setLevel: Function,
+    potency: number,
+    setPotency: Function
 }
 
-const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, modelName, setCurrentElementId }) => {
+const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, modelName, setCurrentElementId,
+                                                 level, setLevel, potency, setPotency}) => {
 
     const element = elements.find(item => item.id === id)
 
@@ -31,6 +36,16 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
     //edge states
     const [edgeIsAnimated, setEdgeIsAnimated] = useState(false);
     const [edgeType, setEdgeType] = useState('');
+
+    const toInt = (value: string): number => {
+        let intValue = Number(value);
+        if (Number.isNaN(intValue)) {
+            console.error(value + " is not a integer");
+            return 0;
+        }
+        return intValue;
+    }
+
 
     //common effects
 
@@ -103,7 +118,27 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
         );
     }, [Name, setElements]);
 
+    useEffect(() => {
+        setElements((els: Elements) =>
+            els.map((el) => {
+                if (el.id === id) {
+                    RepoAPI.SetElementLevel(modelName, el.id, level);
+                }
+                return el;
+            })
+        );
+    }, [level, setLevel]);
 
+    useEffect(() => {
+        setElements((els: Elements) =>
+            els.map((el) => {
+                if (el.id === id) {
+                    RepoAPI.SetElementPotency(modelName, el.id, potency);
+                }
+                return el;
+            })
+        );
+    }, [potency, setPotency]);
 
     useEffect(() => {
         setElements((els: Elements) =>
@@ -183,6 +218,16 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                 </div>
 
                 <div>
+                    <TextField label="Level: " value={level}
+                               onChange={(evt) => setLevel(toInt(evt.target.value))}/>
+                </div>
+
+                <div>
+                    <TextField label="Potency: " value={potency}
+                               onChange={(evt) => setPotency(toInt(evt.target.value))}/>
+                </div>
+
+                <div>
                     <TextField label="Background:" value={nodeBg} onChange={(evt) => setNodeBg(evt.target.value)}/>
                 </div>
 
@@ -221,6 +266,16 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                 <div>
                     <TextField label="Label: " value={element.label}
                                onChange={(evt) => setName(evt.target.value)}/>
+                </div>
+
+                <div>
+                    <TextField label="Level: " value={level}
+                               onChange={(evt) => setLevel(toInt(evt.target.value))}/>
+                </div>
+
+                <div>
+                    <TextField label="Potency: " value={potency}
+                               onChange={(evt) => setPotency(toInt(evt.target.value))}/>
                 </div>
 
                 <div>

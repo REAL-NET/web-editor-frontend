@@ -8,6 +8,7 @@ import {Generalization} from "../model/Generalization";
 import {Attribute} from "../model/Attribute";
 import {Slot} from "../model/Slot";
 import {ElementInfo} from "../model/ElementInfo";
+import {Element} from "../model/Element";
 
 export class RepoAPI {
     static host: string = "http://localhost:8000/api/repo"
