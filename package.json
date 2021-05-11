@@ -23,7 +23,7 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "node ./gateway/build/app.js",
+    "start": "tsc --project ./gateway && node ./gateway/build/app.js",
     "start-gateway": "cd gateway && npm start",
     "build": "react-scripts build",
     "test": "react-scripts test",
