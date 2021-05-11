@@ -1,15 +1,20 @@
 FROM node:latest
 
 WORKDIR /app
-COPY package.json /app
+COPY package.json ./
+COPY package-lock.json ./
 RUN npm install --force
-RUN npm run build
-COPY . /app
+COPY . ./
+RUN npm run build	
 
+WORKDIR /app/gateway
+COPY package.json /gateway
+COPY package-lock.json /gateway
+RUN npm install --force
 WORKDIR /app/gateway
 COPY package.json /app/gateway
 RUN npm install --force
 
 EXPOSE 5000
 
-CMD npm start
+CMD ["node", "./build/app.js"]
