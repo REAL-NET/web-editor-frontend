@@ -13,11 +13,13 @@ const Palette = (props: { metamodelName: string }) => {
 
     useEffect(() => {
         getMetamodel(props.metamodelName).then(data => {
-            let newMetamodel: Array<{ id: number, name: string }> = [];
-            data.forEach((element: { id: number, name: string }) => {
-                newMetamodel.push(element);
-            })
-            setMetamodel(newMetamodel);
+            if (data !== undefined) {
+                let newMetamodel: Array<{ id: number, name: string }> = [];
+                data.forEach((element: { id: number, name: string }) => {
+                    newMetamodel.push(element);
+                })
+                setMetamodel(newMetamodel);
+            }
         });
     }, []);
 
