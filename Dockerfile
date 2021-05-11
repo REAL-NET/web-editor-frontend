@@ -14,4 +14,4 @@ RUN npm install --force
 
 EXPOSE 5000
 
-CMD npm run start-gateway
+CMD ["node", "./build/app.js"]
