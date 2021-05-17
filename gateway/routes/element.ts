@@ -2,12 +2,13 @@ import {Router} from 'express';
 import axios from 'axios';
 
 const elementRouter = Router();
+const host = 'gateway:80'; // 'localhost:8000'
 
 elementRouter.get(`/:modelName/node/:id`, function (req, res) {
     let modelName = req.params.modelName;
     let id = req.params.id;
     axios
-        .get(`http://localhost:8000/api/Repo/Element/${modelName}/${id}/asNode`)
+        .get(`http://${host}/api/Repo/Element/${modelName}/${id}/asNode`)
         .then(response => {
             res.send(response.data);
         })
@@ -21,7 +22,7 @@ elementRouter.get('/:modelName/edge/:id', function (req, res) {
     let modelName = req.params.modelName;
     let id = req.params.id;
     axios
-        .get(`http://localhost:8000/api/Repo/Element/${modelName}/${id}/asEdge`)
+        .get(`http://${host}/api/Repo/Element/${modelName}/${id}/asEdge`)
         .then(response => {
             res.send(response.data)
         })

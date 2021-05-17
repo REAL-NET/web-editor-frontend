@@ -3,18 +3,19 @@ FROM node:latest
 WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
-RUN npm install --force
-COPY . ./
-RUN npm run build	
+RUN npm install	
 
-WORKDIR /app/gateway
+WORKDIR /gateway
 COPY package.json /gateway
 COPY package-lock.json /gateway
-RUN npm install --force
-WORKDIR /app/gateway
-COPY package.json /app/gateway
-RUN npm install --force
+RUN npm install
+
+WORKDIR ../../app
+COPY . .
+RUN npm run build
+RUN npm i -g typescript
+RUN tsc --project ./gateway
 
 EXPOSE 5000
 
-CMD ["node", "./build/app.js"]
+CMD ["node", "./gateway/build/app.js"]
