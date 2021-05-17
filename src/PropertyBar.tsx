@@ -1,10 +1,12 @@
 import React, {useEffect, useState, DragEvent, useRef} from "react";
 import {Elements, isNode, isEdge, Edge, Node} from "react-flow-renderer";
-import { MenuItem, Select, Checkbox, TextField, InputLabel } from "@material-ui/core";
+import {MenuItem, Select, Checkbox, TextField, InputLabel, Button, FormLabel} from "@material-ui/core";
 
 import './Palette.css'
 import './Nodes.css'
 import {RepoAPI} from "./repo/RepoAPI";
+import AddAttributeDialog from "./dialogs/AddAttributeDialog";
+import { toInt } from "./Util";
 
 
 type PropertyBarProps = {
@@ -24,6 +26,8 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
 
     const element = elements.find(item => item.id === id)
 
+    const [modalOpen, setModalOpen] = useState(false);
+
     //common states
     const [Name, setName] = useState("");
     const [isHidden, setIsHidden] = useState(false);
@@ -37,15 +41,16 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
     const [edgeIsAnimated, setEdgeIsAnimated] = useState(false);
     const [edgeType, setEdgeType] = useState('');
 
-    const toInt = (value: string): number => {
-        let intValue = Number(value);
-        if (Number.isNaN(intValue)) {
-            console.error(value + " is not a integer");
-            return 0;
-        }
-        return intValue;
-    }
-
+    const attributesAndSlots =
+         (
+            <div>
+                <br/>
+                <FormLabel>Attributes:</FormLabel>
+                <br/>
+                <Button onClick={() => setModalOpen(true)}>Add Attribute</Button>
+                <AddAttributeDialog open={modalOpen} setOpen={setModalOpen} modelName={modelName} elementName={element?.id || ""}/>
+            </div>
+        )
 
     //common effects
 
@@ -227,6 +232,8 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                                onChange={(evt) => setPotency(toInt(evt.target.value))}/>
                 </div>
 
+                {attributesAndSlots}
+
                 <div>
                     <TextField label="Background:" value={nodeBg} onChange={(evt) => setNodeBg(evt.target.value)}/>
                 </div>
@@ -277,6 +284,8 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                     <TextField label="Potency: " value={potency}
                                onChange={(evt) => setPotency(toInt(evt.target.value))}/>
                 </div>
+
+                {attributesAndSlots}
 
                 <div>
                     <label>Hidden:</label>
