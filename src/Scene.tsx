@@ -12,8 +12,8 @@ import ReactFlow, {
     Node,
     FlowElement,
 } from 'react-flow-renderer';
-import www from './nodeImages/www.png';
 
+import { Handle } from 'react-flow-renderer';
 import './Scene.css'
 
 let id = 0;
@@ -64,22 +64,33 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
     const onDrop = (event: DragEvent) => {
         event.preventDefault();
         if (reactFlowInstance) {
-            const type = event.dataTransfer.getData('application/reactflow');
+            let data = event.dataTransfer.getData('application/reactflow').split(' ');
             const position = reactFlowInstance.project({ x: event.clientX, y: event.clientY - 40 });
 
-            let data = type.split(' ');
-            console.log(data[2]);
-            const newNode: Node = {
-                id: getId(),
-                type,
-                position,
-                data: { label: `${ data[0] } node`},
-                style:{
-                    backgroundImage: data[1],
-                    height: Number(data[2]),
-                    width: Number(data[3]),
-                }
-            };
+            let newNode:Node;
+            if (data[0]=='imgnode') {
+                data[0]='default';
+                 newNode = {
+                    id: getId(),
+                    type: data[0],
+                    position,
+                    data: {label: `${data[0]} node`},
+                    style: {
+                        backgroundImage: data[1],
+                        height: Number(data[2]),
+                        width: Number(data[3]),
+                        padding: 0,
+                    }
+                };
+            }
+            else{
+                newNode = {
+                    id: getId(),
+                    type: data[0],
+                    position,
+                    data: {label: `${data[0]} node`},
+                };
+            }
 
             setElements((es: Elements) => es.concat(newNode));
         }

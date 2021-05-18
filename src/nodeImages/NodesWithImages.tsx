@@ -1,5 +1,8 @@
 import React, { DragEvent } from 'react';
 
+import { makeStyles } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';
+
 import '../PropertyBar.css'
 import '../Nodes.css'
 
@@ -8,16 +11,9 @@ import www from "./www.png";
 import eee from "./eee.png";
 import ttt from "./ttt.png";
 
-let Images=[www,eee,ttt];
-function getDimensions(_src:string,_callback:Function){
-    /* create a new image , not linked anywhere in document */
-    var img = document.createElement('img');
-    /* set the source of the image to what u want */
-    img.src=_src;
-    /* Wait the image to load and when its so call the callback function */
-    /* If you want the actual natural dimensions of the image use naturalWidth and natural height instead */
-    img.onload = function () { _callback(img.width,img.height) };
-}
+
+let ImageLinks = [www,eee,ttt];
+
 
 const onDragStart = (event: DragEvent, nodeType: string) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
@@ -29,18 +25,17 @@ const NodesWithImages = () => {
     let height:number
     let width:number
 
-    let Images2=Images.map(function(name) {
+    let Images = ImageLinks.map(function(name) {
             let img = new Image();
-            img.src=name;
-
+            img.src = name;
             return img;
         }
         )
 
 
-    const ListOfNodes = Images2.map((name) =>
+    const ListOfNodes = Images.map((name) =>
         <li>
-            <div className="dndnode default" onDragStart={(event: DragEvent) => onDragStart(event, 'default'+' '+`url(${name.src})`+' '+name.height+' '+ name.width)} draggable
+            <div className="imgnode" onDragStart={(event: DragEvent) => onDragStart(event, 'imgnode'+' '+`url(${name.src})`+' '+name.height+' '+ name.width)} draggable
                  style={{
                      backgroundImage: `url(${name.src})`,
                      height: name.height,
@@ -51,11 +46,30 @@ const NodesWithImages = () => {
         </li>
     );
 
+    const useStyles = makeStyles((theme) => ({
+        root: {
+            width: '100%',
+            backgroundColor: theme.palette.background.paper,
+            position: 'relative',
+            overflow: 'auto',
+            maxHeight: 720,
+        },
+        listSection: {
+            backgroundColor: 'inherit',
+        },
+        ul: {
+            backgroundColor: 'inherit',
+            padding: 0,
+        },
+    }));
+
+    const classes = useStyles();
 
     return (
-        <ul>
-            {ListOfNodes}
-        </ul>
+        <List className={classes.root}  subheader={<li />}>
+            Nodes with images
+            { ListOfNodes }
+        </List>
     );
 };
 
