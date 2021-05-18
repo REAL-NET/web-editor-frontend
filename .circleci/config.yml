@@ -3,6 +3,8 @@ jobs:
   build:  
     docker:
       - image: node:latest
+    environment:
+      process.env.CI: "false"
     steps:
       - checkout
       - run:
