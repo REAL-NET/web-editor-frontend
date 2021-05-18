@@ -4,7 +4,7 @@ jobs:
     docker:
       - image: node:latest
     environment:
-      process.env.CI: "false"
+      CI: "false"
     steps:
       - checkout
       - run:
