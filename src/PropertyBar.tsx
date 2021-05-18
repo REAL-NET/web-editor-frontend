@@ -6,6 +6,7 @@ import './Palette.css'
 import './Nodes.css'
 import {RepoAPI} from "./repo/RepoAPI";
 import AddAttributeDialog from "./dialogs/AddAttributeDialog";
+import AddSlotDialog from "./dialogs/AddSlotDialog";
 import { toInt } from "./Util";
 
 
@@ -26,7 +27,8 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
 
     const element = elements.find(item => item.id === id)
 
-    const [modalOpen, setModalOpen] = useState(false);
+    const [addAttributeOpen, setAddAttributeOpen] = useState(false);
+    const [addSlotOpen, setAddSlotOpen] = useState(false);
 
     //common states
     const [Name, setName] = useState("");
@@ -47,12 +49,21 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                 <br/>
                 <FormLabel>Attributes:</FormLabel>
                 <br/>
-                <Button onClick={() => setModalOpen(true)}>Add Attribute</Button>
-                <AddAttributeDialog open={modalOpen} setOpen={setModalOpen} modelName={modelName} elementName={element?.id || ""}/>
                 {
                     RepoAPI.GetAttributes(modelName, element?.id || "")?.map(value =>
                         <label>{value.name}: {value.type.name} L:{value.level} P:{value.potency}</label>)
                 }
+                <Button onClick={() => setAddAttributeOpen(true)} fullWidth={true}>Add Attribute</Button>
+                <AddAttributeDialog open={addAttributeOpen} setOpen={setAddAttributeOpen} modelName={modelName} elementName={element?.id || ""}/>
+                <br/>
+                <FormLabel>Slots:</FormLabel>
+                <br/>
+                {
+                    RepoAPI.GetSlots(modelName, element?.id || "")?.map(value =>
+                        <label>{value.attribute.name}: {value.value.name} L:{value.level} P:{value.potency}</label>)
+                }
+                <Button onClick={() => setAddSlotOpen(true)} fullWidth={true}>Add Slot</Button>
+                <AddSlotDialog open={addSlotOpen} setOpen={setAddSlotOpen} modelName={modelName} elementName={element?.id || ""}/>
             </div>
         )
 

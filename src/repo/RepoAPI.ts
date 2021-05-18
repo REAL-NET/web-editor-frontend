@@ -140,6 +140,10 @@ export class RepoAPI {
         return this.ParseJson(Requests.Request("PUT", `${RepoAPI.host}/Element/${modelName}/${elementName}/slot/${attributeName}/${valueName}`))
     }
 
+    public static GetValuesForAttribute(modelName: string, elementName: string, attributeName: string): ElementInfo[] | undefined {
+        return this.ParseJson(Requests.Request("GET", `${RepoAPI.host}/Element/${modelName}/${elementName}/slot/${attributeName}/values`))
+    }
+
     private static ParseJson<Type>(json: string | undefined): Type | undefined {
         try {
             if (json === undefined) {
