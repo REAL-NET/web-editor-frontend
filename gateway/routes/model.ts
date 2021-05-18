@@ -7,7 +7,7 @@ const host = 'gateway:80'; // 'localhost:8000'
 modelRouter.get('/model/:modelName', function (req, res) {
     const modelName = req.params.modelName;
     axios
-        .get(`https://${host}/api/Repo/Model/` + modelName)
+        .get(`http://${host}/api/Repo/Model/` + modelName)
         .then(response => {
             res.send(response.data);
         })
@@ -20,7 +20,7 @@ modelRouter.get('/model/:modelName', function (req, res) {
 modelRouter.get('/metamodel/:metamodelName', function (req, res) {
     const metamodelName = req.params.metamodelName;
     axios
-        .get(`https://${host}/api/Repo/Model/` + metamodelName)
+        .get(`http://${host}/api/Repo/Model/` + metamodelName)
         .then(response => {
             res.send(response.data);
         })
