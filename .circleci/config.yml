@@ -15,6 +15,6 @@ jobs:
           command: npm run build
 
 workflows:
-  sample: 
+  main: 
     jobs:
       - build
