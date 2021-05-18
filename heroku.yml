@@ -1,4 +1,3 @@
 build:
   docker:
     web: Dockerfile
-    gateway: docker.pkg.github.com/real-net/web-editor-backend/gateway:master
