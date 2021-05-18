@@ -8,7 +8,7 @@ elementRouter.get(`/:modelName/node/:id`, function (req, res) {
     let modelName = req.params.modelName;
     let id = req.params.id;
     axios
-        .get(`http://${host}/api/Repo/Element/${modelName}/${id}/asNode`)
+        .get(`https://${host}/api/Repo/Element/${modelName}/${id}/asNode`)
         .then(response => {
             res.send(response.data);
         })
@@ -22,7 +22,7 @@ elementRouter.get('/:modelName/edge/:id', function (req, res) {
     let modelName = req.params.modelName;
     let id = req.params.id;
     axios
-        .get(`http://${host}/api/Repo/Element/${modelName}/${id}/asEdge`)
+        .get(`https://${host}/api/Repo/Element/${modelName}/${id}/asEdge`)
         .then(response => {
             res.send(response.data)
         })
