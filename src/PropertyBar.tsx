@@ -49,6 +49,10 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                 <br/>
                 <Button onClick={() => setModalOpen(true)}>Add Attribute</Button>
                 <AddAttributeDialog open={modalOpen} setOpen={setModalOpen} modelName={modelName} elementName={element?.id || ""}/>
+                {
+                    RepoAPI.GetAttributes(modelName, element?.id || "")?.map(value =>
+                        <label>{value.name}: {value.type.name} L:{value.level} P:{value.potency}</label>)
+                }
             </div>
         )
 
