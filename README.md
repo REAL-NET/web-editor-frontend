@@ -1,6 +1,6 @@
 # REAL.NET Web Editor
 
-[![CircleCI](https://circleci.com/gh/REAL-NET/web-editor-backend.svg?style=svg)](https://circleci.com/gh/REAL-NET/web-editor-backend)
+[![CircleCI](https://circleci.com/gh/REAL-NET/web-editor-frontend.svg?style=svg)](https://circleci.com/gh/REAL-NET/web-editor-frontend)
 
 ## Available Scripts
 
