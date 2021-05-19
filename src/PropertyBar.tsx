@@ -51,7 +51,10 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                 <br/>
                 {
                     RepoAPI.GetAttributes(modelName, element?.id || "")?.map(value =>
-                        <label>{value.name}: {value.type.name} L:{value.level} P:{value.potency}</label>)
+                        <div>
+                            <label>{value.name}: {value.type.name} L:{value.level} P:{value.potency}</label>
+                            <br/>
+                        </div>)
                 }
                 <Button onClick={() => setAddAttributeOpen(true)} fullWidth={true}>Add Attribute</Button>
                 <AddAttributeDialog open={addAttributeOpen} setOpen={setAddAttributeOpen} modelName={modelName} elementName={element?.id || ""}/>
@@ -60,7 +63,10 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                 <br/>
                 {
                     RepoAPI.GetSlots(modelName, element?.id || "")?.map(value =>
-                        <label>{value.attribute.name}: {value.value.name} L:{value.level} P:{value.potency}</label>)
+                        <div>
+                            <label>{value.attribute.name}: {value.value.name} L:{value.level} P:{value.potency}</label>
+                            <br/>
+                        </div>)
                 }
                 <Button onClick={() => setAddSlotOpen(true)} fullWidth={true}>Add Slot</Button>
                 <AddSlotDialog open={addSlotOpen} setOpen={setAddSlotOpen} modelName={modelName} elementName={element?.id || ""}/>
