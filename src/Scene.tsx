@@ -12,7 +12,7 @@ import ReactFlow, {
     FlowElement,
 } from 'react-flow-renderer';
 
-import customNode from './customNodes';
+import robotsModelNode from './RobotsModelNode';
 
 import './Scene.css'
 
@@ -26,7 +26,7 @@ type SceneProps = {
 }
 
 const nodeTypes = {
-    exampleNode: customNode,
+    robotsNode: robotsModelNode,
 };
 
 const Scene: React.FC<SceneProps> = ({
@@ -70,7 +70,7 @@ const Scene: React.FC<SceneProps> = ({
                 id: getId(),
                 type,
                 position,
-                data: {label: `${name}`},
+                data: {name: `${name}`},
             };
 
             setElements((es: Elements) => es.concat(newNode));

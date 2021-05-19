@@ -1,6 +1,8 @@
 import React, {DragEvent, useEffect, useState} from 'react';
-import './Palette.css'
-import './Nodes.css'
+
+import './Palette.css';
+import './RobotsModelNode.css';
+
 import {getMetamodel} from "./requests/modelRequests";
 
 const onDragStart = (event: DragEvent, nodeType: string, elementName: string) => {
@@ -25,8 +27,8 @@ const Palette = (props: { metamodelName: string }) => {
 
     const PaletteItem = (props: { element: { id: number; name: string } }) => {
         return (
-            <div className="dndnode" key={props.element.id}
-                 onDragStart={(event: DragEvent) => onDragStart(event, 'default', props.element.name)} draggable>
+            <div className="robotsNode" key={props.element.id}
+                 onDragStart={(event: DragEvent) => onDragStart(event, 'robotsNode', props.element.name)} draggable>
                 {props.element.name}
             </div>
         );

@@ -6,7 +6,6 @@ import {getNodeAttributes, getEdgeAttributes} from "./requests/elementRequests";
 import {Attribute} from "./Attribute";
 
 import './PropertyBar.css'
-import './Nodes.css'
 
 type PropertyBarProps = {
     modelName: string

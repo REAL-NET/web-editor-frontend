@@ -29,8 +29,8 @@ export const getModelElements = async (modelName: string, nodes: Array<{ id: num
                 elements.push(
                     {
                         id: `${data.id}`,
-                        type: 'default',
-                        data: {label: data.name},
+                        type: 'robotsNode',
+                        data: {name: data.name},
                         position: {x: 100 + data.id * 10, y: 150 + data.id * 10},
                     }
                 );
