@@ -116,8 +116,8 @@ export class RepoAPI {
         return this.ParseJson(Requests.Request("GET", `${RepoAPI.host}/Element/${modelName}/${elementName}/attribute/${attributeName}`))
     }
 
-    public static AddAttribute(modelName: string, elementName: string, attributeName: string, typeName: string, level: number, potency: number): Attribute | undefined {
-        return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/${modelName}/${elementName}/attribute/${attributeName}/${typeName}/${level}/${potency}`))
+    public static AddAttribute(modelName: string, elementName: string, attributeName: string, typeModel: string, typeName: string, level: number, potency: number): Attribute | undefined {
+        return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/${modelName}/${elementName}/attribute/${attributeName}/${typeModel}/${typeName}/${level}/${potency}`))
     }
 
     public static SetAttributeSingle(modelName: string, elementName: string, attributeName: string, single: boolean): Attribute | undefined {

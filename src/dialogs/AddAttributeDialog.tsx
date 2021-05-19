@@ -22,7 +22,9 @@ const FormDialog: React.FC<FormDialogProps> = ({open, setOpen, modelName, elemen
     const [level, setLevel] = useState(-1);
     const [potency, setPotency] = useState(-1);
 
-    const availableTypes = RepoAPI.GetModel(modelName)?.elements.map(value => value.name) || [];
+
+    const availableTypes = [...(RepoAPI.GetModel(modelName)?.nodes || []), ...(RepoAPI.GetModelMetaNodes(modelName) || [])]
+        .map(value => `${value.model.name}::${value.name}`);
 
     const [typeName, setTypeName] = useState(availableTypes[0] || "");
     const [isNoError, setIsNoError] = useState(availableTypes.length > 0);
@@ -34,7 +36,9 @@ const FormDialog: React.FC<FormDialogProps> = ({open, setOpen, modelName, elemen
     const handleAdd = () => {
         console.log(modelName);
         console.log(elementName);
-        const repoResp = RepoAPI.AddAttribute(modelName, elementName, attributeName, typeName, level, potency);
+        const sep = typeName.indexOf("::");
+        const repoResp = RepoAPI.AddAttribute(modelName, elementName, attributeName,
+            typeName.substr(0, sep), typeName.substr(sep + 2), level, potency);
         if (repoResp === undefined) {
             setIsNoError(false);
         } else {
