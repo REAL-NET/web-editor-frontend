@@ -22,9 +22,7 @@ const onDragStart = (event: DragEvent, nodeType: string) => {
 };
 
 
-const NodesWithImages = () => {
-    let height:number
-    let width:number
+const ImageNodeList = () => {
 
     let Images = ImageLinks.map(function(name) {
             let img = new Image();
@@ -36,13 +34,13 @@ const NodesWithImages = () => {
 
     const ListOfNodes = Images.map((name) =>
         <li>
-            <div className="imgnode" onDragStart={(event: DragEvent) => onDragStart(event, 'imgnode'+' '+`url(${name.src})`+' '+name.height+' '+ name.width)} draggable
+            <div className="imgnode" onDragStart={(event: DragEvent) => onDragStart(event, 'ImageNode'+' '+`url(${name.src})`+' '+name.height+' '+ name.width)} draggable
                  style={{
                      backgroundImage: `url(${name.src})`,
                      height: name.height,
                      width : name.width,
             }}>
-                Default Node
+                Image Node
             </div>
         </li>
     );
@@ -77,4 +75,4 @@ const NodesWithImages = () => {
 
 
 
-export default NodesWithImages;
+export default ImageNodeList;

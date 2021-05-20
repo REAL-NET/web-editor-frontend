@@ -1,7 +1,7 @@
 import React, { DragEvent } from 'react';
 import './PropertyBar.css'
 import './Nodes.css'
-import NodesWithImages from './NodesWithImages';
+import ImageNodeList from './ImageNodeList';
 const onDragStart = (event: DragEvent, nodeType: string) => {
     event.dataTransfer.setData('application/reactflow', nodeType );
     event.dataTransfer.effectAllowed = 'move';
@@ -22,7 +22,7 @@ const Palette = () => {
                 Output Node
             </div>
             Nodes with images
-            <NodesWithImages></NodesWithImages>
+            <ImageNodeList></ImageNodeList>
         </aside>
     );
 };

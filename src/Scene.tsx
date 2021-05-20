@@ -1,4 +1,5 @@
 import React, { DragEvent, MouseEvent } from 'react';
+import ImageNode from "./ImageNode";
 
 import ReactFlow, {
     addEdge,
@@ -60,6 +61,9 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
         console.log('elements:', elements);
     };
 
+    const nodeTypes = {
+        imageNode: ImageNode,
+    };
 
     const onDrop = (event: DragEvent) => {
         event.preventDefault();
@@ -68,18 +72,21 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
             const position = reactFlowInstance.project({ x: event.clientX, y: event.clientY - 40 });
 
             let newNode:Node;
-            if (data[0]=='imgnode') {
-                data[0]='default';
+            if (data[0]==='ImageNode') {
                  newNode = {
                     id: getId(),
-                    type: data[0],
+                    type: 'imageNode',
                     position,
                     data: {label: `${data[0]} node`},
                     style: {
                         backgroundImage: data[1],
                         height: Number(data[2]),
                         width: Number(data[3]),
-                        padding: 0,
+                        border: '1px solid #777',
+                        borderRadius:2,
+                        display: "flex",
+                        justifyContent:"center",
+                        alignItems: 'center',
                     }
                 };
             }
@@ -97,6 +104,7 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
 
     };
 
+
     return (
         <div className="Scene">
             <ReactFlow
@@ -110,6 +118,7 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onElementClick={captureElementClick ? onElementClick : undefined}
+                nodeTypes={nodeTypes}
             >
                 <Controls/>
                 <Background>
