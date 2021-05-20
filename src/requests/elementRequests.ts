@@ -30,7 +30,7 @@ export const getModelElements = async (modelName: string, nodes: Array<{ id: num
                     {
                         id: `${data.id}`,
                         type: 'robotsNode',
-                        data: {name: data.name},
+                        data: {label: data.name},
                         position: {x: 100 + data.id * 10, y: 150 + data.id * 10},
                     }
                 );

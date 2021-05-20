@@ -12,7 +12,7 @@ const robotsModelNode: FC<NodeProps> = ({data}) => {
                 id="target"
                 className="robotsNodeHandle"
             />
-            {data.name}
+            {data.label}
             <Handle
                 type="source"
                 position={Position.Bottom}

@@ -70,7 +70,7 @@ const Scene: React.FC<SceneProps> = ({
                 id: getId(),
                 type,
                 position,
-                data: {name: `${name}`},
+                data: {label: `${name}`},
             };
 
             setElements((es: Elements) => es.concat(newNode));

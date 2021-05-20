@@ -243,7 +243,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
             <div>
                 <label>Id: {idNumber}</label>
             </div>
-            <TextFieldItem label="Label" value={element.data.name} setFunc={setName}/>
+            <TextFieldItem label="Label" value={element.data.label} setFunc={setName}/>
             <TextFieldItem label="Background" value={nodeBg} setFunc={setNodeBg}/>
             <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden}/>
             <CheckboxItem label="Draggable" setFunc={setNodeIsDraggable} value={nodeIsDraggable}/>
