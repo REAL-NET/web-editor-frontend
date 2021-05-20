@@ -1,9 +1,9 @@
 import React, { DragEvent } from 'react';
 import './PropertyBar.css'
 import './Nodes.css'
-import NodesWithImages from './nodeImages/NodesWithImages';
+import NodesWithImages from './NodesWithImages';
 const onDragStart = (event: DragEvent, nodeType: string) => {
-    event.dataTransfer.setData('application/reactflow', nodeType, );
+    event.dataTransfer.setData('application/reactflow', nodeType );
     event.dataTransfer.effectAllowed = 'move';
 };
 
@@ -21,6 +21,7 @@ const Palette = () => {
             <div className="dndnode output" onDragStart={(event: DragEvent) => onDragStart(event, 'output')} draggable>
                 Output Node
             </div>
+            Nodes with images
             <NodesWithImages></NodesWithImages>
         </aside>
     );

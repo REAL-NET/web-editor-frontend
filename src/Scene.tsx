@@ -1,4 +1,5 @@
 import React, { DragEvent, MouseEvent } from 'react';
+
 import ReactFlow, {
     addEdge,
     Background,
@@ -13,7 +14,6 @@ import ReactFlow, {
     FlowElement,
 } from 'react-flow-renderer';
 
-import { Handle } from 'react-flow-renderer';
 import './Scene.css'
 
 let id = 0;

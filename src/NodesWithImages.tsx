@@ -3,16 +3,17 @@ import React, { DragEvent } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 
-import '../PropertyBar.css'
-import '../Nodes.css'
+import './PropertyBar.css'
+import './Nodes.css'
 
 
-import www from "./www.png";
-import eee from "./eee.png";
-import ttt from "./ttt.png";
+import www from "./nodeImages/ttt.png";
+import eee from "./nodeImages/eee.png";
+import ttt from "./nodeImages/ttt.png";
+import mmm from "./nodeImages/mmm.png";
 
 
-let ImageLinks = [www,eee,ttt];
+let ImageLinks = [www,eee,ttt,mmm,mmm,ttt];
 
 
 const onDragStart = (event: DragEvent, nodeType: string) => {
@@ -52,7 +53,7 @@ const NodesWithImages = () => {
             backgroundColor: theme.palette.background.paper,
             position: 'relative',
             overflow: 'auto',
-            maxHeight: 720,
+            maxHeight: 360,
         },
         listSection: {
             backgroundColor: 'inherit',
@@ -67,7 +68,6 @@ const NodesWithImages = () => {
 
     return (
         <List className={classes.root}  subheader={<li />}>
-            Nodes with images
             { ListOfNodes }
         </List>
     );
