@@ -4,6 +4,7 @@ import './Palette.css';
 import './RobotsModelNode.css';
 
 import {getMetamodel} from "./requests/modelRequests";
+import {getAttributeValue} from "./requests/attributesRequests";
 
 const onDragStart = (event: DragEvent, nodeType: string, elementName: string) => {
     event.dataTransfer.setData('text/plain', nodeType + ' ' + elementName);
@@ -14,15 +15,20 @@ const Palette = (props: { metamodelName: string }) => {
     const [metamodel, setMetamodel] = useState<Array<{ id: number, name: string }>>([]);
 
     useEffect(() => {
+        let newMetamodel: Array<{ id: number, name: string }> = [];
         getMetamodel(props.metamodelName).then(data => {
             if (data !== undefined) {
-                let newMetamodel: Array<{ id: number, name: string }> = [];
                 data.forEach((element: { id: number, name: string }) => {
-                    newMetamodel.push(element);
+                    (async () => {
+                        await getAttributeValue(props.metamodelName, element.id, 'isAbstract').then(data => {
+                            if (data !== undefined && !data) {
+                                newMetamodel.push(element);
+                            }
+                        })
+                    })();
                 })
-                setMetamodel(newMetamodel);
             }
-        });
+        }).finally(() => setMetamodel(newMetamodel));
     }, []);
 
     const PaletteItem = (props: { element: { id: number; name: string } }) => {
