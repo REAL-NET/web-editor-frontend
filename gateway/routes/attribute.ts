@@ -16,7 +16,7 @@ attributeRouter.get(`/:modelName/:id/:attribute`, function (req, res) {
         })
         .catch(error => {
             console.log(error.message);
-            res.send([]);
+            res.send(undefined);
         });
 });
 
@@ -28,6 +28,9 @@ attributeRouter.post(`/:modelName/:id/:attribute/:defaultValue`, function (req, 
     let defaultValue = req.params.defaultValue;
     axios
         .post(`http://${host}/api/Repo/Attribute/${modelName}/${id}/${attribute}/0/${defaultValue}`)
+        .then(response => {
+            res.send(`${response.status}`)
+        })
         .catch(error => {
             console.log(error.message);
         });

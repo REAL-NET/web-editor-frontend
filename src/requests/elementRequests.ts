@@ -36,18 +36,23 @@ export const getModelElements = async (modelName: string, nodes: Array<{ id: num
                 );
                 (async () => {
                     await getAttributeValue(modelName, data.id, "xCoordinate").then(attributeData => {
-                        console.log(attributeData)
                         if (attributeData === undefined || attributeData.length === 0) {
                             (async () => {
                                 await api.post(`attribute/${modelName}/${data.id}/xCoordinate/0`).then(() => {
-                                    api.put(`attribute/${modelName}/${data.id}/xCoordinate/${100 + data.id * 10}`);
+                                    (async () => {
+                                        await api.put(`attribute/${modelName}/${data.id}/xCoordinate/${100 + data.id * 10}`)
+                                            .catch(error => console.log(error));
+                                    })();
                                 }).catch(error => console.log(error));
-                            })().catch(error => console.log(error));
+                            })();
                             (async () => {
                                 await api.post(`attribute/${modelName}/${data.id}/yCoordinate/0`).then(() => {
-                                    api.put(`attribute/${modelName}/${data.id}/yCoordinate/${150 + data.id * 10}`);
+                                    (async () => {
+                                        await api.put(`attribute/${modelName}/${data.id}/yCoordinate/${150 + data.id * 10}`)
+                                            .catch(error => console.log(error));
+                                    })();
                                 }).catch(error => console.log(error));
-                            })().catch(error => console.log(error));
+                            })();
                         }
                     }).catch(error => console.log(error));
                 })();
