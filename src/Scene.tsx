@@ -92,7 +92,7 @@ const Scene: React.FC<SceneProps> = ({
                 onDragOver={onDragOver}
                 onElementClick={captureElementClick ? onElementClick : undefined}
             >
-                <Controls/>
+                <Controls />
                 <Background>
                     gap={25}
                     size={1}

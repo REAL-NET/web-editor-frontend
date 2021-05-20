@@ -1,9 +1,11 @@
 import { Router } from 'express';
-import modelRouter from './model';
+import attributeRouter from './attribute';
 import elementRouter from './element';
+import modelRouter from './model';
 
 const routes = Router();
 
+routes.use('/attribute', attributeRouter);
 routes.use('/element', elementRouter);
 routes.use('/model', modelRouter);
 

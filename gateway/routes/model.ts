@@ -4,6 +4,7 @@ import axios from 'axios';
 const modelRouter = Router();
 const host = "localhost:8000"; // 'gateway:80'; // 'localhost:8000'
 
+// Gets model
 modelRouter.get('/model/:modelName', function (req, res) {
     const modelName = req.params.modelName;
     axios
@@ -17,6 +18,7 @@ modelRouter.get('/model/:modelName', function (req, res) {
         });
 });
 
+// Gets metamodel
 modelRouter.get('/metamodel/:metamodelName', function (req, res) {
     const metamodelName = req.params.metamodelName;
     axios

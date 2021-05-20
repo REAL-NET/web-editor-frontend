@@ -1,7 +1,7 @@
 import api from './api'
 import {Elements} from "react-flow-renderer";
 
-import {Attribute} from "../Attribute";
+import {getAttributeValue} from "./attributesRequests";
 
 export const getEdge = async (modelName: string, id: number) => {
     try {
@@ -34,6 +34,23 @@ export const getModelElements = async (modelName: string, nodes: Array<{ id: num
                         position: {x: 100 + data.id * 10, y: 150 + data.id * 10},
                     }
                 );
+                (async () => {
+                    await getAttributeValue(modelName, data.id, "xCoordinate").then(attributeData => {
+                        console.log(attributeData)
+                        if (attributeData === undefined || attributeData.length === 0) {
+                            (async () => {
+                                await api.post(`attribute/${modelName}/${data.id}/xCoordinate/0`).then(() => {
+                                    api.put(`attribute/${modelName}/${data.id}/xCoordinate/${100 + data.id * 10}`);
+                                }).catch(error => console.log(error));
+                            })().catch(error => console.log(error));
+                            (async () => {
+                                await api.post(`attribute/${modelName}/${data.id}/yCoordinate/0`).then(() => {
+                                    api.put(`attribute/${modelName}/${data.id}/yCoordinate/${150 + data.id * 10}`);
+                                }).catch(error => console.log(error));
+                            })().catch(error => console.log(error));
+                        }
+                    }).catch(error => console.log(error));
+                })();
             }
         })
     }
@@ -55,27 +72,3 @@ export const getModelElements = async (modelName: string, nodes: Array<{ id: num
 
     return elements;
 };
-
-export const getNodeAttributes = async (modelName: string, id: number) => {
-    let attributes: Array<Attribute> = [];
-    await getNode(modelName, id).then(data => {
-        if (data.attributes !== undefined) {
-            data.attributes.forEach((attribute: Attribute) => {
-                attributes.push(attribute);
-            });
-        }
-    });
-    return attributes;
-}
-
-export const getEdgeAttributes = async (modelName: string, id: number) => {
-    let attributes: Array<Attribute> = [];
-    await getEdge(modelName, id).then(data => {
-        if (data.attributes !== undefined) {
-            data.attributes.forEach((attribute: Attribute) => {
-                attributes.push(attribute);
-            });
-        }
-    });
-    return attributes;
-}

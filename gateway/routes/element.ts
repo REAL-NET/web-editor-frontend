@@ -4,6 +4,7 @@ import axios from 'axios';
 const elementRouter = Router();
 const host = 'localhost:8000'; // 'gateway:80'; // 'localhost:8000'
 
+// Gets node
 elementRouter.get(`/:modelName/node/:id`, function (req, res) {
     let modelName = req.params.modelName;
     let id = req.params.id;
@@ -18,6 +19,7 @@ elementRouter.get(`/:modelName/node/:id`, function (req, res) {
         });
 });
 
+// Gets edge
 elementRouter.get('/:modelName/edge/:id', function (req, res) {
     let modelName = req.params.modelName;
     let id = req.params.id;
