@@ -5,14 +5,14 @@ import './RobotsModelNode.css';
 import './Nodes.css'
 
 import ImageNodeList from './nodesWithImages/ImageNodeList';
-import {getMetamodel} from "./requests/modelRequests";
-import {getAttributeValue} from "./requests/attributesRequests";
+import {getMetamodel} from './requests/modelRequests';
+import {getAttributeValue} from './requests/attributesRequests';
 
 // const onDragStart = (event: DragEvent, nodeType: string) => {
 //    event.dataTransfer.setData('application/reactflow', nodeType);
 
 const onDragStart = (event: DragEvent, nodeType: string, elementName: string) => {
-    event.dataTransfer.setData('text/plain', nodeType + ' ' + elementName);
+    event.dataTransfer.setData('application/reactflow', nodeType + ' ' + elementName);
     event.dataTransfer.effectAllowed = 'move';
 };
 
@@ -36,7 +36,7 @@ const Palette = (props: { metamodelName: string }) => {
         }).finally(() => setMetamodel(newMetamodel));
     }, []);
 
-    const PaletteItem = (props: { element: { id: number; name: string } }) => {
+    const RobotsNodePaletteItem = (props: { element: { id: number; name: string } }) => {
         return (
             <div className="robotsNode" key={props.element.id}
                  onDragStart={(event: DragEvent) => onDragStart(event, 'robotsNode', props.element.name)} draggable>
@@ -46,7 +46,7 @@ const Palette = (props: { metamodelName: string }) => {
     }
 
     const metamodelFiltered = metamodel.filter((element) => element.name !== '');
-    const metamodelElements = metamodelFiltered.map(element => <PaletteItem element={element} key={element.name + element.id} />);
+    const metamodelElements = metamodelFiltered.map(element => <RobotsNodePaletteItem element={element} key={element.name + element.id} />);
 
     return (
         <aside>

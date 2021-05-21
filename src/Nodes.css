@@ -1,24 +1,3 @@
-.dndnode {
-    height: 20px;
-    padding: 4px;
-    border: 1px solid #1a192b;
-    border-radius: 2px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: grab;
-}
-
-.dndnode.input {
-    border-color: #0041d0;
-}
-
-.dndnode.output {
-    border-color: #ff0072;
-}
-
-
 .imgnode {
     border: 1px solid #1a192b;
     border-radius: 2px;

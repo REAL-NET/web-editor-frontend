@@ -53,7 +53,7 @@ const Scene: React.FC<SceneProps> = ({
     const onConnect = (edgeParas: Edge | Connection): void => {
         setElements((elements: Elements) => addEdge(edgeParas, elements));
     };
-	
+
     let id = 0;
     const getId = function (): string {
         while (elements.find(item => item.id === `${id}`) !== undefined) {
@@ -66,31 +66,30 @@ const Scene: React.FC<SceneProps> = ({
         event.preventDefault();
         if (reactFlowInstance) {
             const data = event.dataTransfer.getData('application/reactflow').split(' ');
-			const type = data[0];
-            const position = reactFlowInstance.project({ x: event.clientX - 280, y: event.clientY - 40 });
+            const type = data[0];
+            const position = reactFlowInstance.project({x: event.clientX - 280, y: event.clientY - 40});
 
             let newNode: Node;
             if (type === 'ImageNode') {
-                 newNode = {
+                newNode = {
                     id: getId(),
                     type: 'imageNode',
                     position,
-                    data: {label: `${data[0]} node`},
+                    data: {label: `${type} node`},
                     style: {
                         backgroundImage: data[1],
                         height: Number(data[2]),
                         width: Number(data[3]),
                         border: '1px solid #777',
-                        borderRadius:2,
+                        borderRadius: 2,
                         display: "flex",
-                        justifyContent:"center",
+                        justifyContent: "center",
                         alignItems: 'center',
                     }
                 };
-            }
-            else{
+            } else {
+                const name = data[1];
                 newNode = {
-					const name = data[1];
                     id: getId(),
                     type,
                     position,
@@ -116,9 +115,8 @@ const Scene: React.FC<SceneProps> = ({
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onElementClick={captureElementClick ? onElementClick : undefined}
-                nodeTypes={nodeTypes}
             >
-                <Controls />
+                <Controls/>
                 <Background>
                     gap={25}
                     size={1}
