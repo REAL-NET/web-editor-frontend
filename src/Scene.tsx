@@ -14,8 +14,8 @@ import ReactFlow, {
 
 import './Scene.css'
 
-import ImageNode from "./nodesWithImages/ImageNode";
-import robotsModelNode from './RobotsModelNode';
+import ImageNode from './nodesWithImages/ImageNode';
+import RobotsModelNode from './RobotsModelNode';
 
 type SceneProps = {
     elements: Elements
@@ -27,7 +27,7 @@ type SceneProps = {
 }
 
 const nodeTypes = {
-    robotsNode: robotsModelNode,
+    robotsNode: RobotsModelNode,
     imageNode: ImageNode,
 };
 
@@ -75,7 +75,7 @@ const Scene: React.FC<SceneProps> = ({
                     id: getId(),
                     type: 'imageNode',
                     position,
-                    data: {label: `${type} node`},
+                    data: {label: `${type}`},
                     style: {
                         backgroundImage: data[1],
                         height: Number(data[2]),

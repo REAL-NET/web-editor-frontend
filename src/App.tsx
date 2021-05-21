@@ -23,19 +23,19 @@ const OverviewFlow = () => {
     // model
     useEffect(() => {
         Promise.all([getModelNodes(modelName), getModelEdges(modelName)]).then(value => {
-                let nodes: Array<{ id: number, name: string }> = [];
-                let edges: Array<{ id: number, name: string }> = [];
-                if (value[0] !== undefined) {
-                    value[0].forEach((element: { id: number, name: string }) => {
-                        nodes.push(element);
-                    });
-                }
-                if (value[1] !== undefined) {
-                    value[1].forEach((element: { id: number, name: string }) => {
-                        edges.push(element);
-                    });
-                }
-                getModelElements(modelName, nodes, edges).then(data => setElements(data));
+            let nodes: Array<{ id: number, name: string }> = [];
+            let edges: Array<{ id: number, name: string }> = [];
+            if (value[0] !== undefined) {
+                value[0].forEach((element: { id: number, name: string }) => {
+                    nodes.push(element);
+                });
+            }
+            if (value[1] !== undefined) {
+                value[1].forEach((element: { id: number, name: string }) => {
+                    edges.push(element);
+                });
+            }
+            getModelElements(modelName, nodes, edges).then(data => setElements(data));
         });
     }, []);
 

@@ -19,12 +19,6 @@ const robotsModelNode: FC<NodeProps> = ({data}) => {
                 id="source"
                 className="robotsNodeHandle"
             />
-            {/*<Handle*/}
-            {/*    type="target"*/}
-            {/*    position={Position.Right}*/}
-            {/*    id="t2"*/}
-            {/*    className="robotsNodeHandle"*/}
-            {/*/>*/}
         </div>
     );
 };

@@ -3,27 +3,21 @@ import React, {DragEvent} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 
-import '../PropertyBar.css'
 import '../Nodes.css'
 
-
-import image1 from "./images/image1.png";
-import image2 from "./images/image2.png";
-import image3 from "./images/image3.png";
-import image4 from "./images/image4.png";
-
+import image1 from './images/image1.png';
+import image2 from './images/image2.png';
+import image3 from './images/image3.png';
+import image4 from './images/image4.png';
 
 let ImageLinks = [image1, image2, image3, image3, image4];
 
-
-const onDragStart = (event: DragEvent, nodeType: string) => {
-    event.dataTransfer.setData('application/reactflow', nodeType);
+const onDragStart = (event: DragEvent, nodeType: string, source: string, height: string, width: string) => {
+    event.dataTransfer.setData('application/reactflow', nodeType + ' ' + source + ' ' + height + ' ' + width);
     event.dataTransfer.effectAllowed = 'move';
 };
 
-
 const ImageNodeList = () => {
-
     let Images = ImageLinks.map(function (name) {
             let img = new Image();
             img.src = name;
@@ -31,22 +25,21 @@ const ImageNodeList = () => {
         }
     )
 
-
-    const ListOfNodes = Images.map((name) =>
+    const ListOfNodes = Images.map((image) =>
         <li>
             <div className="imgnode"
-                 onDragStart={(event: DragEvent) => onDragStart(event, 'ImageNode' + ' ' + `url(${name.src})` + ' ' + name.height + ' ' + name.width)}
+                 onDragStart={(event: DragEvent) => onDragStart(event, 'ImageNode', `url(${image.src})`, `${image.height}`,
+                  `${image.width}`)}
                  draggable
                  style={{
-                     backgroundImage: `url(${name.src})`,
-                     height: name.height,
-                     width: name.width,
+                     backgroundImage: `url(${image.src})`,
+                     height: image.height,
+                     width: image.width,
                  }}>
                 Image Node
             </div>
         </li>
     );
-
 
     const useStyles = makeStyles((theme) => ({
         root: {
@@ -66,7 +59,6 @@ const ImageNodeList = () => {
     }));
 
     const classes = useStyles();
-
 
     return (
         <List className={classes.root} subheader={<li/>}>

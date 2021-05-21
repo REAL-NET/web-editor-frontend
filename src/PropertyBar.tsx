@@ -81,22 +81,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
     useEffect(() => {
         setElements((els: Elements) =>
             els.map((el) => {
-                if (el.id === id) {
-                    // it's important that you create a new object here
-                    // in order to notify react flow about the change
-                    el = {
-                        ...el,
-                        label: name,
-                    };
-                }
-                return el;
-            })
-        );
-    }, [name, setElements]);
-
-    useEffect(() => {
-        setElements((els: Elements) =>
-            els.map((el) => {
                 if (el.id === id && isNode(el)) {
                     // when you update a simple type you can just update the value
                     el.connectable = nodeIsConnectable;
