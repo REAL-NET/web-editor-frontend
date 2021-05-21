@@ -66,6 +66,7 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
     };
 
     const onDrop = (event: DragEvent) => {
+
         event.preventDefault();
         if (reactFlowInstance) {
             let data = event.dataTransfer.getData('application/reactflow').split(' ');
@@ -103,7 +104,6 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
         }
 
     };
-
 
     return (
         <div className="Scene">

@@ -4,7 +4,7 @@ import './Nodes.css'
 import ImageNodeList from './nodesWithImages/ImageNodeList';
 
 const onDragStart = (event: DragEvent, nodeType: string) => {
-    event.dataTransfer.setData('application/reactflow', nodeType );
+    event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
 };
 
