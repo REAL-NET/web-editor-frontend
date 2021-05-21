@@ -8,9 +8,6 @@ import ImageNodeList from './nodesWithImages/ImageNodeList';
 import {getMetamodel} from './requests/modelRequests';
 import {getAttributeValue} from './requests/attributesRequests';
 
-// const onDragStart = (event: DragEvent, nodeType: string) => {
-//    event.dataTransfer.setData('application/reactflow', nodeType);
-
 const onDragStart = (event: DragEvent, nodeType: string, elementName: string) => {
     event.dataTransfer.setData('application/reactflow', nodeType + ' ' + elementName);
     event.dataTransfer.effectAllowed = 'move';
@@ -24,14 +21,12 @@ const Palette = (props: { metamodelName: string }) => {
         getMetamodel(props.metamodelName).then(data => {
             if (data !== undefined) {
                 data.forEach((element: { id: number, name: string }) => {
-                    (async () => {
-                        await getAttributeValue(props.metamodelName, element.id, 'isAbstract').then(data => {
-                            if (data !== undefined && !data) {
-                                newMetamodel.push(element);
-                            }
-                        })
-                    })();
-                })
+                    getAttributeValue(props.metamodelName, element.id, 'isAbstract').then(data => {
+                        if (data !== undefined && !data) {
+                            newMetamodel.push(element);
+                        }
+                    });
+                });
             }
         }).finally(() => setMetamodel(newMetamodel));
     }, []);

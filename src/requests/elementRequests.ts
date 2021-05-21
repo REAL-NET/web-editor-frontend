@@ -72,3 +72,12 @@ export const getModelElements = async (modelName: string, nodes: Array<{ id: num
 
     return elements;
 };
+
+export const setElementName = async (modelName: string, id: number, value: string) => {
+    try {
+        const response = await api.put(`element/${modelName}/${id}/name/${value}`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+}

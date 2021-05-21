@@ -2,10 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {Elements, isNode, isEdge} from 'react-flow-renderer';
 import {MenuItem, Select, Checkbox, TextField, InputLabel} from '@material-ui/core';
 
-import {getNodeAttributes, getEdgeAttributes} from './requests/attributesRequests'
+import {getNodeAttributes, getEdgeAttributes, setAttributeValue, getAttributeValue} from './requests/attributesRequests'
 import {Attribute} from './Attribute';
 
 import './PropertyBar.css'
+import {setElementName} from "./requests/elementRequests";
 
 type PropertyBarProps = {
     modelName: string
@@ -72,6 +73,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
                         ...el.data,
                         label: name,
                     };
+                    setElementName(modelName, idNumber, name);
                 }
                 return el;
             })
@@ -150,10 +152,10 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
                 }
 
                 const attributeElements: Array<JSX.Element> = [];
-                const setAttribute = (newValue: string) => {
-                    // ADD CODE HERE LATER
-                }
                 attributes.forEach(attribute => {
+                    const setAttribute = (newValue: string) => {
+                        setAttributeValue(modelName, idNumber, attribute.name, newValue);
+                    }
                     attributeElements.push(<TextFieldItem key={attribute.name + attribute.stringValue}
                                                           label={attribute.name} value={attribute.stringValue}
                                                           setFunc={setAttribute}/>);
@@ -172,9 +174,10 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
                 }
 
                 const attributeElements: Array<JSX.Element> = [];
-                const setAttribute = (newValue: string) => {
-                }
                 attributes.forEach(attribute => {
+                    const setAttribute = (newValue: string) => {
+                        setAttributeValue(modelName, idNumber, attribute.name, newValue);
+                    }
                     attributeElements.push(<TextFieldItem
                         key={attribute.name + attribute.stringValue}
                         label={attribute.name} value={attribute.stringValue}

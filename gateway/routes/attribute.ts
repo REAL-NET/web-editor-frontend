@@ -20,7 +20,7 @@ attributeRouter.get(`/:modelName/:id/:attribute`, function (req, res) {
         });
 });
 
-// Adds the attribute
+// Adds the attribute into element
 attributeRouter.post(`/:modelName/:id/:attribute/:defaultValue`, function (req, res) {
     let modelName = req.params.modelName;
     let id = req.params.id;
