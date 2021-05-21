@@ -3,6 +3,14 @@ import { Elements } from 'react-flow-renderer';
 
 let initialElements : Elements = [
     {
+        id: 'cn1',
+        type: 'exampleNode',
+        data: {
+            text: 'Custom node'
+        },
+        position: {x: 0, y: 0},
+    },
+    {
         id: '1',
         type: 'input',
         data: {

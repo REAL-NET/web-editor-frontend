@@ -1,36 +1,39 @@
-import React, { useEffect, useState, DragEvent } from "react";
-import { Elements, isNode, isEdge } from "react-flow-renderer";
-import { MenuItem, Select, Checkbox, TextField, InputLabel } from "@material-ui/core";
+import React, {useEffect, useState} from "react";
+import {Elements, isNode, isEdge} from "react-flow-renderer";
+import {MenuItem, Select, Checkbox, TextField, InputLabel} from "@material-ui/core";
 
-import './Palette.css'
-import './Nodes.css'
+import {getNodeAttributes, getEdgeAttributes} from "./requests/attributesRequests";
+import {Attribute} from "./Attribute";
 
+import './PropertyBar.css'
 
 type PropertyBarProps = {
+    modelName: string
     elements: Elements
     setElements: Function
     id: string
 }
 
-const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) => {
-
+const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElements, id}) => {
     const element = elements.find(item => item.id === id)
+    const idNumber: number = +id;
 
     //common states
-    const [Name, setName] = useState("");
+    const [name, setName] = useState("");
     const [isHidden, setIsHidden] = useState(false);
 
     //node states
     const [nodeBg, setNodeBg] = useState("");
     const [nodeIsDraggable, setNodeIsDraggable] = useState(true);
     const [nodeIsConnectable, setNodeIsConnectable] = useState(true);
+    const [nodeAttributes, setNodeAttributes] = useState<Array<JSX.Element>>([]);
 
     //edge states
     const [edgeIsAnimated, setEdgeIsAnimated] = useState(false);
     const [edgeType, setEdgeType] = useState('');
+    const [edgeAttributes, setEdgeAttributes] = useState<Array<JSX.Element>>([]);
 
     //common effects
-
     useEffect(() => { // sets states for chosen element
         if ((element !== undefined) && isNode(element)) {
 
@@ -47,7 +50,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
         }
     }, [element])
 
-
     useEffect(() => {
         setElements((els: Elements) =>
             els.map((el) => {
@@ -60,7 +62,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
         );
     }, [isHidden, setElements]);
 
-
     useEffect(() => {
         setElements((els: Elements) =>
             els.map((el) => {
@@ -69,14 +70,13 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
                     // in order to notify react flow about the change
                     el.data = {
                         ...el.data,
-                        label: Name,
+                        label: name,
                     };
                 }
                 return el;
             })
         );
-    }, [Name, setElements]);
-
+    }, [name, setElements]);
 
     useEffect(() => {
         setElements((els: Elements) =>
@@ -86,15 +86,13 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
                     // in order to notify react flow about the change
                     el = {
                         ...el,
-                        label: Name,
+                        label: name,
                     };
                 }
                 return el;
             })
         );
-    }, [Name, setElements]);
-
-
+    }, [name, setElements]);
 
     useEffect(() => {
         setElements((els: Elements) =>
@@ -108,9 +106,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
         );
     }, [nodeIsConnectable, setElements]);
 
-
     //node effects
-
     useEffect(() => {
         setElements((els: Elements) =>
             els.map((el) => {
@@ -122,7 +118,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
             })
         );
     }, [nodeIsDraggable, setElements]);
-
 
     useEffect(() => {
         setElements((els: Elements) =>
@@ -137,7 +132,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
         );
     }, [nodeBg, setElements]);
 
-
     //edge effects
     useEffect(() => {
         setElements((els: Elements) =>
@@ -151,7 +145,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
         );
     }, [edgeIsAnimated, setElements]);
 
-
     useEffect(() => {
         setElements((els: Elements) =>
             els.map((el) => {
@@ -164,96 +157,127 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id }) 
         );
     }, [edgeType, setElements]);
 
+    useEffect(() => {
+        if (element !== undefined && isNode(element)) {
+            let attributes: Array<Attribute> = [];
+            getNodeAttributes(modelName, idNumber).then(data => {
+                if (data !== undefined) {
+                    data.map(attribute => attributes.push(attribute));
+                }
 
-    if (element !== undefined && isNode(element)) {
+                const attributeElements: Array<JSX.Element> = [];
+                const setAttribute = (newValue: string) => {
+                    // ADD CODE HERE LATER
+                }
+                attributes.forEach(attribute => {
+                    attributeElements.push(<TextFieldItem key={attribute.name + attribute.stringValue}
+                                                          label={attribute.name} value={attribute.stringValue}
+                                                          setFunc={setAttribute}/>);
+                });
+                setNodeAttributes(attributeElements);
+            });
+        }
+    }, [element]);
+
+    useEffect(() => {
+        if (element !== undefined && isEdge(element)) {
+            let attributes: Array<Attribute> = [];
+            getEdgeAttributes(modelName, idNumber).then(data => {
+                if (data !== undefined) {
+                    data.map(attribute => attributes.push(attribute));
+                }
+
+                const attributeElements: Array<JSX.Element> = [];
+                const setAttribute = (newValue: string) => {
+                }
+                attributes.forEach(attribute => {
+                    attributeElements.push(<TextFieldItem
+                        key={attribute.name + attribute.stringValue}
+                        label={attribute.name} value={attribute.stringValue}
+                        setFunc={setAttribute}
+                    />);
+                });
+                setEdgeAttributes(attributeElements);
+            });
+        }
+    }, [element]);
+
+    const CheckboxItem = (props: { label: string, value: boolean, setFunc: (isRequired: boolean) => void }) => {
         return (
-            <aside>
-
-                <div>
-                    <TextField label="Label: " value={element.data.label}
-                               onChange={(evt) => setName(evt.target.value)}/>
-                </div>
-
-                <div>
-                    <TextField label="Background:" value={nodeBg} onChange={(evt) => setNodeBg(evt.target.value)}/>
-                </div>
-
-                <div>
-                    <label>Hidden:</label>
-                    <Checkbox
-                        checked={isHidden}
-                        onChange={(evt) => setIsHidden(evt.target.checked)}
-                        size='small'
-                    />
-                </div>
-
-                <div>
-                    <label>Draggable:</label>
-                    <Checkbox
-                        checked={nodeIsDraggable}
-                        onChange={(evt) => setNodeIsDraggable(evt.target.checked)}
-                        size='small'
-                    />
-                </div>
-
-                <div>
-                    <label>Connectable:</label>
-                    <Checkbox
-                        size='small'
-                        checked={nodeIsConnectable}
-                        onChange={(evt) => setNodeIsConnectable(evt.target.checked)}
-                    />
-                </div>
-
-            </aside>)
-    } else if (element !== undefined && isEdge(element)) {
-        return (
-            <aside>
-
-                <div>
-                    <TextField label="Label: " value={element.label}
-                               onChange={(evt) => setName(evt.target.value)}/>
-                </div>
-
-                <div>
-                    <label>Hidden:</label>
-                    <Checkbox
-                        checked={isHidden}
-                        onChange={(evt) => setIsHidden(evt.target.checked)}
-                        size='small'
-                    />
-                </div>
-
-                <div>
-                    <label>Animated:</label>
-                    <Checkbox
-                        checked={edgeIsAnimated}
-                        onChange={(evt) => setEdgeIsAnimated(evt.target.checked)}
-                        size='small'
-                    />
-                </div>
-
-                <div>
-                    <InputLabel>Type</InputLabel>
-                    <Select
-                        id="edgeType"
-                        value={edgeType}
-                        onChange={(evt) => setEdgeType(evt.target.value as string)}
-                    >
-                        <MenuItem value={'default'}>default</MenuItem>
-                        <MenuItem value={'straight'}>straight</MenuItem>
-                        <MenuItem value={'step'}>step</MenuItem>
-                        <MenuItem value={'smoothstep'}>smoothstep</MenuItem>
-                    </Select>
-                </div>
-
-            </aside>)
-    } else {
-        return (
-            <aside>
-                <label>This part will be corrected soon</label>
-            </aside>)
+            <div>
+                <label>{props.label}:</label>
+                <Checkbox
+                    checked={props.value}
+                    onChange={(event) => props.setFunc(event.target.checked)}
+                    size="small"
+                />
+            </div>
+        );
     }
+
+    const TextFieldItem = (props: { label: string, value: string, setFunc: (newValue: string) => void }) => {
+        const [textFieldValue, setTextFieldValue] = useState(props.value);
+
+        return (
+            <div>
+                <TextField
+                    label={props.label + ': '}
+                    value={textFieldValue}
+                    onChange={(event) => setTextFieldValue(event.target.value)}
+                    onBlur={() => {
+                        props.setFunc(textFieldValue);
+                    }}
+                    onKeyPress={(event) => {
+                        if (event.key === 'Enter') {
+                            props.setFunc(textFieldValue);
+                        }
+                    }}
+                />
+            </div>
+        );
+    }
+
+    if (element !== undefined && isNode(element)) return (
+        <aside>
+            <div className="description">Property bar</div>
+            <div>
+                <label>Id: {idNumber}</label>
+            </div>
+            <TextFieldItem label="Label" value={element.data.label} setFunc={setName}/>
+            <TextFieldItem label="Background" value={nodeBg} setFunc={setNodeBg}/>
+            <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden}/>
+            <CheckboxItem label="Draggable" setFunc={setNodeIsDraggable} value={nodeIsDraggable}/>
+            <CheckboxItem label="Connectable" setFunc={setNodeIsConnectable} value={nodeIsConnectable}/>
+            {nodeAttributes}
+        </aside>)
+    else if (element !== undefined && isEdge(element)) return (
+        <aside>
+            <div className="description">Property bar</div>
+            <div>
+                <label>Id: {idNumber}</label>
+            </div>
+            <TextFieldItem label="Label" value={element.label !== undefined ? element.label : ""} setFunc={setName}/>
+            <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden}/>
+            <CheckboxItem label="Animated" setFunc={setEdgeIsAnimated} value={edgeIsAnimated}/>
+            <div>
+                <InputLabel>Type</InputLabel>
+                <Select
+                    id="edgeType"
+                    value={edgeType}
+                    onChange={(evt) => setEdgeType(evt.target.value as string)}
+                >
+                    <MenuItem value={'default'}>default</MenuItem>
+                    <MenuItem value={'straight'}>straight</MenuItem>
+                    <MenuItem value={'step'}>step</MenuItem>
+                    <MenuItem value={'smoothstep'}>smoothstep</MenuItem>
+                </Select>
+            </div>
+            {edgeAttributes}
+        </aside>)
+    else return (
+            <aside>
+                <div className="description">Property bar</div>
+            </aside>)
 };
 
 export default PropertyBar;

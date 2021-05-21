@@ -1,0 +1,54 @@
+services:
+  web:
+    container_name: web
+    image: yuniyakim/web-editor:latest
+    ports:
+      - "5000:5000"
+    depends_on:
+      - gateway
+    deploy:
+      resources:
+        limits:
+          memory: 50M
+        reservations:
+          memory: 20M
+    networks:
+      - network-services
+  gateway:
+    container_name: gateway
+    image: docker.pkg.github.com/real-net/web-editor-backend/gateway:master
+    ports:
+      - "8000:80"
+    depends_on:
+      - repo
+      - auth
+    networks:
+      - network-services
+  auth:
+    container_name: auth
+    image: docker.pkg.github.com/real-net/web-editor-backend/auth:master
+    ports:
+      - "8002:80"
+    volumes:
+      - type: bind
+        source: ./Auth/users.db
+        target: /users.db
+    networks:
+      - network-services
+  repo:
+    container_name: repo
+    image: docker.pkg.github.com/real-net/web-editor-backend/repo:master
+    ports:
+      - "8004:80"
+    networks:
+      - network-services
+  test:
+    container_name: test
+    image: docker.pkg.github.com/real-net/web-editor-backend/test:master
+    ports:
+      - "8099:80"
+    networks:
+      - network-services
+networks:
+  network-services:
+    driver: bridge

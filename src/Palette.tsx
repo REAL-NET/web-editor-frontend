@@ -1,29 +1,59 @@
-import React, { DragEvent } from 'react';
-import './PropertyBar.css'
-import './Nodes.css'
-import ImageNodeList from './nodesWithImages/ImageNodeList';
+import React, {DragEvent, useEffect, useState} from 'react';
 
-const onDragStart = (event: DragEvent, nodeType: string) => {
-    event.dataTransfer.setData('application/reactflow', nodeType);
+import './Palette.css';
+import './RobotsModelNode.css';
+import './Nodes.css'
+
+import ImageNodeList from './nodesWithImages/ImageNodeList';
+import {getMetamodel} from "./requests/modelRequests";
+import {getAttributeValue} from "./requests/attributesRequests";
+
+// const onDragStart = (event: DragEvent, nodeType: string) => {
+//    event.dataTransfer.setData('application/reactflow', nodeType);
+
+const onDragStart = (event: DragEvent, nodeType: string, elementName: string) => {
+    event.dataTransfer.setData('text/plain', nodeType + ' ' + elementName);
     event.dataTransfer.effectAllowed = 'move';
 };
 
+const Palette = (props: { metamodelName: string }) => {
+    const [metamodel, setMetamodel] = useState<Array<{ id: number, name: string }>>([]);
 
-const Palette = () => {
+    useEffect(() => {
+        let newMetamodel: Array<{ id: number, name: string }> = [];
+        getMetamodel(props.metamodelName).then(data => {
+            if (data !== undefined) {
+                data.forEach((element: { id: number, name: string }) => {
+                    (async () => {
+                        await getAttributeValue(props.metamodelName, element.id, 'isAbstract').then(data => {
+                            if (data !== undefined && !data) {
+                                newMetamodel.push(element);
+                            }
+                        })
+                    })();
+                })
+            }
+        }).finally(() => setMetamodel(newMetamodel));
+    }, []);
+
+    const PaletteItem = (props: { element: { id: number; name: string } }) => {
+        return (
+            <div className="robotsNode" key={props.element.id}
+                 onDragStart={(event: DragEvent) => onDragStart(event, 'robotsNode', props.element.name)} draggable>
+                {props.element.name}
+            </div>
+        );
+    }
+
+    const metamodelFiltered = metamodel.filter((element) => element.name !== '');
+    const metamodelElements = metamodelFiltered.map(element => <PaletteItem element={element} key={element.name + element.id} />);
+
     return (
         <aside>
-            <div className="description">palette.</div>
-            <div className="dndnode input" onDragStart={(event: DragEvent) => onDragStart(event, 'input')} draggable>
-                Input Node
-            </div>
-            <div className="dndnode" onDragStart={(event: DragEvent) => onDragStart(event, 'default')} draggable>
-                Default Node
-            </div>
-            <div className="dndnode output" onDragStart={(event: DragEvent) => onDragStart(event, 'output')} draggable>
-                Output Node
-            </div>
+            <div className="description">Palette</div>
+            {metamodelElements}
             Nodes with images
-            <ImageNodeList></ImageNodeList>
+            <ImageNodeList />
         </aside>
     );
 };

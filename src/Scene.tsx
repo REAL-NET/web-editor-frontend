@@ -1,5 +1,4 @@
-import React, { DragEvent, MouseEvent } from 'react';
-
+import React, {DragEvent, MouseEvent} from 'react';
 import ReactFlow, {
     addEdge,
     Background,
@@ -9,16 +8,14 @@ import ReactFlow, {
     Connection,
     Controls,
     OnLoadParams,
-    ElementId,
     Node,
     FlowElement,
 } from 'react-flow-renderer';
 
 import './Scene.css'
-import ImageNode from "./nodesWithImages/ImageNode";
 
-let id = 0;
-const getId = (): ElementId => `dndnode_${id++}`;
+import ImageNode from "./nodesWithImages/ImageNode";
+import robotsModelNode from './RobotsModelNode';
 
 type SceneProps = {
     elements: Elements
@@ -29,51 +26,51 @@ type SceneProps = {
     captureElementClick: boolean
 }
 
+const nodeTypes = {
+    robotsNode: robotsModelNode,
+    imageNode: ImageNode,
+};
 
-const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
-                                         setReactFlowInstance, setCurrentElementId, captureElementClick }) => {
-
-
+const Scene: React.FC<SceneProps> = ({
+                                         elements, setElements, reactFlowInstance,
+                                         setReactFlowInstance, setCurrentElementId, captureElementClick
+                                     }) => {
     const onElementClick = (_: MouseEvent, element: FlowElement) => {
-        console.log('click', element);
         setCurrentElementId(element.id);
-
     }
-
 
     const onDragOver = (event: DragEvent) => {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
     };
 
-
     const onElementsRemove = (elementsToRemove: Elements): void => {
         setElements((elements: Elements) => removeElements(elementsToRemove, elements));
-        console.log('elements:', elements);
     };
-
 
     const onLoad = (_reactFlowInstance: OnLoadParams) => setReactFlowInstance(_reactFlowInstance);
 
-
     const onConnect = (edgeParas: Edge | Connection): void => {
         setElements((elements: Elements) => addEdge(edgeParas, elements));
-        console.log('elements:', elements);
     };
-
-    const nodeTypes = {
-        imageNode: ImageNode,
+	
+    let id = 0;
+    const getId = function (): string {
+        while (elements.find(item => item.id === `${id}`) !== undefined) {
+            ++id;
+        }
+        return `${id}`;
     };
 
     const onDrop = (event: DragEvent) => {
-
         event.preventDefault();
         if (reactFlowInstance) {
-            let data = event.dataTransfer.getData('application/reactflow').split(' ');
-            const position = reactFlowInstance.project({ x: event.clientX, y: event.clientY - 40 });
+            const data = event.dataTransfer.getData('application/reactflow').split(' ');
+			const type = data[0];
+            const position = reactFlowInstance.project({ x: event.clientX - 280, y: event.clientY - 40 });
 
-            let newNode:Node;
-            if (data[0]==='ImageNode') {
+            let newNode: Node;
+            if (type === 'ImageNode') {
                  newNode = {
                     id: getId(),
                     type: 'imageNode',
@@ -93,34 +90,35 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
             }
             else{
                 newNode = {
+					const name = data[1];
                     id: getId(),
-                    type: data[0],
+                    type,
                     position,
-                    data: {label: `${data[0]} node`},
+                    data: {label: `${name}`},
                 };
             }
 
             setElements((es: Elements) => es.concat(newNode));
         }
-
     };
 
     return (
         <div className="Scene">
             <ReactFlow
-                elements = {elements}
+                elements={elements}
                 onElementsRemove={onElementsRemove}
                 onLoad={onLoad}
                 onConnect={onConnect}
+                nodeTypes={nodeTypes}
                 deleteKeyCode={46}
-                snapToGrid={true}
+                snapToGrid
                 snapGrid={[25, 25]}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onElementClick={captureElementClick ? onElementClick : undefined}
                 nodeTypes={nodeTypes}
             >
-                <Controls/>
+                <Controls />
                 <Background>
                     gap={25}
                     size={1}
@@ -129,4 +127,5 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
         </div>
     );
 };
+
 export default Scene;
