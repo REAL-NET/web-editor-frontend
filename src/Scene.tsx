@@ -12,9 +12,10 @@ import ReactFlow, {
     FlowElement,
 } from 'react-flow-renderer';
 
-import robotsModelNode from './RobotsModelNode';
-
 import './Scene.css'
+
+import ImageNode from "./nodesWithImages/ImageNode";
+import robotsModelNode from './RobotsModelNode';
 
 type SceneProps = {
     elements: Elements
@@ -27,6 +28,7 @@ type SceneProps = {
 
 const nodeTypes = {
     robotsNode: robotsModelNode,
+    imageNode: ImageNode,
 };
 
 const Scene: React.FC<SceneProps> = ({
@@ -63,15 +65,37 @@ const Scene: React.FC<SceneProps> = ({
     const onDrop = (event: DragEvent) => {
         event.preventDefault();
         if (reactFlowInstance) {
-            const type = event.dataTransfer.getData('text').split(' ')[0];
-            const name = event.dataTransfer.getData('text').split(' ')[1];
+            const data = event.dataTransfer.getData('application/reactflow').split(' ');
+            const type = data[0];
             const position = reactFlowInstance.project({x: event.clientX - 280, y: event.clientY - 40});
-            const newNode: Node = {
-                id: getId(),
-                type,
-                position,
-                data: {label: `${name}`},
-            };
+
+            let newNode: Node;
+            if (type === 'ImageNode') {
+                newNode = {
+                    id: getId(),
+                    type: 'imageNode',
+                    position,
+                    data: {label: `${type} node`},
+                    style: {
+                        backgroundImage: data[1],
+                        height: Number(data[2]),
+                        width: Number(data[3]),
+                        border: '1px solid #777',
+                        borderRadius: 2,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: 'center',
+                    }
+                };
+            } else {
+                const name = data[1];
+                newNode = {
+                    id: getId(),
+                    type,
+                    position,
+                    data: {label: `${name}`},
+                };
+            }
 
             setElements((es: Elements) => es.concat(newNode));
         }
@@ -92,7 +116,7 @@ const Scene: React.FC<SceneProps> = ({
                 onDragOver={onDragOver}
                 onElementClick={captureElementClick ? onElementClick : undefined}
             >
-                <Controls />
+                <Controls/>
                 <Background>
                     gap={25}
                     size={1}
