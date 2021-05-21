@@ -3,14 +3,14 @@ import React, { DragEvent } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 
-import './PropertyBar.css'
-import './Nodes.css'
+import '../PropertyBar.css'
+import '../Nodes.css'
 
 
-import www from "./nodeImages/ttt.png";
-import eee from "./nodeImages/eee.png";
-import ttt from "./nodeImages/ttt.png";
-import mmm from "./nodeImages/mmm.png";
+import www from "./Images/ttt.png";
+import eee from "./Images/eee.png";
+import ttt from "./Images/ttt.png";
+import mmm from "./Images/mmm.png";
 
 
 let ImageLinks = [www,eee,ttt,mmm,mmm,ttt];

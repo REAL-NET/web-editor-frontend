@@ -1,5 +1,5 @@
 import React, { DragEvent, MouseEvent } from 'react';
-import ImageNode from "./ImageNode";
+import ImageNode from "./nodesWithImages/ImageNode";
 
 import ReactFlow, {
     addEdge,
