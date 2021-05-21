@@ -44,6 +44,9 @@ attributeRouter.put(`/:modelName/:id/:attribute/:value`, function (req, res) {
     let value = req.params.value;
     axios
         .put(`http://${host}/api/Repo/Attribute/${modelName}/${id}/${attribute}/value/${value}`)
+        .then(response => {
+            res.send(`${response.status}`)
+        })
         .catch(error => {
             console.log(error.message);
         });

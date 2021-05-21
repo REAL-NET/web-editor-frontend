@@ -35,3 +35,21 @@ export const getAttributeValue = async (modelName: string, id: number, attribute
         console.log(error);
     }
 }
+
+export const addAttribute = async (modelName: string, id: number, attribute: string, defaultValue: string) => {
+    try {
+        const response = await api.post(`attribute/${modelName}/${id}/${attribute}/${defaultValue}`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const setAttributeValue = async (modelName: string, id: number, attribute: string, value: string) => {
+    try {
+        const response = await api.put(`attribute/${modelName}/${id}/${attribute}/${value}`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
