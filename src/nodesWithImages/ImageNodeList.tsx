@@ -1,19 +1,19 @@
-import React, { DragEvent } from 'react';
+import React, {DragEvent} from 'react';
 
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 
 import '../PropertyBar.css'
 import '../Nodes.css'
 
 
-import www from "./Images/ttt.png";
-import eee from "./Images/eee.png";
-import ttt from "./Images/ttt.png";
-import mmm from "./Images/mmm.png";
+import image1 from "./images/image1.png";
+import image2 from "./images/image2.png";
+import image3 from "./images/image3.png";
+import image4 from "./images/image4.png";
 
 
-let ImageLinks = [www,eee,ttt,mmm,mmm,ttt];
+let ImageLinks = [image1, image2, image3, image3, image4];
 
 
 const onDragStart = (event: DragEvent, nodeType: string) => {
@@ -24,26 +24,29 @@ const onDragStart = (event: DragEvent, nodeType: string) => {
 
 const ImageNodeList = () => {
 
-    let Images = ImageLinks.map(function(name) {
+    let Images = ImageLinks.map(function (name) {
             let img = new Image();
             img.src = name;
             return img;
         }
-        )
+    )
 
 
     const ListOfNodes = Images.map((name) =>
         <li>
-            <div className="imgnode" onDragStart={(event: DragEvent) => onDragStart(event, 'ImageNode'+' '+`url(${name.src})`+' '+name.height+' '+ name.width)} draggable
+            <div className="imgnode"
+                 onDragStart={(event: DragEvent) => onDragStart(event, 'ImageNode' + ' ' + `url(${name.src})` + ' ' + name.height + ' ' + name.width)}
+                 draggable
                  style={{
                      backgroundImage: `url(${name.src})`,
                      height: name.height,
-                     width : name.width,
-            }}>
+                     width: name.width,
+                 }}>
                 Image Node
             </div>
         </li>
     );
+
 
     const useStyles = makeStyles((theme) => ({
         root: {
@@ -64,15 +67,13 @@ const ImageNodeList = () => {
 
     const classes = useStyles();
 
+
     return (
-        <List className={classes.root}  subheader={<li />}>
-            { ListOfNodes }
+        <List className={classes.root} subheader={<li/>}>
+            {ListOfNodes}
         </List>
     );
 };
-
-
-
 
 
 export default ImageNodeList;

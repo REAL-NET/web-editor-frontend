@@ -1,5 +1,4 @@
 import React, { DragEvent, MouseEvent } from 'react';
-import ImageNode from "./nodesWithImages/ImageNode";
 
 import ReactFlow, {
     addEdge,
@@ -16,6 +15,7 @@ import ReactFlow, {
 } from 'react-flow-renderer';
 
 import './Scene.css'
+import ImageNode from "./nodesWithImages/ImageNode";
 
 let id = 0;
 const getId = (): ElementId => `dndnode_${id++}`;
