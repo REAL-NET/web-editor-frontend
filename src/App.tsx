@@ -22,20 +22,20 @@ const OverviewFlow = () => {
 
     // model
     useEffect(() => {
-        Promise.all([getModelNodes(modelName), getModelEdges(modelName)]).then(value => {
+        Promise.all([getModelNodes(modelName), getModelEdges(modelName)]).then(data => {
             let nodes: Array<{ id: number, name: string }> = [];
             let edges: Array<{ id: number, name: string }> = [];
-            if (value[0] !== undefined) {
-                value[0].forEach((element: { id: number, name: string }) => {
+            if (data[0] !== undefined) {
+                data[0].forEach((element: { id: number, name: string }) => {
                     nodes.push(element);
                 });
             }
-            if (value[1] !== undefined) {
-                value[1].forEach((element: { id: number, name: string }) => {
+            if (data[1] !== undefined) {
+                data[1].forEach((element: { id: number, name: string }) => {
                     edges.push(element);
                 });
             }
-            getModelElements(modelName, nodes, edges).then(data => setElements(data));
+            getModelElements(modelName, nodes, edges).then(modelElements => setElements(modelElements));
         });
     }, []);
 
@@ -44,6 +44,7 @@ const OverviewFlow = () => {
             <ReactFlowProvider>
                 <PropertyBar modelName={modelName} id={currentElementId} setElements={setElements} elements={elements}/>
                 <Scene
+                    modelName={modelName}
                     elements={elements}
                     setElements={setElements}
                     reactFlowInstance={reactFlowInstance}

@@ -27,34 +27,33 @@ export const getModelElements = async (modelName: string, nodes: Array<{ id: num
         await getNode(modelName, nodes[i].id).then(data => {
             if (data !== undefined) {
                 const id: number = +JSON.stringify(data.id);
-                let xCoordinate = 100 + data.id * 10;
-                let yCoordinate = 150 + data.id * 10;
-                getAttributeValue(modelName, id, 'xCoordinate').then(attributeData => {
-                    if (attributeData === undefined || attributeData.length === 0) {
-                        addAttribute(modelName, id, 'xCoordinate', '0').then(() => {
-                            setAttributeValue(modelName, id, 'xCoordinate', `${100 + id * 10}`);
-                        });
-                        addAttribute(modelName, id, 'yCoordinate', '0').then(() => {
-                            setAttributeValue(modelName, id, 'yCoordinate', `${150 + id * 10}`);
-                        });
+                Promise.all([getAttributeValue(modelName, id, 'xCoordinate'), getAttributeValue(modelName, id, 'yCoordinate')]).then(attributeValues => {
+                    if (attributeValues[0] === undefined || attributeValues[0].length === 0 || attributeValues[1] === undefined || attributeValues[1].length === 0) {
+                        addAttribute(modelName, id, 'xCoordinate', '0');
+                        addAttribute(modelName, id, 'yCoordinate', '0');
+                        elements.push(
+                            {
+                                id: `${data.id}`,
+                                type: 'robotsNode',
+                                data: {label: data.name},
+                                position: {x: 0, y: 0},
+                            }
+                        );
                     } else {
-                        xCoordinate = attributeData;
-                        getAttributeValue(modelName, id, 'yCoordinate').then(attributeData => {
-                            yCoordinate = attributeData;
-                        });
+                        elements.push(
+                            {
+                                id: `${data.id}`,
+                                type: 'robotsNode',
+                                data: {label: data.name},
+                                position: {x: attributeValues[0], y: attributeValues[1]},
+                            }
+                        );
                     }
                 });
-                elements.push(
-                    {
-                        id: `${data.id}`,
-                        type: 'robotsNode',
-                        data: {label: data.name},
-                        position: {x: xCoordinate, y: yCoordinate},
-                    }
-                );
             }
-        })
+        });
     }
+
     for (let i = 0, length = edges.length; i < length; ++i) {
         await getEdge(modelName, edges[i].id).then(data => {
             if (data !== undefined) {
@@ -71,7 +70,7 @@ export const getModelElements = async (modelName: string, nodes: Array<{ id: num
     }
 
     return elements;
-};
+}
 
 export const setElementName = async (modelName: string, id: number, value: string) => {
     try {

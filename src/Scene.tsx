@@ -16,8 +16,10 @@ import './Scene.css'
 
 import ImageNode from './nodesWithImages/ImageNode';
 import RobotsModelNode from './RobotsModelNode';
+import {setAttributeValue} from "./requests/attributesRequests";
 
 type SceneProps = {
+    modelName: string
     elements: Elements
     setElements: Function
     reactFlowInstance: OnLoadParams | undefined
@@ -32,13 +34,14 @@ const nodeTypes = {
 };
 
 const Scene: React.FC<SceneProps> = ({
-                                         elements, setElements, reactFlowInstance,
+                                         modelName, elements, setElements, reactFlowInstance,
                                          setReactFlowInstance, setCurrentElementId, captureElementClick
                                      }) => {
     const onElementClick = (_: MouseEvent, element: FlowElement) => {
         setCurrentElementId(element.id);
     }
 
+    // Any node moving
     const onDragOver = (event: DragEvent) => {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
@@ -101,6 +104,13 @@ const Scene: React.FC<SceneProps> = ({
         }
     };
 
+    // Scene node stops being dragged/moved
+    const onNodeDragStop = (event: MouseEvent, node: Node) => {
+        event.preventDefault();
+        setAttributeValue(modelName, +node.id, 'xCoordinate', `${node.position.x}`);
+        setAttributeValue(modelName, +node.id, 'yCoordinate', `${node.position.y}`);
+    }
+
     return (
         <div className="Scene">
             <ReactFlow
@@ -114,6 +124,7 @@ const Scene: React.FC<SceneProps> = ({
                 snapGrid={[25, 25]}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
+                onNodeDragStop={onNodeDragStop}
                 onElementClick={captureElementClick ? onElementClick : undefined}
             >
                 <Controls/>
