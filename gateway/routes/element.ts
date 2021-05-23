@@ -49,4 +49,32 @@ elementRouter.put('/:modelName/:id/name/:value', function (req, res) {
         });
 });
 
+// Adds new element by its parent's id in metamodel
+elementRouter.post('/:modelName/:id', function (req, res) {
+    let modelName = req.params.modelName;
+    let id = req.params.id;
+    axios
+        .post(`http://${host}/api/Repo/Element/${modelName}/${id}`)
+        .then(response => {
+            res.send(`${response.data}`);
+        })
+        .catch(error => {
+            console.log(error.message);
+        });
+});
+
+// Deletes the element
+elementRouter.delete('/:modelName/:id', function (req, res) {
+    let modelName = req.params.modelName;
+    let id = req.params.id;
+    axios
+        .delete(`http://${host}/api/Repo/Element/${modelName}/${id}`)
+        .then(response => {
+            res.send(`${response.status}`);
+        })
+        .catch(error => {
+            console.log(error.message);
+        });
+});
+
 export default elementRouter;

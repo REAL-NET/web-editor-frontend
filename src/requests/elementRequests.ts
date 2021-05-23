@@ -80,3 +80,21 @@ export const setElementName = async (modelName: string, id: number, value: strin
         console.log(error);
     }
 }
+
+export const addElement = async (modelName: string, parentId: number) => {
+    try {
+        const response = await api.post(`element/${modelName}/${parentId}`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const deleteElement = async (modelName: string, id: number) => {
+    try {
+        const response = await api.delete(`element/${modelName}/${id}`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+}

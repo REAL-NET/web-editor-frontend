@@ -8,8 +8,8 @@ import ImageNodeList from './nodesWithImages/ImageNodeList';
 import {getMetamodel} from './requests/modelRequests';
 import {getAttributeValue} from './requests/attributesRequests';
 
-const onDragStart = (event: DragEvent, nodeType: string, elementName: string) => {
-    event.dataTransfer.setData('application/reactflow', nodeType + ' ' + elementName);
+const onDragStart = (event: DragEvent, nodeType: string, elementId: number, elementName: string) => {
+    event.dataTransfer.setData('application/reactflow', `${nodeType} ${elementId} ${elementName}`);
     event.dataTransfer.effectAllowed = 'move';
 };
 
@@ -34,7 +34,7 @@ const Palette = (props: { metamodelName: string }) => {
     const RobotsNodePaletteItem = (props: { element: { id: number; name: string } }) => {
         return (
             <div className="robotsNode" key={props.element.id}
-                 onDragStart={(event: DragEvent) => onDragStart(event, 'robotsNode', props.element.name)} draggable>
+                 onDragStart={(event: DragEvent) => onDragStart(event, 'robotsNode', props.element.id, props.element.name)} draggable>
                 {props.element.name}
             </div>
         );

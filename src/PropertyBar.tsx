@@ -2,11 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {Elements, isNode, isEdge} from 'react-flow-renderer';
 import {MenuItem, Select, Checkbox, TextField, InputLabel} from '@material-ui/core';
 
-import {getNodeAttributes, getEdgeAttributes, setAttributeValue, getAttributeValue} from './requests/attributesRequests'
+import {getNodeAttributes, getEdgeAttributes, setAttributeValue} from './requests/attributesRequests';
 import {Attribute} from './Attribute';
+import {setElementName} from './requests/elementRequests';
 
-import './PropertyBar.css'
-import {setElementName} from "./requests/elementRequests";
+import './PropertyBar.css';
 
 type PropertyBarProps = {
     modelName: string

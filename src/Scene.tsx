@@ -16,14 +16,15 @@ import './Scene.css'
 
 import ImageNode from './nodesWithImages/ImageNode';
 import RobotsModelNode from './RobotsModelNode';
-import {setAttributeValue} from "./requests/attributesRequests";
+import {addAttribute, setAttributeValue} from './requests/attributesRequests';
+import {addElement, deleteElement, getNode} from './requests/elementRequests';
 
 type SceneProps = {
     modelName: string
     elements: Elements
     setElements: Function
     reactFlowInstance: OnLoadParams | undefined
-    setReactFlowInstance: Function
+    setReactFlowInstance: Function  
     setCurrentElementId: Function
     captureElementClick: boolean
 }
@@ -49,6 +50,9 @@ const Scene: React.FC<SceneProps> = ({
 
     const onElementsRemove = (elementsToRemove: Elements): void => {
         setElements((elements: Elements) => removeElements(elementsToRemove, elements));
+        elementsToRemove.forEach(element => {
+            deleteElement(modelName, +element.id);
+        })
     };
 
     const onLoad = (_reactFlowInstance: OnLoadParams) => setReactFlowInstance(_reactFlowInstance);
@@ -70,6 +74,7 @@ const Scene: React.FC<SceneProps> = ({
         if (reactFlowInstance) {
             const data = event.dataTransfer.getData('application/reactflow').split(' ');
             const type = data[0];
+            const name = data[2];
             const position = reactFlowInstance.project({x: event.clientX - 280, y: event.clientY - 40});
 
             let newNode: Node;
@@ -90,17 +95,23 @@ const Scene: React.FC<SceneProps> = ({
                         alignItems: 'center',
                     }
                 };
-            } else {
-                const name = data[1];
-                newNode = {
-                    id: getId(),
-                    type,
-                    position,
-                    data: {label: `${name}`},
-                };
+                setElements((es: Elements) => es.concat(newNode));
+            } else if (name !== 'Link') {
+                const parentsId = data[1];
+                addElement(modelName, +parentsId).then((id: string) => {
+                    Promise.all([getNode(modelName, +id), addAttribute(modelName, +id, 'xCoordinate', `${position.x}`),
+                        addAttribute(modelName, +id, 'yCoordinate', `${position.y}`)]).then(data => {
+                        const nodeName = data[0].name;
+                        newNode = {
+                            id: id,
+                            type,
+                            position,
+                            data: {label: `${nodeName}`},
+                        };
+                        setElements((es: Elements) => es.concat(newNode));
+                    });
+                })
             }
-
-            setElements((es: Elements) => es.concat(newNode));
         }
     };
 
