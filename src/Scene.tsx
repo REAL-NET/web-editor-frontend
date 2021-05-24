@@ -1,4 +1,4 @@
-import React, {DragEvent, MouseEvent} from 'react';
+import React, {DragEvent, MouseEvent, useEffect} from 'react';
 import ReactFlow, {
     addEdge,
     Background,
@@ -22,7 +22,7 @@ import {addElement, deleteElement, getNode} from './requests/elementRequests';
 type SceneProps = {
     modelName: string
     elements: Elements
-    setElements: Function
+    setElements: React.Dispatch<React.SetStateAction<Elements>>
     reactFlowInstance: OnLoadParams | undefined
     setReactFlowInstance: Function  
     setCurrentElementId: Function
@@ -74,7 +74,6 @@ const Scene: React.FC<SceneProps> = ({
         if (reactFlowInstance) {
             const data = event.dataTransfer.getData('application/reactflow').split(' ');
             const type = data[0];
-            const name = data[2];
             const position = reactFlowInstance.project({x: event.clientX - 280, y: event.clientY - 40});
 
             let newNode: Node;
@@ -96,24 +95,25 @@ const Scene: React.FC<SceneProps> = ({
                     }
                 };
                 setElements((es: Elements) => es.concat(newNode));
-            } else if (name !== 'Link') {
+            } else {
                 const parentsId = data[1];
                 addElement(modelName, +parentsId).then((id: string) => {
                     Promise.all([getNode(modelName, +id), addAttribute(modelName, +id, 'xCoordinate', `${position.x}`),
                         addAttribute(modelName, +id, 'yCoordinate', `${position.y}`)]).then(data => {
                         const nodeName = data[0].name;
                         newNode = {
-                            id: id,
+                            id: `${id}`,
                             type,
                             position,
                             data: {label: `${nodeName}`},
                         };
+
                         setElements((es: Elements) => es.concat(newNode));
                     });
-                })
+                });
             }
         }
-    };
+    }
 
     // Scene node stops being dragged/moved
     const onNodeDragStop = (event: MouseEvent, node: Node) => {

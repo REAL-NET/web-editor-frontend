@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Dispatch, useEffect, useState} from 'react';
 import {Elements, isNode, isEdge} from 'react-flow-renderer';
 import {MenuItem, Select, Checkbox, TextField, InputLabel} from '@material-ui/core';
 
@@ -11,7 +11,7 @@ import './PropertyBar.css';
 type PropertyBarProps = {
     modelName: string
     elements: Elements
-    setElements: Function
+    setElements: React.Dispatch<React.SetStateAction<Elements>>
     id: string
 }
 

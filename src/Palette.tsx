@@ -8,8 +8,8 @@ import ImageNodeList from './nodesWithImages/ImageNodeList';
 import {getMetamodel} from './requests/modelRequests';
 import {getAttributeValue} from './requests/attributesRequests';
 
-const onDragStart = (event: DragEvent, nodeType: string, elementId: number, elementName: string) => {
-    event.dataTransfer.setData('application/reactflow', `${nodeType} ${elementId} ${elementName}`);
+const onDragStart = (event: DragEvent, nodeType: string, elementId: number) => {
+    event.dataTransfer.setData('application/reactflow', `${nodeType} ${elementId}`);
     event.dataTransfer.effectAllowed = 'move';
 };
 
@@ -22,7 +22,7 @@ const Palette = (props: { metamodelName: string }) => {
             if (data !== undefined) {
                 data.forEach((element: { id: number, name: string }) => {
                     getAttributeValue(props.metamodelName, element.id, 'isAbstract').then(data => {
-                        if (data !== undefined && !data) {
+                        if (data !== undefined && !data && element.name !== 'Link') {
                             newMetamodel.push(element);
                         }
                     });
@@ -34,7 +34,7 @@ const Palette = (props: { metamodelName: string }) => {
     const RobotsNodePaletteItem = (props: { element: { id: number; name: string } }) => {
         return (
             <div className="robotsNode" key={props.element.id}
-                 onDragStart={(event: DragEvent) => onDragStart(event, 'robotsNode', props.element.id, props.element.name)} draggable>
+                 onDragStart={(event: DragEvent) => onDragStart(event, 'robotsNode', props.element.id)} draggable>
                 {props.element.name}
             </div>
         );
