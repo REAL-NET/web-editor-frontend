@@ -2,29 +2,55 @@
 
 [![CircleCI](https://circleci.com/gh/REAL-NET/web-editor-frontend.svg?style=svg)](https://circleci.com/gh/REAL-NET/web-editor-frontend)
 
-## Available Scripts
+## Prerequisites
 
-In the project directory, you can run:
+*   Docker (you can download it [here](https://www.docker.com/get-started))
 
-### `npm start`
+## Getting started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+To run the web-editor in the production mode, do the following steps:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+0.  Launch Docker
 
-### `npm test`
+1.  Download docker-compose file
+```cmd
+curl -o docker-compose.yml https://raw.githubusercontent.com/REAL-NET/web-editor-frontend/master/docker-compose.yml
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2.  Run docker-compose
+```cmd
+docker compose up
+```
 
-### `npm run build`
+3.  Open [http://localhost:5000](http://localhost:5000)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Debugging
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+You can launch web-editor in 'debugging' mode:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+0.  Launch Docker
+
+1.  Download repository
+```cmd
+git clone https://github.com/REAL-NET/web-editor-frontend
+```
+
+2.  Launch non-web services from docker-compose
+```cmd
+docker compose up repo auth gateway test
+```
+
+3. Change host's url in gateway/routes files (except for routes.ts) from 'gateway:80' to 'localhost:8000' (5th string)
+
+
+4.  Run web-editor's server
+```cmd
+cd gateway && npm start
+```
+
+5.  Launch web-editor
+```cmd
+npm start-client
+```
+
+6.  Open [http://localhost:5000](http://localhost:5000)
