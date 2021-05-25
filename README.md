@@ -1,4 +1,4 @@
-# REAL.NET Web Editor
+# REAL.NET Web-editor
 
 [![CircleCI](https://circleci.com/gh/REAL-NET/web-editor-frontend.svg?style=svg)](https://circleci.com/gh/REAL-NET/web-editor-frontend)
 
