@@ -2,7 +2,7 @@ import {Router} from 'express';
 import axios from 'axios';
 
 const attributeRouter = Router();
-const host = 'localhost:8000'; // 'gateway:80'; // 'localhost:8000'
+const host = 'gateway:80'; // 'localhost:8000'
 
 // Gets the attribute value
 attributeRouter.get(`/:modelName/:id/:attribute`, function (req, res) {

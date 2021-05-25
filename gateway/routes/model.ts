@@ -2,7 +2,7 @@ import {Router} from 'express';
 import axios from 'axios';
 
 const modelRouter = Router();
-const host = "localhost:8000"; // 'gateway:80'; // 'localhost:8000'
+const host = 'gateway:80'; // 'localhost:8000'
 
 // Gets model
 modelRouter.get('/model/:modelName', function (req, res) {
