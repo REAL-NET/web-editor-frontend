@@ -53,3 +53,15 @@ export const setAttributeValue = async (modelName: string, id: number, attribute
         console.log(error);
     }
 }
+
+export const addNodeAttributes = (modelName: string, id: number) => {
+    addAttribute(modelName, id, 'isHidden', 'false');
+    addAttribute(modelName, id, 'isDraggable', 'true');
+    addAttribute(modelName, id, 'isConnectable', 'true');
+}
+
+export const addEdgeAttributes = (modelName: string, id: number) => {
+    addAttribute(modelName, id, 'isHidden', 'false');
+    addAttribute(modelName, id, 'isAnimated', 'false');
+    addAttribute(modelName, id, 'type', 'default');
+}

@@ -1,4 +1,4 @@
-import React, {Dispatch, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Elements, isNode, isEdge} from 'react-flow-renderer';
 import {MenuItem, Select, Checkbox, TextField, InputLabel} from '@material-ui/core';
 

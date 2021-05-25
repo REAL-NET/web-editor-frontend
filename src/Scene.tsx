@@ -16,8 +16,8 @@ import './Scene.css'
 
 import ImageNode from './nodesWithImages/ImageNode';
 import RobotsModelNode from './RobotsModelNode';
-import {addAttribute, setAttributeValue} from './requests/attributesRequests';
-import {addElement, deleteElement, getNode, addEdgeElement, getEdge} from './requests/elementRequests';
+import {setAttributeValue} from './requests/attributesRequests';
+import {deleteElement, addEdgeElement, getEdge, addNodeElement} from './requests/elementRequests';
 
 type SceneProps = {
     modelName: string
@@ -111,20 +111,9 @@ const Scene: React.FC<SceneProps> = ({
                 setElements((es: Elements) => es.concat(newNode));
             } else {
                 const parentsId = data[1];
-                addElement(modelName, +parentsId).then(id => {
-                    Promise.all([getNode(modelName, +id), addAttribute(modelName, +id, 'xCoordinate', `${position.x}`),
-                        addAttribute(modelName, +id, 'yCoordinate', `${position.y}`)]).then(data => {
-                        const nodeName = data[0].name;
-                        newNode = {
-                            id: `${id}`,
-                            type,
-                            position,
-                            data: {label: `${nodeName}`},
-                        };
-
-                        setElements((es: Elements) => es.concat(newNode));
-                    });
-                });
+                addNodeElement(modelName, +parentsId, type, position.x, position.y).then(node => {
+                    setElements((es: Elements) => es.concat(node));
+                })
             }
         }
     };

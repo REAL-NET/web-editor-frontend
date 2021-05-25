@@ -1,8 +1,8 @@
 import api from './api'
-import {Elements} from "react-flow-renderer";
+import {Elements} from 'react-flow-renderer';
 
-import {addAttribute, getAttributeValue, setAttributeValue} from "./attributesRequests";
-import {getModelEdges} from "./modelRequests";
+import {addAttribute, addEdgeAttributes, addNodeAttributes, getAttributeValue} from './attributesRequests';
+import {getModelEdges} from './modelRequests';
 
 export const getEdge = async (modelName: string, id: number) => {
     try {
@@ -109,6 +109,31 @@ export const setEdgeToElement = async (modelName: string, edgeId: number, elemen
     }
 }
 
+export const addNodeElement = async (modelName: string, parentsId: number, type: string, xCoordinate: number, yCoordinate: number) => {
+    let id = '';
+    let newNode = {
+        id: '',
+        type: '',
+        position: {x: 0, y: 0},
+        data: {label: ''},
+    }
+    await addElement(modelName, parentsId).then((newNodeId: string) => {
+        id = newNodeId;
+        return Promise.all([getNode(modelName, +newNodeId), addAttribute(modelName, +newNodeId, 'xCoordinate', `${xCoordinate}`),
+            addAttribute(modelName, +newNodeId, 'yCoordinate', `${yCoordinate}`)]);
+    }).then(data => {
+        const nodeName = data[0].name;
+        // addNodeAttributes(modelName, +id);
+        newNode = {
+            id: `${id}`,
+            type,
+            position: {x: xCoordinate, y: yCoordinate},
+            data: {label: `${nodeName}`},
+        };
+    });
+    return newNode;
+}
+
 export const addEdgeElement = async (metamodelName: string, modelName: string, fromElementId: number, toElementId: number): Promise<string> => {
     let id = '';
     await getModelEdges(metamodelName).then((edges: Array<{id: number, name: string}>) => {
@@ -122,6 +147,7 @@ export const addEdgeElement = async (metamodelName: string, modelName: string, f
     }).then((newEdgeId: string) => {
         setEdgeFromElement(modelName, +newEdgeId, fromElementId);
         setEdgeToElement(modelName, +newEdgeId, toElementId);
+        // addEdgeAttributes(modelName, +newEdgeId);
         id = newEdgeId;
     });
     return id;
