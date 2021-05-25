@@ -2,6 +2,7 @@ import api from './api'
 import {Elements} from "react-flow-renderer";
 
 import {addAttribute, getAttributeValue, setAttributeValue} from "./attributesRequests";
+import {getModelEdges} from "./modelRequests";
 
 export const getEdge = async (modelName: string, id: number) => {
     try {
@@ -88,6 +89,42 @@ export const addElement = async (modelName: string, parentId: number) => {
     } catch (error) {
         console.log(error);
     }
+}
+
+export const setEdgeFromElement = async (modelName: string, edgeId: number, elementId: number | undefined) => {
+    try {
+        const response = await api.put(`element/${modelName}/${edgeId}/from/${elementId}`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const setEdgeToElement = async (modelName: string, edgeId: number, elementId: number | undefined) => {
+    try {
+        const response = await api.put(`element/${modelName}/${edgeId}/to/${elementId}`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const addEdgeElement = async (metamodelName: string, modelName: string, fromElementId: number, toElementId: number): Promise<string> => {
+    let id = '';
+    await getModelEdges(metamodelName).then((edges: Array<{id: number, name: string}>) => {
+        for (let i = 0, length = edges.length; i < length; ++i) {
+            if (edges[i].name === 'Link') {
+                return getEdge(metamodelName, edges[i].id)
+            }
+        }
+    }).then((edge: {id: number, name: string}) => {
+        return addElement(modelName, edge.id);
+    }).then((newEdgeId: string) => {
+        setEdgeFromElement(modelName, +newEdgeId, fromElementId);
+        setEdgeToElement(modelName, +newEdgeId, toElementId);
+        id = newEdgeId;
+    });
+    return id;
 }
 
 export const deleteElement = async (modelName: string, id: number) => {

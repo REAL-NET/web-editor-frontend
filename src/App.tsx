@@ -45,6 +45,7 @@ const OverviewFlow = () => {
                 <PropertyBar modelName={modelName} id={currentElementId} setElements={setElements} elements={elements}/>
                 <Scene
                     modelName={modelName}
+                    metamodelName={metamodelName}
                     elements={elements}
                     setElements={setElements}
                     reactFlowInstance={reactFlowInstance}

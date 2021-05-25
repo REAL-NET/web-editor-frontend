@@ -49,7 +49,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
             else setEdgeType('undefined');
 
         }
-    }, [element])
+    }, [element]);
 
     useEffect(() => {
         setElements((els: Elements) =>
@@ -67,12 +67,19 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
         setElements((els: Elements) =>
             els.map((el) => {
                 if (el.id === id) {
-                    // it's important that you create a new object here
-                    // in order to notify react flow about the change
-                    el.data = {
-                        ...el.data,
-                        label: name,
-                    };
+                    if (isNode(el)) {
+                        // it's important that you create a new object here
+                        // in order to notify react flow about the change
+                        el.data = {
+                            ...el.data,
+                            label: name,
+                        };
+                    } else {
+                        el = {
+                            ...el,
+                            label: name,
+                        };
+                    }
                     setElementName(modelName, idNumber, name);
                 }
                 return el;

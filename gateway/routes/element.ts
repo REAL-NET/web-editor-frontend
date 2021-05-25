@@ -63,6 +63,36 @@ elementRouter.post('/:modelName/:id', function (req, res) {
         });
 });
 
+// Changes edge's from element
+elementRouter.put('/:modelName/:edgeId/from/:elementId', function (req, res) {
+    let modelName = req.params.modelName;
+    let edgeId = req.params.edgeId;
+    let elementId = req.params.elementId;
+    axios
+        .put(`http://${host}/api/Repo/Element/${modelName}/${edgeId}/from/${elementId}`)
+        .then(response => {
+            res.send(`${response.data}`);
+        })
+        .catch(error => {
+            console.log(error.message);
+        });
+});
+
+// Changes edge's to element
+elementRouter.put('/:modelName/:edgeId/to/:elementId', function (req, res) {
+    let modelName = req.params.modelName;
+    let edgeId = req.params.edgeId;
+    let elementId = req.params.elementId;
+    axios
+        .put(`http://${host}/api/Repo/Element/${modelName}/${edgeId}/to/${elementId}`)
+        .then(response => {
+            res.send(`${response.data}`);
+        })
+        .catch(error => {
+            console.log(error.message);
+        });
+});
+
 // Deletes the element
 elementRouter.delete('/:modelName/:id', function (req, res) {
     let modelName = req.params.modelName;

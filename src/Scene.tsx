@@ -17,14 +17,15 @@ import './Scene.css'
 import ImageNode from './nodesWithImages/ImageNode';
 import RobotsModelNode from './RobotsModelNode';
 import {addAttribute, setAttributeValue} from './requests/attributesRequests';
-import {addElement, deleteElement, getNode} from './requests/elementRequests';
+import {addElement, deleteElement, getNode, addEdgeElement, getEdge} from './requests/elementRequests';
 
 type SceneProps = {
     modelName: string
+    metamodelName: string
     elements: Elements
     setElements: React.Dispatch<React.SetStateAction<Elements>>
     reactFlowInstance: OnLoadParams | undefined
-    setReactFlowInstance: Function  
+    setReactFlowInstance: Function
     setCurrentElementId: Function
     captureElementClick: boolean
 }
@@ -35,12 +36,12 @@ const nodeTypes = {
 };
 
 const Scene: React.FC<SceneProps> = ({
-                                         modelName, elements, setElements, reactFlowInstance,
+                                         modelName, metamodelName, elements, setElements, reactFlowInstance,
                                          setReactFlowInstance, setCurrentElementId, captureElementClick
                                      }) => {
     const onElementClick = (_: MouseEvent, element: FlowElement) => {
         setCurrentElementId(element.id);
-    }
+    };
 
     // Any node moving
     const onDragOver = (event: DragEvent) => {
@@ -58,7 +59,20 @@ const Scene: React.FC<SceneProps> = ({
     const onLoad = (_reactFlowInstance: OnLoadParams) => setReactFlowInstance(_reactFlowInstance);
 
     const onConnect = (edgeParas: Edge | Connection): void => {
-        setElements((elements: Elements) => addEdge(edgeParas, elements));
+        addEdgeElement(metamodelName, modelName, edgeParas.source !== null ? +edgeParas.source : -1,
+            edgeParas.target !== null ? +edgeParas.target : -1).then((id: string) => {
+            if (id !== '') {
+                getEdge(modelName, +id).then(edge => {
+                    const newLink = {
+                        id: `${edge.id}`,
+                        source: `${edgeParas.source}`,
+                        target: `${edgeParas.target}`,
+                        label: `${edge.name}`
+                    }
+                    setElements((es: Elements) => es.concat(newLink));
+                });
+            }
+        });
     };
 
     let id = 0;
@@ -97,7 +111,7 @@ const Scene: React.FC<SceneProps> = ({
                 setElements((es: Elements) => es.concat(newNode));
             } else {
                 const parentsId = data[1];
-                addElement(modelName, +parentsId).then((id: string) => {
+                addElement(modelName, +parentsId).then(id => {
                     Promise.all([getNode(modelName, +id), addAttribute(modelName, +id, 'xCoordinate', `${position.x}`),
                         addAttribute(modelName, +id, 'yCoordinate', `${position.y}`)]).then(data => {
                         const nodeName = data[0].name;
@@ -113,14 +127,14 @@ const Scene: React.FC<SceneProps> = ({
                 });
             }
         }
-    }
+    };
 
     // Scene node stops being dragged/moved
     const onNodeDragStop = (event: MouseEvent, node: Node) => {
         event.preventDefault();
         setAttributeValue(modelName, +node.id, 'xCoordinate', `${node.position.x}`);
         setAttributeValue(modelName, +node.id, 'yCoordinate', `${node.position.y}`);
-    }
+    };
 
     return (
         <div className="Scene">
