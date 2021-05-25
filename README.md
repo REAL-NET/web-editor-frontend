@@ -50,7 +50,7 @@ cd gateway && npm start
 
 5.  Launch web-editor
 ```cmd
-npm start-client
+npm run start-client
 ```
 
 6.  Open [http://localhost:5000](http://localhost:5000)
