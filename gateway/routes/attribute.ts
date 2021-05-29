@@ -2,7 +2,7 @@ import {Router} from 'express';
 import axios from 'axios';
 
 const attributeRouter = Router();
-const host = 'gateway:80'; // 'localhost:8000'
+const host = 'https://web-editor-backend.herokuapp.com'; // 'localhost:8000'
 
 // Gets the attribute value
 attributeRouter.get(`/:modelName/:id/:attribute`, function (req, res) {
@@ -10,7 +10,7 @@ attributeRouter.get(`/:modelName/:id/:attribute`, function (req, res) {
     let id = req.params.id;
     let attribute = req.params.attribute;
     axios
-        .get(`http://${host}/api/Repo/Attribute/${modelName}/${id}/${attribute}`)
+        .get(`${host}/api/Attribute/${modelName}/${id}/${attribute}`)
         .then(response => {
             res.send(`${response.data}`);
         })
@@ -27,7 +27,7 @@ attributeRouter.post(`/:modelName/:id/:attribute/:defaultValue`, function (req, 
     let attribute = req.params.attribute;
     let defaultValue = req.params.defaultValue;
     axios
-        .post(`http://${host}/api/Repo/Attribute/${modelName}/${id}/${attribute}/0/${defaultValue}`)
+        .post(`${host}/api/Attribute/${modelName}/${id}/${attribute}/0/${defaultValue}`)
         .then(response => {
             res.send(`${response.status}`)
         })
@@ -43,7 +43,7 @@ attributeRouter.put(`/:modelName/:id/:attribute/:value`, function (req, res) {
     let attribute = req.params.attribute;
     let value = req.params.value;
     axios
-        .put(`http://${host}/api/Repo/Attribute/${modelName}/${id}/${attribute}/value/${value}`)
+        .put(`${host}/api/Attribute/${modelName}/${id}/${attribute}/value/${value}`)
         .then(response => {
             res.send(`${response.status}`)
         })
