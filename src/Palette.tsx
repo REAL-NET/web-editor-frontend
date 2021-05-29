@@ -47,8 +47,8 @@ const Palette = (props: { metamodelName: string }) => {
         <aside>
             <div className="description">Palette</div>
             {metamodelElements}
-            Nodes with images
-            <ImageNodeList />
+            {/*Nodes with images*/}
+            {/*<ImageNodeList />*/}
         </aside>
     );
 };
