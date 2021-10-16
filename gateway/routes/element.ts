@@ -1,15 +1,15 @@
 import {Router} from 'express';
 import axios from 'axios';
+import {host} from "./host";
 
 const elementRouter = Router();
-const host = 'https://web-editor-backend.herokuapp.com'; // 'localhost:8000'
 
 // Gets the node
 elementRouter.get(`/:modelName/node/:id`, function (req, res) {
     let modelName = req.params.modelName;
     let id = req.params.id;
     axios
-        .get(`${host}/api/Element/${modelName}/${id}/asNode`)
+        .get(`${host}/Element/${modelName}/${id}/asNode`)
         .then(response => {
             res.send(response.data);
         })
@@ -24,7 +24,7 @@ elementRouter.get('/:modelName/edge/:id', function (req, res) {
     let modelName = req.params.modelName;
     let id = req.params.id;
     axios
-        .get(`${host}/api/Element/${modelName}/${id}/asEdge`)
+        .get(`${host}/Element/${modelName}/${id}/asEdge`)
         .then(response => {
             res.send(response.data)
         })
@@ -40,7 +40,7 @@ elementRouter.put('/:modelName/:id/name/:value', function (req, res) {
     let id = req.params.id;
     let value = req.params.value;
     axios
-        .put(`${host}/api/Element/${modelName}/${id}/name/${value}`)
+        .put(`${host}/Element/${modelName}/${id}/name/${value}`)
         .then(response => {
             res.send(`${response.status}`)
         })
@@ -54,7 +54,7 @@ elementRouter.post('/:modelName/:id', function (req, res) {
     let modelName = req.params.modelName;
     let id = req.params.id;
     axios
-        .post(`${host}/api/Element/${modelName}/${id}`)
+        .post(`${host}/Element/${modelName}/${id}`)
         .then(response => {
             res.send(`${response.data}`);
         })
@@ -69,7 +69,7 @@ elementRouter.put('/:modelName/:edgeId/from/:elementId', function (req, res) {
     let edgeId = req.params.edgeId;
     let elementId = req.params.elementId;
     axios
-        .put(`${host}/api/Element/${modelName}/${edgeId}/from/${elementId}`)
+        .put(`${host}/Element/${modelName}/${edgeId}/from/${elementId}`)
         .then(response => {
             res.send(`${response.data}`);
         })
@@ -84,7 +84,7 @@ elementRouter.put('/:modelName/:edgeId/to/:elementId', function (req, res) {
     let edgeId = req.params.edgeId;
     let elementId = req.params.elementId;
     axios
-        .put(`${host}/api/Element/${modelName}/${edgeId}/to/${elementId}`)
+        .put(`${host}/Element/${modelName}/${edgeId}/to/${elementId}`)
         .then(response => {
             res.send(`${response.data}`);
         })
@@ -98,7 +98,7 @@ elementRouter.delete('/:modelName/:id', function (req, res) {
     let modelName = req.params.modelName;
     let id = req.params.id;
     axios
-        .delete(`${host}/api/Element/${modelName}/${id}`)
+        .delete(`${host}/api/Repo/Element/${modelName}/${id}`)
         .then(response => {
             res.send(`${response.status}`);
         })
