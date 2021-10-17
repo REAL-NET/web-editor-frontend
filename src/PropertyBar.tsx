@@ -1,7 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {Elements, isNode, isEdge} from 'react-flow-renderer';
 import {MenuItem, Select, Checkbox, TextField, InputLabel} from '@material-ui/core';
+import React, {useEffect, useState, DragEvent, useRef} from "react";
+import {Elements, isNode, isEdge, Edge, Node} from "react-flow-renderer";
+import {MenuItem, Select, Checkbox, TextField, InputLabel, Button, FormLabel} from "@material-ui/core";
 
+import './Palette.css'
+import './Nodes.css'
+import {RepoAPI} from "./repo/RepoAPI";
+import AddAttributeDialog from "./dialogs/AddAttributeDialog";
+import AddSlotDialog from "./dialogs/AddSlotDialog";
+import { toInt } from "./Util";
 import {getNodeAttributes, getEdgeAttributes, setAttributeValue} from './requests/attributesRequests';
 import {Attribute} from './Attribute';
 import {setElementName} from './requests/elementRequests';
@@ -13,11 +22,25 @@ type PropertyBarProps = {
     elements: Elements
     setElements: React.Dispatch<React.SetStateAction<Elements>>
     id: string
+    setElements: Function
+    id: string,
+    modelName: string,
+    setCurrentElementId: Function,
+    level: number,
+    setLevel: Function,
+    potency: number,
+    setPotency: Function
 }
 
 const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElements, id}) => {
+const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, modelName, setCurrentElementId,
+                                                 level, setLevel, potency, setPotency}) => {
+
     const element = elements.find(item => item.id === id)
     const idNumber: number = +id;
+
+    const [addAttributeOpen, setAddAttributeOpen] = useState(false);
+    const [addSlotOpen, setAddSlotOpen] = useState(false);
 
     //common states
     const [name, setName] = useState("");
@@ -33,6 +56,36 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
     const [edgeIsAnimated, setEdgeIsAnimated] = useState(false);
     const [edgeType, setEdgeType] = useState('');
     const [edgeAttributes, setEdgeAttributes] = useState<Array<JSX.Element>>([]);
+
+    const attributesAndSlots =
+         (
+            <div>
+                <br/>
+                <FormLabel>Attributes:</FormLabel>
+                <br/>
+                {
+                    RepoAPI.GetAttributes(modelName, element?.id || "")?.map(value =>
+                        <div>
+                            <label>{value.name}: {value.type.name} L:{value.level} P:{value.potency}</label>
+                            <br/>
+                        </div>)
+                }
+                <Button onClick={() => setAddAttributeOpen(true)} fullWidth={true}>Add Attribute</Button>
+                <AddAttributeDialog open={addAttributeOpen} setOpen={setAddAttributeOpen} modelName={modelName} elementName={element?.id || ""}/>
+                <br/>
+                <FormLabel>Slots:</FormLabel>
+                <br/>
+                {
+                    RepoAPI.GetSlots(modelName, element?.id || "")?.map(value =>
+                        <div>
+                            <label>{value.attribute.name}: {value.value.name} L:{value.level} P:{value.potency}</label>
+                            <br/>
+                        </div>)
+                }
+                <Button onClick={() => setAddSlotOpen(true)} fullWidth={true}>Add Slot</Button>
+                <AddSlotDialog open={addSlotOpen} setOpen={setAddSlotOpen} modelName={modelName} elementName={element?.id || ""}/>
+            </div>
+        )
 
     //common effects
     useEffect(() => { // sets states for chosen element
@@ -81,11 +134,64 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
                         };
                     }
                     setElementName(modelName, idNumber, name);
+                    if (els.filter(e => e.id === Name).length > 0) {
+                        console.warn("Duplicated name");
+                        return el;
+                    }
+                    // it's important that you create a new object here
+                    // in order to notify react flow about the change
+                    const newElem = RepoAPI.SetElementName(modelName, el.id, Name);
+                    if (newElem === undefined) {
+                        console.error("Error while applying new name");
+                        return el;
+                    }
+                    el = {
+                        ...el,
+                        id: Name
+                    };
+                    if (isEdge(el)) {
+                        (el as Edge).label = Name;
+                    }
+                    if (((el as Node).data !== undefined) && ((el as Node).data.label !== undefined)) {
+                        el.data.label = Name;
+                    }
+                    els.filter(e => isEdge(e)).forEach(edge => {
+                        if ((edge as Edge).source === id) {
+                            (edge as Edge).source = Name
+                        }
+                        if ((edge as Edge).target === id) {
+                            (edge as Edge).target = Name
+                        }
+                    })
+                    setCurrentElementId(Name);
+                }
+                return el;
+            })
+        );
+    }, [Name, setElements]);
+
+    useEffect(() => {
+        setElements((els: Elements) =>
+            els.map((el) => {
+                if (el.id === id) {
+                    RepoAPI.SetElementLevel(modelName, el.id, level);
                 }
                 return el;
             })
         );
     }, [name, setElements]);
+    }, [level, setLevel]);
+
+    useEffect(() => {
+        setElements((els: Elements) =>
+            els.map((el) => {
+                if (el.id === id) {
+                    RepoAPI.SetElementPotency(modelName, el.id, potency);
+                }
+                return el;
+            })
+        );
+    }, [potency, setPotency]);
 
     useEffect(() => {
         setElements((els: Elements) =>
@@ -198,6 +304,36 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
 
     const CheckboxItem = (props: { label: string, value: boolean, setFunc: (isRequired: boolean) => void }) => {
         return (
+            <aside>
+                <div>
+                    <TextField label="Label: " value={element.data.label}
+                               onChange={(evt) => setName(evt.target.value)}/>
+                </div>
+
+                <div>
+                    <TextField label="Level: " value={level}
+                               onChange={(evt) => setLevel(toInt(evt.target.value))}/>
+                </div>
+
+                <div>
+                    <TextField label="Potency: " value={potency}
+                               onChange={(evt) => setPotency(toInt(evt.target.value))}/>
+                </div>
+
+                {attributesAndSlots}
+
+                <div>
+                    <TextField label="Background:" value={nodeBg} onChange={(evt) => setNodeBg(evt.target.value)}/>
+                </div>
+
+                <div>
+                    <label>Hidden:</label>
+                    <Checkbox
+                        checked={isHidden}
+                        onChange={(evt) => setIsHidden(evt.target.checked)}
+                        size='small'
+                    />
+                </div>
             <div>
                 <label>{props.label}:</label>
                 <Checkbox
@@ -231,6 +367,72 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
         );
     }
 
+                <div>
+                    <label>Connectable:</label>
+                    <Checkbox
+                        size='small'
+                        checked={nodeIsConnectable}
+                        onChange={(evt) => setNodeIsConnectable(evt.target.checked)}
+                    />
+                </div>
+
+            </aside>)
+    } else if (element !== undefined && isEdge(element)) {
+        return (
+            <aside>
+
+                <div>
+                    <TextField label="Label: " value={element.label}
+                               onChange={(evt) => setName(evt.target.value)}/>
+                </div>
+
+                <div>
+                    <TextField label="Level: " value={level}
+                               onChange={(evt) => setLevel(toInt(evt.target.value))}/>
+                </div>
+
+                <div>
+                    <TextField label="Potency: " value={potency}
+                               onChange={(evt) => setPotency(toInt(evt.target.value))}/>
+                </div>
+
+                {attributesAndSlots}
+
+                <div>
+                    <label>Hidden:</label>
+                    <Checkbox
+                        checked={isHidden}
+                        onChange={(evt) => setIsHidden(evt.target.checked)}
+                        size='small'
+                    />
+                </div>
+
+                <div>
+                    <label>Animated:</label>
+                    <Checkbox
+                        checked={edgeIsAnimated}
+                        onChange={(evt) => setEdgeIsAnimated(evt.target.checked)}
+                        size='small'
+                    />
+                </div>
+
+                <div>
+                    <InputLabel>Type</InputLabel>
+                    <Select
+                        id="edgeType"
+                        value={edgeType}
+                        onChange={(evt) => setEdgeType(evt.target.value as string)}
+                    >
+                        <MenuItem value={'default'}>default</MenuItem>
+                        <MenuItem value={'straight'}>straight</MenuItem>
+                        <MenuItem value={'step'}>step</MenuItem>
+                        <MenuItem value={'smoothstep'}>smoothstep</MenuItem>
+                    </Select>
+                </div>
+
+            </aside>)
+    } else {
+        return (
     if (element !== undefined && isNode(element)) return (
         <aside>
             <div className="description">Property bar</div>

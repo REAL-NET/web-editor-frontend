@@ -6,8 +6,10 @@ import Palette from './Palette';
 import Scene from './Scene';
 import {getModelNodes, getModelEdges} from './requests/modelRequests';
 import {getModelElements} from './requests/elementRequests';
+import { getElements } from './initialElements';
 
-import './App.css';
+import './App.css'
+import {AssociationMetatype} from "./Constants";
 
 document.addEventListener('click', e => (e.target));
 
@@ -16,9 +18,15 @@ const OverviewFlow = () => {
     const metamodelName = 'RobotsMetamodel';
 
     const [reactFlowInstance, setReactFlowInstance] = useState<OnLoadParams>();
+    const [modelName, setModelName] = useState("TestModel2");
+    const [elements, setElements] = useState(getElements(modelName));
     const [elements, setElements] = useState<Elements>([]);
     const [captureElementClick, setCaptureElementClick] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
+    const [edgeType, setEdgeType] = useState(AssociationMetatype);
+    const [level, setLevel] = useState(-1);
+    const [potency, setPotency] = useState(-1);
+
 
     // model
     useEffect(() => {
@@ -42,7 +50,16 @@ const OverviewFlow = () => {
     return (
         <div className="OverviewFlow">
             <ReactFlowProvider>
-                <PropertyBar modelName={modelName} id={currentElementId} setElements={setElements} elements={elements}/>
+                <PropertyBar id={currentElementId}
+                             setElements={setElements}
+                             elements={elements}
+                             modelName={modelName}
+                             setCurrentElementId={setCurrentElementId}
+                             level={level}
+                             setLevel={setLevel}
+                             potency={potency}
+                             setPotency={setPotency}
+                />
                 <Scene
                     modelName={modelName}
                     metamodelName={metamodelName}
@@ -52,8 +69,18 @@ const OverviewFlow = () => {
                     setReactFlowInstance={setReactFlowInstance}
                     setCurrentElementId={setCurrentElementId}
                     captureElementClick={captureElementClick}
+                    edgeType={edgeType}
+                    setLevel={setLevel}
+                    setPotency={setPotency}
                 />
-                <Palette metamodelName={metamodelName}/>
+                <Palette
+                    setElements={setElements}
+                    modelName={modelName}
+                    metamodelName={metamodelName}
+                    setModelName={setModelName}
+                    edgeType={edgeType}
+                    setEdgeType={setEdgeType}
+                />
             </ReactFlowProvider>
         </div>
     );
