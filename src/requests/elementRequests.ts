@@ -1,7 +1,7 @@
 import api from './api'
 import {Elements} from 'react-flow-renderer';
 
-import {addAttribute, addEdgeAttributes, addNodeAttributes, getAttributeValue} from './attributesRequests';
+import {addAttribute, addEdgeAttributes, addNodeAttributes, getAttributeValue} from './attributeRequests';
 import {getModelEdges} from './modelRequests';
 
 export const getEdge = async (modelName: string, id: number) => {

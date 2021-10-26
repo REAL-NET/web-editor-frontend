@@ -11,7 +11,7 @@ import {RepoAPI} from "./repo/RepoAPI";
 import AddAttributeDialog from "./dialogs/AddAttributeDialog";
 import AddSlotDialog from "./dialogs/AddSlotDialog";
 import { toInt } from "./Util";
-import {getNodeAttributes, getEdgeAttributes, setAttributeValue} from './requests/attributesRequests';
+import {getNodeAttributes, getEdgeAttributes, setAttributeValue} from './requests/attributeRequests';
 import {Attribute} from './Attribute';
 import {setElementName} from './requests/elementRequests';
 

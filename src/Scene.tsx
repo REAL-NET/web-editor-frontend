@@ -16,7 +16,7 @@ import './Scene.css'
 
 import ImageNode from './nodesWithImages/ImageNode';
 import RobotsModelNode from './RobotsModelNode';
-import {setAttributeValue} from './requests/attributesRequests';
+import {setAttributeValue} from './requests/attributeRequests';
 import {deleteElement, addEdgeElement, getEdge, addNodeElement} from './requests/elementRequests';
 import {RepoAPI} from "./repo/RepoAPI";
 import {FlowTransform} from "react-flow-renderer/dist/types";

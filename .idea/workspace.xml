@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c5975f99-cf70-4dce-9ccf-f7b0d9dc83f9" name="Default Changelist" comment="" />
+    <list default="true" id="c5975f99-cf70-4dce-9ccf-f7b0d9dc83f9" name="Default Changelist" comment="Move to root">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway/routes/model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/gateway/routes/model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gateway/routes/routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/gateway/routes/routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Palette.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Palette.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PropertyBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/PropertyBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Scene.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Scene.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repo/RepoAPI.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repo/RepoAPI.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/requests/attributesRequests.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/requests/attributeRequests.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/requests/elementRequests.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/requests/elementRequests.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/requests/modelRequests.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/requests/modelRequests.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -69,6 +80,9 @@
       <workItem from="1607691563423" duration="796000" />
       <workItem from="1617362875374" duration="10070000" />
       <workItem from="1618050325342" duration="3587000" />
+      <workItem from="1634910221725" duration="2236000" />
+      <workItem from="1635087980784" duration="249000" />
+      <workItem from="1635257793652" duration="6976000" />
     </task>
     <task id="LOCAL-00001" summary="Add Requests.ts">
       <created>1617627816759</created>
@@ -163,7 +177,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/deep-web-editor" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>

@@ -1,23 +1,19 @@
-import React, {DragEvent, useEffect} from 'react';
-import './PropertyBar.css'
 import React, {DragEvent, useEffect, useState} from 'react';
 
 import './Palette.css';
 import './RobotsModelNode.css';
 import './Nodes.css'
-import {RepoAPI} from "./repo/RepoAPI";
+
 import {ElementInfo} from "./model/ElementInfo";
 import {InputLabel, MenuItem, Select} from "@material-ui/core";
 import {getElements} from "./initialElements";
-import {MiniMap} from "react-flow-renderer";
 import {AssociationMetatype, GeneralizationMetatype} from "./Constants";
+import {getAttributeValue} from './requests/attributeRequests';
+import {AllModels, GetModel, GetModelMetaEdges, GetModelMetaNodes} from "./requests/deepModelRequests";
+import {getModel} from "./requests/modelRequests";
 
 const onDragStart = (event: DragEvent, metaInfo: string) => {
     event.dataTransfer.setData('application/reactflow', metaInfo);
-
-import ImageNodeList from './nodesWithImages/ImageNodeList';
-import {getMetamodel} from './requests/modelRequests';
-import {getAttributeValue} from './requests/attributesRequests';
 
 const onDragStart = (event: DragEvent, nodeType: string, elementId: number) => {
     event.dataTransfer.setData('application/reactflow', `${nodeType} ${elementId}`);
@@ -29,7 +25,7 @@ const Palette = (props: { metamodelName: string }) => {
 
     useEffect(() => {
         let newMetamodel: Array<{ id: number, name: string }> = [];
-        getMetamodel(props.metamodelName).then(data => {
+        getModel(props.metamodelName).then(data => {
             if (data !== undefined) {
                 data.forEach((element: { id: number, name: string }) => {
                     getAttributeValue(props.metamodelName, element.id, 'isAbstract').then(data => {
@@ -41,16 +37,17 @@ const Palette = (props: { metamodelName: string }) => {
             }
         }).finally(() => setMetamodel(newMetamodel));
     }, []);
+
 const getMetamodelElements = (modelName: string): ElementInfo[] => {
-    const nodes = RepoAPI.GetModelMetaNodes(modelName);
+    const nodes = GetModelMetaNodes(modelName);
     if (nodes === undefined || nodes.length === 0) {
         console.error(`No meta nodes retrieved for ${modelName}`);
-        const model = RepoAPI.GetModel(modelName);
+        const model = GetModel(modelName);
         if (model === undefined) {
             console.error(`Model ${modelName} is not retrieved from repo`);
             return [];
         }
-        let metamodel = RepoAPI.GetModel(model.metamodel.name);
+        let metamodel = GetModel(model.metamodel.name);
         if (metamodel === undefined) {
             console.error(`Metamodel ${metamodel} is not retrieved from repo`);
             return [];
@@ -61,7 +58,7 @@ const getMetamodelElements = (modelName: string): ElementInfo[] => {
 };
 
 const getModelsMenuItems = () => {
-    const models = RepoAPI.AllModels();
+    const models = AllModels();
     if (models === undefined) {
         console.error("Models is not retrieved from repo");
         return [];
@@ -82,15 +79,15 @@ const getModelsMenuItems = () => {
     const metamodelElements = metamodelFiltered.map(element => <RobotsNodePaletteItem element={element} key={element.name + element.id} />);
 
 const getEdgesMetatypes = (modelName: string) => {
-    const edges = RepoAPI.GetModelMetaEdges(modelName);
+    const edges = GetModelMetaEdges(modelName);
     if (edges === undefined) {
         console.error(`No meta edges retrieved for ${modelName}`);
-        const model = RepoAPI.GetModel(modelName);
+        const model = GetModel(modelName);
         if (model === undefined) {
             console.error(`Model ${modelName} is not retrieved from repo`);
             return [];
         }
-        let metamodel = RepoAPI.GetModel(model.metamodel.name);
+        let metamodel = GetModel(model.metamodel.name);
         if (metamodel === undefined) {
             console.error(`Metamodel ${metamodel} is not retrieved from repo`);
             return [];
