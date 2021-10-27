@@ -14,13 +14,13 @@ import {AssociationMetatype} from "./Constants";
 document.addEventListener('click', e => (e.target));
 
 const OverviewFlow = () => {
-    const modelName = 'RobotsTestModel';
-    const metamodelName = 'RobotsMetamodel';
+    // const modelName = 'RobotsTestModel';
+    // const metamodelName = 'RobotsMetamodel';
 
     const [reactFlowInstance, setReactFlowInstance] = useState<OnLoadParams>();
     const [modelName, setModelName] = useState("TestModel2");
     const [elements, setElements] = useState(getElements(modelName));
-    const [elements, setElements] = useState<Elements>([]);
+    // const [elements, setElements] = useState<Elements>([]);
     const [captureElementClick, setCaptureElementClick] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
     const [edgeType, setEdgeType] = useState(AssociationMetatype);
@@ -28,24 +28,24 @@ const OverviewFlow = () => {
     const [potency, setPotency] = useState(-1);
 
 
-    // model
-    useEffect(() => {
-        Promise.all([getModelNodes(modelName), getModelEdges(modelName)]).then(data => {
-            let nodes: Array<{ id: number, name: string }> = [];
-            let edges: Array<{ id: number, name: string }> = [];
-            if (data[0] !== undefined) {
-                data[0].forEach((element: { id: number, name: string }) => {
-                    nodes.push(element);
-                });
-            }
-            if (data[1] !== undefined) {
-                data[1].forEach((element: { id: number, name: string }) => {
-                    edges.push(element);
-                });
-            }
-            getModelElements(modelName, nodes, edges).then(modelElements => setElements(modelElements));
-        });
-    }, []);
+    // // model
+    // useEffect(() => {
+    //     Promise.all([getModelNodes(modelName), getModelEdges(modelName)]).then(data => {
+    //         let nodes: Array<{ id: number, name: string }> = [];
+    //         let edges: Array<{ id: number, name: string }> = [];
+    //         if (data[0] !== undefined) {
+    //             data[0].forEach((element: { id: number, name: string }) => {
+    //                 nodes.push(element);
+    //             });
+    //         }
+    //         if (data[1] !== undefined) {
+    //             data[1].forEach((element: { id: number, name: string }) => {
+    //                 edges.push(element);
+    //             });
+    //         }
+    //         getModelElements(modelName, nodes, edges).then(modelElements => setElements(modelElements));
+    //     });
+    // }, []);
 
     return (
         <div className="OverviewFlow">
@@ -62,7 +62,7 @@ const OverviewFlow = () => {
                 />
                 <Scene
                     modelName={modelName}
-                    metamodelName={metamodelName}
+                    // metamodelName={metamodelName}
                     elements={elements}
                     setElements={setElements}
                     reactFlowInstance={reactFlowInstance}
@@ -76,7 +76,6 @@ const OverviewFlow = () => {
                 <Palette
                     setElements={setElements}
                     modelName={modelName}
-                    metamodelName={metamodelName}
                     setModelName={setModelName}
                     edgeType={edgeType}
                     setEdgeType={setEdgeType}

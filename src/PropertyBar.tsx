@@ -1,30 +1,31 @@
-import React, {useEffect, useState} from 'react';
-import {Elements, isNode, isEdge} from 'react-flow-renderer';
-import {MenuItem, Select, Checkbox, TextField, InputLabel} from '@material-ui/core';
 import React, {useEffect, useState, DragEvent, useRef} from "react";
 import {Elements, isNode, isEdge, Edge, Node} from "react-flow-renderer";
 import {MenuItem, Select, Checkbox, TextField, InputLabel, Button, FormLabel} from "@material-ui/core";
 
 import './Palette.css'
 import './Nodes.css'
-import {RepoAPI} from "./repo/RepoAPI";
 import AddAttributeDialog from "./dialogs/AddAttributeDialog";
 import AddSlotDialog from "./dialogs/AddSlotDialog";
 import { toInt } from "./Util";
 import {getNodeAttributes, getEdgeAttributes, setAttributeValue} from './requests/attributeRequests';
-import {Attribute} from './Attribute';
+import {Attribute} from './model/Attribute';
+import {Slot} from "./model/Slot";
 import {setElementName} from './requests/elementRequests';
 
 import './PropertyBar.css';
+import {
+    GetAttributes,
+    GetSlots,
+    SetElementLevel,
+    SetElementName,
+    SetElementPotency
+} from "./requests/deepElementRequests";
 
 type PropertyBarProps = {
     modelName: string
     elements: Elements
-    setElements: React.Dispatch<React.SetStateAction<Elements>>
     id: string
     setElements: Function
-    id: string,
-    modelName: string,
     setCurrentElementId: Function,
     level: number,
     setLevel: Function,
@@ -32,7 +33,7 @@ type PropertyBarProps = {
     setPotency: Function
 }
 
-const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElements, id}) => {
+// const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElements, id}) => {
 const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, modelName, setCurrentElementId,
                                                  level, setLevel, potency, setPotency}) => {
 
@@ -50,12 +51,28 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
     const [nodeBg, setNodeBg] = useState("");
     const [nodeIsDraggable, setNodeIsDraggable] = useState(true);
     const [nodeIsConnectable, setNodeIsConnectable] = useState(true);
-    const [nodeAttributes, setNodeAttributes] = useState<Array<JSX.Element>>([]);
+    // const [nodeAttributes, setNodeAttributes] = useState<Array<JSX.Element>>([]);
 
     //edge states
     const [edgeIsAnimated, setEdgeIsAnimated] = useState(false);
     const [edgeType, setEdgeType] = useState('');
-    const [edgeAttributes, setEdgeAttributes] = useState<Array<JSX.Element>>([]);
+    // const [edgeAttributes, setEdgeAttributes] = useState<Array<JSX.Element>>([]);
+
+    const [attributes, setAttributes] = useState<Attribute[] | undefined>([]);
+    const [slots, setSlots] = useState<Slot[] | undefined>([]);
+    // const [attributes, setAttributes] = useState<Attribute[] | undefined>([]);
+
+    useEffect(() => {
+        (async () => {
+            setAttributes(await GetAttributes(modelName,element?.id || ""));
+        })()
+    }, [element]);
+
+    useEffect(() => {
+        (async () => {
+            setSlots(await GetSlots(modelName, element?.id || ""));
+        })()
+    }, [element]);
 
     const attributesAndSlots =
          (
@@ -64,7 +81,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                 <FormLabel>Attributes:</FormLabel>
                 <br/>
                 {
-                    RepoAPI.GetAttributes(modelName, element?.id || "")?.map(value =>
+                    attributes?.map(value =>
                         <div>
                             <label>{value.name}: {value.type.name} L:{value.level} P:{value.potency}</label>
                             <br/>
@@ -76,7 +93,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                 <FormLabel>Slots:</FormLabel>
                 <br/>
                 {
-                    RepoAPI.GetSlots(modelName, element?.id || "")?.map(value =>
+                    slots?.map(value =>
                         <div>
                             <label>{value.attribute.name}: {value.value.name} L:{value.level} P:{value.potency}</label>
                             <br/>
@@ -118,75 +135,75 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
 
     useEffect(() => {
         setElements((els: Elements) =>
-            els.map((el) => {
+            els.map(async (el) => {
                 if (el.id === id) {
-                    if (isNode(el)) {
-                        // it's important that you create a new object here
-                        // in order to notify react flow about the change
-                        el.data = {
-                            ...el.data,
-                            label: name,
-                        };
-                    } else {
-                        el = {
-                            ...el,
-                            label: name,
-                        };
-                    }
-                    setElementName(modelName, idNumber, name);
-                    if (els.filter(e => e.id === Name).length > 0) {
+                    // if (isNode(el)) {
+                    //     // it's important that you create a new object here
+                    //     // in order to notify react flow about the change
+                    //     el.data = {
+                    //         ...el.data,
+                    //         label: name,
+                    //     };
+                    // } else {
+                    //     el = {
+                    //         ...el,
+                    //         label: name,
+                    //     };
+                    // }
+                    // setElementName(modelName, idNumber, name);
+                    if (els.filter(e => e.id === name).length > 0) {
                         console.warn("Duplicated name");
                         return el;
                     }
                     // it's important that you create a new object here
                     // in order to notify react flow about the change
-                    const newElem = RepoAPI.SetElementName(modelName, el.id, Name);
+                    const newElem = await SetElementName(modelName, el.id, name);
                     if (newElem === undefined) {
                         console.error("Error while applying new name");
                         return el;
                     }
                     el = {
                         ...el,
-                        id: Name
+                        id: name
                     };
                     if (isEdge(el)) {
-                        (el as Edge).label = Name;
+                        (el as Edge).label = name;
                     }
                     if (((el as Node).data !== undefined) && ((el as Node).data.label !== undefined)) {
-                        el.data.label = Name;
+                        el.data.label = name;
                     }
                     els.filter(e => isEdge(e)).forEach(edge => {
                         if ((edge as Edge).source === id) {
-                            (edge as Edge).source = Name
+                            (edge as Edge).source = name
                         }
                         if ((edge as Edge).target === id) {
-                            (edge as Edge).target = Name
+                            (edge as Edge).target = name
                         }
                     })
-                    setCurrentElementId(Name);
-                }
-                return el;
-            })
-        );
-    }, [Name, setElements]);
-
-    useEffect(() => {
-        setElements((els: Elements) =>
-            els.map((el) => {
-                if (el.id === id) {
-                    RepoAPI.SetElementLevel(modelName, el.id, level);
+                    setCurrentElementId(name);
                 }
                 return el;
             })
         );
     }, [name, setElements]);
+
+    useEffect(() => {
+        setElements((els: Elements) =>
+            els.map(async (el) => {
+                if (el.id === id) {
+                    await SetElementLevel(modelName, el.id, level);
+                }
+                return el;
+            })
+        );
+    // }, [name, setElements]);
     }, [level, setLevel]);
 
     useEffect(() => {
         setElements((els: Elements) =>
-            els.map((el) => {
+            els.map(async (el) => {
                 if (el.id === id) {
-                    RepoAPI.SetElementPotency(modelName, el.id, potency);
+                    await SetElementPotency(modelName, el.id, potency);
                 }
                 return el;
             })
@@ -256,53 +273,77 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
         );
     }, [edgeType, setElements]);
 
-    useEffect(() => {
-        if (element !== undefined && isNode(element)) {
-            let attributes: Array<Attribute> = [];
-            getNodeAttributes(modelName, idNumber).then(data => {
-                if (data !== undefined) {
-                    data.map(attribute => attributes.push(attribute));
-                }
+    // useEffect(() => {
+    //     if (element !== undefined && isNode(element)) {
+    //         let attributes: Array<Attribute> = [];
+    //         getNodeAttributes(modelName, idNumber).then(data => {
+    //             if (data !== undefined) {
+    //                 data.map(attribute => attributes.push(attribute));
+    //             }
+    //
+    //             const attributeElements: Array<JSX.Element> = [];
+    //             attributes.forEach(attribute => {
+    //                 const setAttribute = (newValue: string) => {
+    //                     setAttributeValue(modelName, idNumber, attribute.name, newValue);
+    //                 }
+    //                 attributeElements.push(<TextFieldItem key={attribute.name + attribute.stringValue}
+    //                                                       label={attribute.name} value={attribute.stringValue}
+    //                                                       setFunc={setAttribute}/>);
+    //             });
+    //             setNodeAttributes(attributeElements);
+    //         });
+    //     }
+    // }, [element]);
 
-                const attributeElements: Array<JSX.Element> = [];
-                attributes.forEach(attribute => {
-                    const setAttribute = (newValue: string) => {
-                        setAttributeValue(modelName, idNumber, attribute.name, newValue);
-                    }
-                    attributeElements.push(<TextFieldItem key={attribute.name + attribute.stringValue}
-                                                          label={attribute.name} value={attribute.stringValue}
-                                                          setFunc={setAttribute}/>);
-                });
-                setNodeAttributes(attributeElements);
-            });
-        }
-    }, [element]);
+    // useEffect(() => {
+    //     if (element !== undefined && isEdge(element)) {
+    //         let attributes: Array<Attribute> = [];
+    //         getEdgeAttributes(modelName, idNumber).then(data => {
+    //             if (data !== undefined) {
+    //                 data.map(attribute => attributes.push(attribute));
+    //             }
+    //
+    //             const attributeElements: Array<JSX.Element> = [];
+    //             attributes.forEach(attribute => {
+    //                 const setAttribute = (newValue: string) => {
+    //                     setAttributeValue(modelName, idNumber, attribute.name, newValue);
+    //                 }
+    //                 attributeElements.push(<TextFieldItem
+    //                     key={attribute.name + attribute.stringValue}
+    //                     label={attribute.name} value={attribute.stringValue}
+    //                     setFunc={setAttribute}
+    //                 />);
+    //             });
+    //             setEdgeAttributes(attributeElements);
+    //         });
+    //     }
+    // }, [element]);
 
-    useEffect(() => {
-        if (element !== undefined && isEdge(element)) {
-            let attributes: Array<Attribute> = [];
-            getEdgeAttributes(modelName, idNumber).then(data => {
-                if (data !== undefined) {
-                    data.map(attribute => attributes.push(attribute));
-                }
+    // const CheckboxItem = (props: { label: string, value: boolean, setFunc: (isRequired: boolean) => void }) => {
 
-                const attributeElements: Array<JSX.Element> = [];
-                attributes.forEach(attribute => {
-                    const setAttribute = (newValue: string) => {
-                        setAttributeValue(modelName, idNumber, attribute.name, newValue);
-                    }
-                    attributeElements.push(<TextFieldItem
-                        key={attribute.name + attribute.stringValue}
-                        label={attribute.name} value={attribute.stringValue}
-                        setFunc={setAttribute}
-                    />);
-                });
-                setEdgeAttributes(attributeElements);
-            });
-        }
-    }, [element]);
 
-    const CheckboxItem = (props: { label: string, value: boolean, setFunc: (isRequired: boolean) => void }) => {
+    // const TextFieldItem = (props: { label: string, value: string, setFunc: (newValue: string) => void }) => {
+    //     const [textFieldValue, setTextFieldValue] = useState(props.value);
+    //
+    //     return (
+    //         <div>
+    //             <TextField
+    //                 label={props.label + ': '}
+    //                 value={textFieldValue}
+    //                 onChange={(event) => setTextFieldValue(event.target.value)}
+    //                 onBlur={() => {
+    //                     props.setFunc(textFieldValue);
+    //                 }}
+    //                 onKeyPress={(event) => {
+    //                     if (event.key === 'Enter') {
+    //                         props.setFunc(textFieldValue);
+    //                     }
+    //                 }}
+    //             />
+    //         </div>
+    //     );
+    // }
+    if (element !== undefined && isNode(element)) {
         return (
             <aside>
                 <div>
@@ -334,39 +375,14 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                         size='small'
                     />
                 </div>
-            <div>
-                <label>{props.label}:</label>
-                <Checkbox
-                    checked={props.value}
-                    onChange={(event) => props.setFunc(event.target.checked)}
-                    size="small"
-                />
-            </div>
-        );
-    }
-
-    const TextFieldItem = (props: { label: string, value: string, setFunc: (newValue: string) => void }) => {
-        const [textFieldValue, setTextFieldValue] = useState(props.value);
-
-        return (
-            <div>
-                <TextField
-                    label={props.label + ': '}
-                    value={textFieldValue}
-                    onChange={(event) => setTextFieldValue(event.target.value)}
-                    onBlur={() => {
-                        props.setFunc(textFieldValue);
-                    }}
-                    onKeyPress={(event) => {
-                        if (event.key === 'Enter') {
-                            props.setFunc(textFieldValue);
-                        }
-                    }}
-                />
-            </div>
-        );
-    }
-
+                <div>
+                    <label>Draggable:</label>
+                    <Checkbox
+                        checked={nodeIsDraggable}
+                        onChange={(evt) => setNodeIsDraggable(evt.target.checked)}
+                        size='small'
+                    />
+                </div>
                 <div>
                     <label>Connectable:</label>
                     <Checkbox
@@ -380,24 +396,19 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
     } else if (element !== undefined && isEdge(element)) {
         return (
             <aside>
-
                 <div>
                     <TextField label="Label: " value={element.label}
                                onChange={(evt) => setName(evt.target.value)}/>
                 </div>
-
                 <div>
                     <TextField label="Level: " value={level}
                                onChange={(evt) => setLevel(toInt(evt.target.value))}/>
                 </div>
-
                 <div>
                     <TextField label="Potency: " value={potency}
                                onChange={(evt) => setPotency(toInt(evt.target.value))}/>
                 </div>
-
                 {attributesAndSlots}
-
                 <div>
                     <label>Hidden:</label>
                     <Checkbox
@@ -406,7 +417,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                         size='small'
                     />
                 </div>
-
                 <div>
                     <label>Animated:</label>
                     <Checkbox
@@ -415,7 +425,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                         size='small'
                     />
                 </div>
-
                 <div>
                     <InputLabel>Type</InputLabel>
                     <Select
@@ -429,51 +438,53 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                         <MenuItem value={'smoothstep'}>smoothstep</MenuItem>
                     </Select>
                 </div>
-
             </aside>)
-    } else {
+    }
+    // } else {
+    //     return (
+    // if (element !== undefined && isNode(element)) return (
+    //     <aside>
+    //         <div className="description">Property bar</div>
+    //         <div>
+    //             <label>Id: {idNumber}</label>
+    //         </div>
+    //         <TextFieldItem label="Label" value={element.data.label} setFunc={setName}/>
+    //         <TextFieldItem label="Background" value={nodeBg} setFunc={setNodeBg}/>
+    //         <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden}/>
+    //         <CheckboxItem label="Draggable" setFunc={setNodeIsDraggable} value={nodeIsDraggable}/>
+    //         <CheckboxItem label="Connectable" setFunc={setNodeIsConnectable} value={nodeIsConnectable}/>
+    //         {nodeAttributes}
+    //     </aside>)
+    // else if (element !== undefined && isEdge(element)) return (
+    //     <aside>
+    //         <div className="description">Property bar</div>
+    //         <div>
+    //             <label>Id: {idNumber}</label>
+    //         </div>
+    //         <TextFieldItem label="Label" value={element.label !== undefined ? element.label : ""} setFunc={setName}/>
+    //         <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden}/>
+    //         <CheckboxItem label="Animated" setFunc={setEdgeIsAnimated} value={edgeIsAnimated}/>
+    //         <div>
+    //             <InputLabel>Type</InputLabel>
+    //             <Select
+    //                 id="edgeType"
+    //                 value={edgeType}
+    //                 onChange={(evt) => setEdgeType(evt.target.value as string)}
+    //             >
+    //                 <MenuItem value={'default'}>default</MenuItem>
+    //                 <MenuItem value={'straight'}>straight</MenuItem>
+    //                 <MenuItem value={'step'}>step</MenuItem>
+    //                 <MenuItem value={'smoothstep'}>smoothstep</MenuItem>
+    //             </Select>
+    //         </div>
+    //         {edgeAttributes}
+    //     </aside>)
+    else {
         return (
-    if (element !== undefined && isNode(element)) return (
-        <aside>
-            <div className="description">Property bar</div>
-            <div>
-                <label>Id: {idNumber}</label>
-            </div>
-            <TextFieldItem label="Label" value={element.data.label} setFunc={setName}/>
-            <TextFieldItem label="Background" value={nodeBg} setFunc={setNodeBg}/>
-            <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden}/>
-            <CheckboxItem label="Draggable" setFunc={setNodeIsDraggable} value={nodeIsDraggable}/>
-            <CheckboxItem label="Connectable" setFunc={setNodeIsConnectable} value={nodeIsConnectable}/>
-            {nodeAttributes}
-        </aside>)
-    else if (element !== undefined && isEdge(element)) return (
-        <aside>
-            <div className="description">Property bar</div>
-            <div>
-                <label>Id: {idNumber}</label>
-            </div>
-            <TextFieldItem label="Label" value={element.label !== undefined ? element.label : ""} setFunc={setName}/>
-            <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden}/>
-            <CheckboxItem label="Animated" setFunc={setEdgeIsAnimated} value={edgeIsAnimated}/>
-            <div>
-                <InputLabel>Type</InputLabel>
-                <Select
-                    id="edgeType"
-                    value={edgeType}
-                    onChange={(evt) => setEdgeType(evt.target.value as string)}
-                >
-                    <MenuItem value={'default'}>default</MenuItem>
-                    <MenuItem value={'straight'}>straight</MenuItem>
-                    <MenuItem value={'step'}>step</MenuItem>
-                    <MenuItem value={'smoothstep'}>smoothstep</MenuItem>
-                </Select>
-            </div>
-            {edgeAttributes}
-        </aside>)
-    else return (
             <aside>
                 <div className="description">Property bar</div>
             </aside>)
+    }
 };
 
 export default PropertyBar;

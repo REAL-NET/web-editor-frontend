@@ -18,7 +18,6 @@ import ImageNode from './nodesWithImages/ImageNode';
 import RobotsModelNode from './RobotsModelNode';
 import {setAttributeValue} from './requests/attributeRequests';
 import {deleteElement, addEdgeElement, getEdge, addNodeElement} from './requests/elementRequests';
-import {RepoAPI} from "./repo/RepoAPI";
 import {FlowTransform} from "react-flow-renderer/dist/types";
 import {
     AssociationMetatype,
@@ -26,10 +25,18 @@ import {
     GeneralizationEdgeType,
     GeneralizationMetatype
 } from "./Constants";
+import {
+    CreateAssociations,
+    CreateGeneralization, DeleteElement,
+    GetElement,
+    InstantiateAssociation,
+    InstantiateNode
+} from "./requests/deepElementRequests";
+import {AllModels} from "./requests/deepModelRequests";
 
 type SceneProps = {
     modelName: string
-    metamodelName: string
+    // metamodelName: string
     elements: Elements
     setElements: React.Dispatch<React.SetStateAction<Elements>>
     reactFlowInstance: OnLoadParams | undefined
@@ -46,24 +53,22 @@ const nodeTypes = {
     imageNode: ImageNode,
 };
 
+// const Scene: React.FC<SceneProps> = ({
+//                                          modelName, metamodelName, elements, setElements, reactFlowInstance,
+//                                          setReactFlowInstance, setCurrentElementId, captureElementClick
+//                                      }) => {
 const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
                                          setReactFlowInstance, setCurrentElementId, captureElementClick, modelName, edgeType,
                                      setLevel, setPotency}) => {
-
-const Scene: React.FC<SceneProps> = ({
-                                         modelName, metamodelName, elements, setElements, reactFlowInstance,
-                                         setReactFlowInstance, setCurrentElementId, captureElementClick
-                                     }) => {
-    const onElementClick = (_: MouseEvent, element: FlowElement) => {
+    const onElementClick = async (_: MouseEvent, element: FlowElement) => {
         setCurrentElementId(element.id);
-        const repoElement = RepoAPI.GetElement(modelName, element.id);
+        const repoElement = await GetElement(modelName, element.id)
         if (repoElement === undefined) {
             console.error("No element retrieved from repo");
             return;
         }
         setLevel(repoElement.level);
         setPotency(repoElement.potency);
-    }
     };
 
     // Any node moving
@@ -75,40 +80,37 @@ const Scene: React.FC<SceneProps> = ({
 
     const onElementsRemove = (elementsToRemove: Elements): void => {
         console.debug("On elements remove")
-        elementsToRemove.forEach(value => {
-            RepoAPI.DeleteElement(modelName, value.id);
+        elementsToRemove.forEach(async value => {
+            await DeleteElement(modelName, value.id);
         });
         setElements((elements: Elements) => removeElements(elementsToRemove, elements));
-        elementsToRemove.forEach(element => {
-            deleteElement(modelName, +element.id);
+        elementsToRemove.forEach(async element => {
+            await deleteElement(modelName, +element.id);
         })
     };
 
-    const onLoad = (_reactFlowInstance: OnLoadParams) => setReactFlowInstance(_reactFlowInstance);
-
-
     const onLoad = (_reactFlowInstance: OnLoadParams) => {
-        let models = RepoAPI.AllModels();
+        let models = AllModels();
         console.log(models);
         console.log('flow loaded:', reactFlowInstance);
         setReactFlowInstance(_reactFlowInstance);
     };
 
-    const onConnect = (edgeParas: Edge | Connection): void => {
-        addEdgeElement(metamodelName, modelName, edgeParas.source !== null ? +edgeParas.source : -1,
-            edgeParas.target !== null ? +edgeParas.target : -1).then((id: string) => {
-            if (id !== '') {
-                getEdge(modelName, +id).then(edge => {
-                    const newLink = {
-                        id: `${edge.id}`,
-                        source: `${edgeParas.source}`,
-                        target: `${edgeParas.target}`,
-                        label: `${edge.name}`
-                    }
-                    setElements((es: Elements) => es.concat(newLink));
-                });
-            }
-        });
+    const onConnect = async (edgeParas: Edge | Connection) => {
+        // addEdgeElement(metamodelName, modelName, edgeParas.source !== null ? +edgeParas.source : -1,
+        //     edgeParas.target !== null ? +edgeParas.target : -1).then((id: string) => {
+        //     if (id !== '') {
+        //         getEdge(modelName, +id).then(edge => {
+        //             const newLink = {
+        //                 id: `${edge.id}`,
+        //                 source: `${edgeParas.source}`,
+        //                 target: `${edgeParas.target}`,
+        //                 label: `${edge.name}`
+        //             }
+        //             setElements((es: Elements) => es.concat(newLink));
+        //         });
+        //     }
+        // });
         console.debug("On elements connect");
         const edge = edgeParas as Edge;
         let name: string, metaType: string = "", metaModel: string = "";
@@ -122,13 +124,13 @@ const Scene: React.FC<SceneProps> = ({
         }
         if (edgeParas.source != null && edgeParas.target != null) {
             if (edgeType === AssociationMetatype) {
-                RepoAPI.CreateAssociations(modelName, name, edgeParas.source, edgeParas.target, -1, -1, -1, -1, -1, -1);
+                await CreateAssociations(modelName, name, edgeParas.source, edgeParas.target, -1, -1, -1, -1, -1, -1);
             } else if (edgeType === GeneralizationMetatype) {
-                RepoAPI.CreateGeneralization(modelName, name, edgeParas.source, edgeParas.target, -1, -1);
+                await CreateGeneralization(modelName, name, edgeParas.source, edgeParas.target, -1, -1);
                 edge.style = GeneralizationEdgeStyle;
                 edge.type = GeneralizationEdgeType;
             } else {
-                RepoAPI.InstantiateAssociation(modelName, name, metaModel, metaType, edgeParas.source, edgeParas.target);
+                await InstantiateAssociation(modelName, name, metaModel, metaType, edgeParas.source, edgeParas.target);
             }
             console.debug(edgeParas);
         }
@@ -146,7 +148,7 @@ const Scene: React.FC<SceneProps> = ({
         return `${id}`;
     };
 
-    const onDrop = (event: DragEvent) => {
+    const onDrop = async (event: DragEvent) => {
         console.log("On elements drop")
         event.preventDefault();
         if (reactFlowInstance) {
@@ -156,19 +158,20 @@ const Scene: React.FC<SceneProps> = ({
             const metaModel = metaInfo.substr(0, sepIndex);
             const id = Math.round(Math.random() * 10000000).toString();
             const name = metaType + "_" + id
-            let node = RepoAPI.InstantiateNode(modelName, name, metaModel, metaType);
+            const node = await InstantiateNode(modelName, name, metaModel, metaType);
             if (node !== undefined) {
-                const position = reactFlowInstance.project({ x: event.clientX, y: event.clientY - 40 });
+                const position = reactFlowInstance.project({x: event.clientX, y: event.clientY - 40});
                 const newNode: Node = {
                     id: name,
                     type: 'default',
                     position,
-                    data: { label: node.name },
+                    data: {label: node.name},
                 };
                 setElements((es: Elements) => es.concat(newNode));
             } else {
                 console.error("Some error on adding element");
             }
+
             const data = event.dataTransfer.getData('application/reactflow').split(' ');
             const type = data[0];
             const position = reactFlowInstance.project({x: event.clientX - 280, y: event.clientY - 40});
@@ -201,12 +204,12 @@ const Scene: React.FC<SceneProps> = ({
         }
     };
 
-    // Scene node stops being dragged/moved
-    const onNodeDragStop = (event: MouseEvent, node: Node) => {
-        event.preventDefault();
-        setAttributeValue(modelName, +node.id, 'xCoordinate', `${node.position.x}`);
-        setAttributeValue(modelName, +node.id, 'yCoordinate', `${node.position.y}`);
-    };
+    // // Scene node stops being dragged/moved
+    // const onNodeDragStop = (event: MouseEvent, node: Node) => {
+    //     event.preventDefault();
+    //     setAttributeValue(modelName, +node.id, 'xCoordinate', `${node.position.x}`);
+    //     setAttributeValue(modelName, +node.id, 'yCoordinate', `${node.position.y}`);
+    // };
 
     const onNodeDragStop = (event: MouseEvent, node: Node) => {
         elements
@@ -229,7 +232,6 @@ const Scene: React.FC<SceneProps> = ({
                 onDragOver={onDragOver}
                 onNodeDragStop={onNodeDragStop}
                 onElementClick={captureElementClick ? onElementClick : undefined}
-                onNodeDragStop={onNodeDragStop}
             >
                 <Controls/>
                 <Background>

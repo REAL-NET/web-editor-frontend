@@ -1,9 +1,10 @@
 import {Elements, FlowElement} from 'react-flow-renderer';
-import {RepoAPI} from "./repo/RepoAPI";
 import {GeneralizationEdgeStyle, GeneralizationEdgeType, GeneralizationMetatype} from "./Constants";
+import {GetRelationship} from "./requests/deepElementRequests";
+import {GetModel} from "./requests/deepModelRequests";
 
-const getElements = (modelName: string) : Elements => {
-    const model = RepoAPI.GetModel(modelName);
+const getElements = async (modelName: string) : Promise<Elements> => {
+    const model = await GetModel(modelName);
     if (model !== undefined) {
         const nodes = model.nodes.map((value, index) => {
             return {
@@ -12,11 +13,11 @@ const getElements = (modelName: string) : Elements => {
                 data: {
                     label: value.name
                 },
-                position: { x: 100, y: 60 * index }
+                position: {x: 100, y: 60 * index}
             }
         }) as Array<FlowElement>;
-        const edges = model.relationships.map(value => {
-            const currentRelationship = RepoAPI.GetRelationship(modelName, value.name);
+        const edges = model.relationships.map(async (value) => {
+            const currentRelationship = await GetRelationship(modelName, value.name);
             if (currentRelationship !== undefined) {
                 let edge = {
                     id: currentRelationship.name,
@@ -25,20 +26,19 @@ const getElements = (modelName: string) : Elements => {
                     label: currentRelationship.name
                 };
                 if (currentRelationship.type === GeneralizationMetatype) {
-                    return  {
+                    return {
                         ...edge,
                         type: GeneralizationEdgeType,
                         style: GeneralizationEdgeStyle
-                    }
+                    };
                 }
                 return edge;
-
             }
-            return undefined
-        }).filter(value => value !== undefined) as Array<FlowElement>;
+            return undefined;
+        }).filter(value => value !== undefined) as unknown as Array<FlowElement>;
         return [...nodes, ...edges];
     }
     return [];
 }
 
-export  {getElements};
+export {getElements};

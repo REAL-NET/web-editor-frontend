@@ -3,15 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="c5975f99-cf70-4dce-9ccf-f7b0d9dc83f9" name="Default Changelist" comment="Move to root">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway/routes/model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/gateway/routes/model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway/routes/routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/gateway/routes/routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Palette.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Palette.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PropertyBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/PropertyBar.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Scene.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Scene.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/repo/RepoAPI.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/repo/RepoAPI.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/requests/attributesRequests.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/requests/attributeRequests.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/requests/elementRequests.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/requests/elementRequests.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/requests/modelRequests.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/requests/modelRequests.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/initialElements.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/initialElements.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +28,14 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectId" id="1lVoLGL8En8LDQAidvnFkSkW62s" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -82,7 +86,8 @@
       <workItem from="1618050325342" duration="3587000" />
       <workItem from="1634910221725" duration="2236000" />
       <workItem from="1635087980784" duration="249000" />
-      <workItem from="1635257793652" duration="6976000" />
+      <workItem from="1635257793652" duration="18154000" />
+      <workItem from="1635345670312" duration="3082000" />
     </task>
     <task id="LOCAL-00001" summary="Add Requests.ts">
       <created>1617627816759</created>

@@ -14,80 +14,82 @@ import {getModel} from "./requests/modelRequests";
 
 const onDragStart = (event: DragEvent, metaInfo: string) => {
     event.dataTransfer.setData('application/reactflow', metaInfo);
-
-const onDragStart = (event: DragEvent, nodeType: string, elementId: number) => {
-    event.dataTransfer.setData('application/reactflow', `${nodeType} ${elementId}`);
-    event.dataTransfer.effectAllowed = 'move';
 };
 
-const Palette = (props: { metamodelName: string }) => {
-    const [metamodel, setMetamodel] = useState<Array<{ id: number, name: string }>>([]);
+// const onDragStart = (event: DragEvent, nodeType: string, elementId: number) => {
+//     event.dataTransfer.setData('application/reactflow', `${nodeType} ${elementId}`);
+//     event.dataTransfer.effectAllowed = 'move';
+// };
 
-    useEffect(() => {
-        let newMetamodel: Array<{ id: number, name: string }> = [];
-        getModel(props.metamodelName).then(data => {
-            if (data !== undefined) {
-                data.forEach((element: { id: number, name: string }) => {
-                    getAttributeValue(props.metamodelName, element.id, 'isAbstract').then(data => {
-                        if (data !== undefined && !data && element.name !== 'Link') {
-                            newMetamodel.push(element);
-                        }
-                    });
-                });
-            }
-        }).finally(() => setMetamodel(newMetamodel));
-    }, []);
+// const Palette = (props: { metamodelName: string }) => {
+//     const [metamodel, setMetamodel] = useState<Array<{ id: number, name: string }>>([]);
+//
+//     useEffect(() => {
+//         let newMetamodel: Array<{ id: number, name: string }> = [];
+//         getModel(props.metamodelName).then(data => {
+//             if (data !== undefined) {
+//                 data.forEach((element: { id: number, name: string }) => {
+//                     getAttributeValue(props.metamodelName, element.id, 'isAbstract').then(data => {
+//                         if (data !== undefined && !data && element.name !== 'Link') {
+//                             newMetamodel.push(element);
+//                         }
+//                     });
+//                 });
+//             }
+//         }).finally(() => setMetamodel(newMetamodel));
+//     }, []);
+//
+//     const getMetamodelElements = (modelName: string): ElementInfo[] => {
+//         const nodes = await GetModelMetaNodes(modelName);
+//         if (nodes === undefined || nodes.length === 0) {
+//             console.error(`No meta nodes retrieved for ${modelName}`);
+//             const model = await GetModel(modelName);
+//             if (model === undefined) {
+//                 console.error(`Model ${modelName} is not retrieved from repo`);
+//                 return [];
+//             }
+//             let metamodel = await GetModel(model.metamodel.name);
+//             if (metamodel === undefined) {
+//                 console.error(`Metamodel ${metamodel} is not retrieved from repo`);
+//                 return [];
+//             }
+//             return metamodel.nodes;
+//         }
+//         return nodes;
+//     };
+//
+//     const getModelsMenuItems = () => {
+//         const models = AllModels();
+//         if (models === undefined) {
+//             console.error("Models is not retrieved from repo");
+//             return [];
+//         }
+//         return models.map(value => value.name);
+//     };
+//
+//     const RobotsNodePaletteItem = (props: { element: { id: number; name: string } }) => {
+//         return (
+//             <div className="robotsNode" key={props.element.id}
+//                  onDragStart={(event: DragEvent) => onDragStart(event, 'robotsNode', props.element.id)} draggable>
+//                 {props.element.name}
+//             </div>
+//         );
+//     }
+//
+//     const metamodelFiltered = metamodel.filter((element) => element.name !== '');
+//     const metamodelElements = metamodelFiltered.map(element => <RobotsNodePaletteItem element={element} key={element.name + element.id}/>);
+// }
 
-const getMetamodelElements = (modelName: string): ElementInfo[] => {
-    const nodes = GetModelMetaNodes(modelName);
-    if (nodes === undefined || nodes.length === 0) {
-        console.error(`No meta nodes retrieved for ${modelName}`);
-        const model = GetModel(modelName);
-        if (model === undefined) {
-            console.error(`Model ${modelName} is not retrieved from repo`);
-            return [];
-        }
-        let metamodel = GetModel(model.metamodel.name);
-        if (metamodel === undefined) {
-            console.error(`Metamodel ${metamodel} is not retrieved from repo`);
-            return [];
-        }
-        return metamodel.nodes;
-    }
-    return nodes;
-};
-
-const getModelsMenuItems = () => {
-    const models = AllModels();
-    if (models === undefined) {
-        console.error("Models is not retrieved from repo");
-        return [];
-    }
-    return models.map(value => value.name);
-};
-
-    const RobotsNodePaletteItem = (props: { element: { id: number; name: string } }) => {
-        return (
-            <div className="robotsNode" key={props.element.id}
-                 onDragStart={(event: DragEvent) => onDragStart(event, 'robotsNode', props.element.id)} draggable>
-                {props.element.name}
-            </div>
-        );
-    }
-
-    const metamodelFiltered = metamodel.filter((element) => element.name !== '');
-    const metamodelElements = metamodelFiltered.map(element => <RobotsNodePaletteItem element={element} key={element.name + element.id} />);
-
-const getEdgesMetatypes = (modelName: string) => {
-    const edges = GetModelMetaEdges(modelName);
+const getEdgesMetatypes = async (modelName: string) => {
+    const edges = await GetModelMetaEdges(modelName);
     if (edges === undefined) {
         console.error(`No meta edges retrieved for ${modelName}`);
-        const model = GetModel(modelName);
+        const model = await GetModel(modelName);
         if (model === undefined) {
             console.error(`Model ${modelName} is not retrieved from repo`);
             return [];
         }
-        let metamodel = GetModel(model.metamodel.name);
+        const metamodel = await GetModel(model.metamodel.name);
         if (metamodel === undefined) {
             console.error(`Metamodel ${metamodel} is not retrieved from repo`);
             return [];
@@ -105,16 +107,65 @@ type PaletteBarProps = {
     setEdgeType: Function
 }
 
-const Palette: React.FC<PaletteBarProps>  = ({ setElements, modelName, setModelName, edgeType, setEdgeType }) => {
+const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelName, edgeType, setEdgeType}) => {
+    const [menuItems, setMenuItems] = useState<string[]>([]);
+    const [edgesMetatypes, setEdgesMetatypes] = useState<ElementInfo[]>([]);
+    const [metamodelElements, setMetamodelElements] = useState<ElementInfo[]>([]);
+
+    useEffect(  () => {
+        (async () => {
+            setMenuItems(await getModelsMenuItems());
+        })()
+    }, []);
+
+    useEffect( () => {
+        (async () => {
+            setEdgesMetatypes(await getEdgesMetatypes(modelName));
+        })()
+    }, [modelName]);
+
+    useEffect( () => {
+        (async () => {
+            setMetamodelElements(await getMetamodelElements(modelName));
+        })()
+    }, [modelName]);
 
     useEffect(() => {
         setElements(() => getElements(modelName));
-    }, [modelName, setElements])
+    }, [modelName, setElements]);
+
+    const getMetamodelElements = async (modelName: string) => {
+        const nodes = await GetModelMetaNodes(modelName);
+        if (nodes === undefined || nodes.length === 0) {
+            console.error(`No meta nodes retrieved for ${modelName}`);
+            const model = await GetModel(modelName);
+            if (model === undefined) {
+                console.error(`Model ${modelName} is not retrieved from repo`);
+                return [];
+            }
+            let metamodel = await GetModel(model.metamodel.name);
+            if (metamodel === undefined) {
+                console.error(`Metamodel ${metamodel} is not retrieved from repo`);
+                return [];
+            }
+            return metamodel.nodes;
+        }
+        return nodes;
+    };
+
+    const getModelsMenuItems = async () => {
+        const models = await AllModels();
+        if (models === undefined) {
+            console.error("Models is not retrieved from repo");
+            return [];
+        }
+        return models.map(value => value.name);
+    };
 
     return (
         <aside>
             <div className="description">Palette</div>
-            {metamodelElements}
+            {/*{metamodelElements}*/}
             {/*Nodes with images*/}
             {/*<ImageNodeList />*/}
             <div>
@@ -124,8 +175,9 @@ const Palette: React.FC<PaletteBarProps>  = ({ setElements, modelName, setModelN
                     value={modelName}
                     onChange={(evt) => {
                         setModelName(evt.target.value as string);
-                    }}>
-                    {getModelsMenuItems().map(value => <MenuItem value={value}>{value}</MenuItem>)}
+                    }}
+                >
+                    {menuItems.map(value => <MenuItem value={value}>{value}</MenuItem>)}
                 </Select>
             </div>
             <br/>
@@ -134,14 +186,16 @@ const Palette: React.FC<PaletteBarProps>  = ({ setElements, modelName, setModelN
                 <Select
                     id="edgeType"
                     value={edgeType}
-                    onChange={(event => {setEdgeType(event.target.value as string)})}
+                    onChange={(event => {
+                        setEdgeType(event.target.value as string)
+                    })}
                 >
                     <MenuItem value={AssociationMetatype}>{AssociationMetatype}</MenuItem>
                     <MenuItem value={GeneralizationMetatype}>{GeneralizationMetatype}</MenuItem>
-                    {
-                        getEdgesMetatypes(modelName).map(value =>
-                            <MenuItem value={value.model.name + "$$" +value.name}>{value.model.name + "::" +value.name}</MenuItem> )
-                    }
+                    {edgesMetatypes.map(value =>
+                            <MenuItem
+                                value={value.model.name + "$$" + value.name}>{value.model.name + "::" + value.name}</MenuItem>
+                    )}
                 </Select>
             </div>
             <br/>
@@ -149,9 +203,9 @@ const Palette: React.FC<PaletteBarProps>  = ({ setElements, modelName, setModelN
                 <InputLabel>Elements:</InputLabel>
             </div>
             <br/>
-            {getMetamodelElements(modelName).map(value => {
+            {metamodelElements.map(value => {
                 return <div className="dndnode" onDragStart={(event: DragEvent) =>
-                    onDragStart(event, value.model.name + "$$" +value.name)} draggable>
+                    onDragStart(event, value.model.name + "$$" + value.name)} draggable>
                     {value.model.name + "::" + value.name}
                 </div>
             })}
