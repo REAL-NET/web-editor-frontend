@@ -30,7 +30,7 @@ deepElementRouter.put('/:modelName/:oldName/name/:newName', function (req, res) 
     axios
         .put(`${host}/Element/${modelName}/${oldName}/name/${newName}`)
         .then(response => {
-            res.send(`${response.data}`)
+            res.send(response.data)
         })
         .catch(error => {
             console.log(error.message);
@@ -49,7 +49,7 @@ deepElementRouter.put('/:modelName/:oldName/level/:level', function (req, res) {
     axios
         .put(`${host}/Element/${modelName}/${oldName}/level/${level}`)
         .then(response => {
-            res.send(`${response.data}`)
+            res.send(response.data)
         })
         .catch(error => {
             console.log(error.message);
@@ -67,7 +67,7 @@ deepElementRouter.put('/:modelName/:oldName/potency/:potency', function (req, re
     axios
         .put(`${host}/Element/${modelName}/${oldName}/potency/${potency}`)
         .then(response => {
-            res.send(`${response.data}`);
+            res.send(response.data);
         })
         .catch(error => {
             console.log(error.message);
@@ -154,7 +154,7 @@ deepElementRouter.post('/node/create/:modelName/:name/:level/:potency', function
     axios
         .post(`${host}/Element/node/create/${modelName}/${name}/${level}/${potency}`)
         .then(response => {
-            res.send(`${response.data}`);
+            res.send(response.data);
         })
         .catch(error => {
             console.log(error.message);
@@ -175,7 +175,7 @@ deepElementRouter.post('/generalization/:modelName/:name/:sourceName/:targetName
     axios
         .post(`${host}/Element/generalization/${modelName}/${name}/${sourceName}/${targetName}/${level}/${potency}`)
         .then(response => {
-            res.send(`${response.data}`);
+            res.send(response.data);
         })
         .catch(error => {
             console.log(error.message);
@@ -200,7 +200,7 @@ deepElementRouter.post('/association/create/:modelName/:name/:sourceName/:target
     axios
         .post(`${host}/Element/association/create/${modelName}/${name}/${sourceName}/${targetName}/${level}/${potency}/${minSource}/${maxSource}/${minTarget}/${maxTarget}`)
         .then(response => {
-            res.send(`${response.data}`);
+            res.send(response.data);
         })
         .catch(error => {
             console.log(error.message);
@@ -221,7 +221,7 @@ deepElementRouter.post('/node/instantiate/:modelName/:parentModel/:parentName/:n
     axios
         .post(`${host}/Element/node/instantiate/${modelName}/${parentModel}/${parentName}/${name}`)
         .then(response => {
-            res.send(`${response.data}`);
+            res.send(response.data);
         })
         .catch(error => {
             console.log(error.message);
@@ -242,7 +242,7 @@ deepElementRouter.post('/association/instantiate/:modelName/:name/:parentModel/:
     axios
         .post(`${host}/Element/association/instantiate/${modelName}/${name}/${parentModel}/${parentName}/${sourceName}/${targetName}`)
         .then(response => {
-            res.send(`${response.data}`);
+            res.send(response.data);
         })
         .catch(error => {
             console.log(error.message);
@@ -300,7 +300,7 @@ deepElementRouter.post('/:modelName/:elementName/attribute/:attributeName/:typeM
     axios
         .post(`${host}/Element/${modelName}/${elementName}/attribute/${attributeName}/${typeModel}/${typeName}/${level}/${potency}`)
         .then(response => {
-            res.send(`${response.data}`);
+            res.send(response.data);
         })
         .catch(error => {
             console.log(error.message);
@@ -319,7 +319,7 @@ deepElementRouter.put('/:modelName/:elementName/attribute/:attributeName/:single
     axios
         .put(`${host}/Element/${modelName}/${elementName}/attribute/${attributeName}/${single}`)
         .then(response => {
-            res.send(`${response.data}`);
+            res.send(response.data);
         })
         .catch(error => {
             console.log(error.message);
@@ -375,7 +375,7 @@ deepElementRouter.post('/:modelName/:elementName/slot/:attributeName/:valueName/
     axios
         .post(`${host}/Element/${modelName}/${elementName}/slot/${attributeName}/${valueName}/${level}/${potency}`)
         .then(response => {
-            res.send(`${response.data}`);
+            res.send(response.data);
         })
         .catch(error => {
             console.log(error.message);
@@ -394,7 +394,7 @@ deepElementRouter.put('/:modelName/:elementName/slot/:attributeName/:valueName',
     axios
         .put(`${host}/Element/${modelName}/${elementName}/slot/${attributeName}/${valueName}`)
         .then(response => {
-            res.send(`${response.data}`);
+            res.send(response.data);
         })
         .catch(error => {
             console.log(error.message);

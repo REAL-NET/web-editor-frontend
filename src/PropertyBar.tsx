@@ -14,7 +14,7 @@ import {setElementName} from './requests/elementRequests';
 
 import './PropertyBar.css';
 import {
-    GetAttributes,
+    GetAttributes, GetElement,
     GetSlots,
     SetElementLevel,
     SetElementName,
@@ -73,22 +73,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
     }
     const firstRender = useFirstRender();
 
-    useEffect(() => {
-        if (!firstRender) {
-            (async () => {
-                setAttributes(await GetAttributes(modelName,element?.id || ""));
-            })()
-        }
-    }, [element]);
-
-    useEffect(() => {
-        if (!firstRender) {
-            (async () => {
-                setSlots(await GetSlots(modelName, element?.id || ""));
-            })()
-        }
-    }, [element]);
-
     const attributesAndSlots =
          (
             <div>
@@ -121,18 +105,29 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
 
     //common effects
     useEffect(() => { // sets states for chosen element
-        if ((element !== undefined) && isNode(element)) {
-
-            setNodeIsDraggable(isNode(element) && (element.draggable || element.draggable === undefined)); // because if draggable undefined node is draggable
-            setIsHidden((element.isHidden !== undefined) && element.isHidden);
-            setNodeIsConnectable(isNode(element) && (element.connectable === true || element.connectable === undefined));
-
-        } else if (element !== undefined && isEdge(element)) {
-
-            setEdgeIsAnimated(element.animated !== undefined && element.animated);
-            if (element.type !== undefined) setEdgeType(element.type);
-            else setEdgeType('undefined');
-
+        if (element  !== undefined) {
+            if (!firstRender) {
+                (async () => {
+                    setAttributes(await GetAttributes(modelName, element?.id || ""));
+                    setSlots(await GetSlots(modelName, element?.id || ""));
+                })();
+            }
+            if (isNode(element)) {
+                setNodeIsDraggable(isNode(element) && (element.draggable || element.draggable === undefined)); // because if draggable undefined node is draggable
+                setIsHidden((element.isHidden !== undefined) && element.isHidden);
+                setNodeIsConnectable(isNode(element) && (element.connectable === true || element.connectable === undefined));
+            } else if (isEdge(element)) {
+                setEdgeIsAnimated(element.animated !== undefined && element.animated);
+                if (element.type !== undefined) setEdgeType(element.type);
+                else setEdgeType('undefined');
+            }
+            (async () => {
+                const repoElement = await GetElement(modelName, element.id);
+                if (repoElement !== undefined) {
+                    setLevel(repoElement.level);
+                    setPotency(repoElement.potency);
+                }
+            })();
         }
     }, [element]);
 
@@ -203,26 +198,19 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
     }, [name, setElements]);
 
     useEffect(() => {
-        setElements((els: Elements) =>
-            els.map(async (el) => {
-                if (el.id === id) {
-                    await SetElementLevel(modelName, el.id, level);
-                }
-                return el;
-            })
-        );
-    // }, [name, setElements]);
+        if (element !== undefined) {
+            (async () => {
+                await SetElementLevel(modelName, element.id, level);
+            })();
+        }
     }, [level, setLevel]);
 
     useEffect(() => {
-        setElements((els: Elements) =>
-            els.map(async (el) => {
-                if (el.id === id) {
-                    await SetElementPotency(modelName, el.id, potency);
-                }
-                return el;
-            })
-        );
+        if (element !== undefined) {
+            (async () => {
+                await SetElementPotency(modelName, element.id, potency);
+            })();
+        }
     }, [potency, setPotency]);
 
     useEffect(() => {
@@ -365,23 +353,18 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                     <TextField label="Label: " value={element.data.label}
                                onChange={(evt) => setName(evt.target.value)}/>
                 </div>
-
                 <div>
                     <TextField label="Level: " value={level}
                                onChange={(evt) => setLevel(toInt(evt.target.value))}/>
                 </div>
-
                 <div>
                     <TextField label="Potency: " value={potency}
                                onChange={(evt) => setPotency(toInt(evt.target.value))}/>
                 </div>
-
                 {attributesAndSlots}
-
                 <div>
                     <TextField label="Background:" value={nodeBg} onChange={(evt) => setNodeBg(evt.target.value)}/>
                 </div>
-
                 <div>
                     <label>Hidden:</label>
                     <Checkbox
@@ -406,7 +389,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                         onChange={(evt) => setNodeIsConnectable(evt.target.checked)}
                     />
                 </div>
-
             </aside>)
     } else if (element !== undefined && isEdge(element)) {
         return (

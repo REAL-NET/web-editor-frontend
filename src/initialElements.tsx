@@ -1,8 +1,7 @@
-import {    FlowElement} from 'react-flow-renderer';
+import {FlowElement} from 'react-flow-renderer';
 import {GeneralizationEdgeStyle, GeneralizationEdgeType, GeneralizationMetatype} from "./Constants";
 import {GetRelationship} from "./requests/deepElementRequests";
 import {GetModel} from "./requests/deepModelRequests";
-import {type} from "os";
 
 const getElements = async (modelName: string) => {
     const model = await GetModel(modelName);

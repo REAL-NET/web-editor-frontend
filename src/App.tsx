@@ -6,10 +6,10 @@ import Palette from './Palette';
 import Scene from './Scene';
 import {getModelNodes, getModelEdges} from './requests/modelRequests';
 import {getModelElements} from './requests/elementRequests';
-import { getElements } from './initialElements';
 
 import './App.css'
 import {AssociationMetatype} from "./Constants";
+import {getElements} from "./initialElements";
 
 document.addEventListener('click', e => (e.target));
 

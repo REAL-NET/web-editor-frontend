@@ -62,13 +62,11 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
                                      setLevel, setPotency}) => {
     const onElementClick = async (_: MouseEvent, element: FlowElement) => {
         setCurrentElementId(element.id);
-        const repoElement = await GetElement(modelName, element.id)
+        const repoElement = await GetElement(modelName, element.id);
         if (repoElement === undefined) {
             console.error("No element retrieved from repo");
             return;
         }
-        setLevel(repoElement.level);
-        setPotency(repoElement.potency);
     };
 
     // Any node moving
@@ -156,10 +154,12 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
             const metaType = metaInfo.substr(sepIndex + 2);
             const metaModel = metaInfo.substr(0, sepIndex);
             const id = Math.round(Math.random() * 10000000).toString();
-            const name = metaType + "_" + id
+            const name = metaType + "_" + id;
+            console.log(`${modelName}, ${name}, ${metaModel}, ${metaType}`)
             const node = await InstantiateNode(modelName, name, metaModel, metaType);
             if (node !== undefined) {
                 const position = reactFlowInstance.project({x: event.clientX, y: event.clientY - 40});
+                console.log(node.name)
                 const newNode: Node = {
                     id: name,
                     type: 'default',
@@ -170,36 +170,36 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
             } else {
                 console.error("Some error on adding element");
             }
-
-            const data = event.dataTransfer.getData('application/reactflow').split(' ');
-            const type = data[0];
-            const position = reactFlowInstance.project({x: event.clientX - 280, y: event.clientY - 40});
-
-            let newNode: Node;
-            if (type === 'ImageNode') {
-                newNode = {
-                    id: getId(),
-                    type: 'imageNode',
-                    position,
-                    data: {label: `${type}`},
-                    style: {
-                        backgroundImage: data[1],
-                        height: Number(data[2]),
-                        width: Number(data[3]),
-                        border: '1px solid #777',
-                        borderRadius: 2,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: 'center',
-                    }
-                };
-                setElements((es: Elements) => es.concat(newNode));
-            } else {
-                const parentsId = data[1];
-                addNodeElement(modelName, +parentsId, type, position.x, position.y).then(node => {
-                    setElements((es: Elements) => es.concat(node));
-                })
-            }
+            //
+            // const data = event.dataTransfer.getData('application/reactflow').split(' ');
+            // const type = data[0];
+            // const position = reactFlowInstance.project({x: event.clientX - 280, y: event.clientY - 40});
+            //
+            // let newNode: Node;
+            // if (type === 'ImageNode') {
+            //     newNode = {
+            //         id: getId(),
+            //         type: 'imageNode',
+            //         position,
+            //         data: {label: `${type}`},
+            //         style: {
+            //             backgroundImage: data[1],
+            //             height: Number(data[2]),
+            //             width: Number(data[3]),
+            //             border: '1px solid #777',
+            //             borderRadius: 2,
+            //             display: "flex",
+            //             justifyContent: "center",
+            //             alignItems: 'center',
+            //         }
+            //     };
+            //     setElements((es: Elements) => es.concat(newNode));
+            // } else {
+            //     const parentsId = data[1];
+            //     addNodeElement(modelName, +parentsId, type, position.x, position.y).then(node => {
+            //         setElements((es: Elements) => es.concat(node));
+            //     })
+            // }
         }
     };
 
