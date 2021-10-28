@@ -14,7 +14,7 @@ export const GetElement = async (modelName: string, elementName: string) => {
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Element = JSON.parse(response.data);
+        const responseParsed: Element = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -30,7 +30,7 @@ export const SetElementName = async (modelName: string, oldName: string, newName
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: ElementInfo = JSON.parse(response.data);
+        const responseParsed: ElementInfo = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -46,7 +46,7 @@ export const SetElementLevel = async (modelName: string, oldName: string, level:
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: ElementInfo = JSON.parse(response.data);
+        const responseParsed: ElementInfo = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -62,7 +62,7 @@ export const SetElementPotency = async (modelName: string, oldName: string, pote
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: ElementInfo = JSON.parse(response.data);
+        const responseParsed: ElementInfo = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -89,7 +89,7 @@ export const GetNode = async (modelName: string, elementName: string) => {
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Node = JSON.parse(response.data);
+        const responseParsed: Node = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -105,7 +105,7 @@ export const GetRelationship = async (modelName: string, elementName: string) =>
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Relationship = JSON.parse(response.data);
+        const responseParsed: Relationship = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -121,7 +121,7 @@ export const GetAssociation = async (modelName: string, elementName: string) => 
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Association = JSON.parse(response.data);
+        const responseParsed: Association = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -137,7 +137,7 @@ export const CreateNode = async (modelName: string, name: string, level: number,
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Node = JSON.parse(response.data);
+        const responseParsed: Node = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -153,7 +153,7 @@ export const CreateGeneralization = async (modelName: string, name: string, sour
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Generalization = JSON.parse(response.data);
+        const responseParsed: Generalization = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -170,7 +170,7 @@ export const CreateAssociations = async (modelName: string, name: string, source
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Node = JSON.parse(response.data);
+        const responseParsed: Node = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -188,7 +188,7 @@ export const InstantiateNode = async (modelName: string, name: string, parentMod
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Node = JSON.parse(response.data);
+        const responseParsed: Node = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -205,7 +205,7 @@ export const InstantiateAssociation = async (modelName: string, name: string, pa
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Association = JSON.parse(response.data);
+        const responseParsed: Association = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -222,7 +222,7 @@ export const GetAttributes = async (modelName: string, name: string) => {
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Attribute[] = JSON.parse(response.data);
+        const responseParsed: Attribute[] = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -238,7 +238,7 @@ export const GetAttribute = async (modelName: string, elementName: string, attri
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Attribute = JSON.parse(response.data);
+        const responseParsed: Attribute = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -254,7 +254,7 @@ export const AddAttribute = async (modelName: string, elementName: string, attri
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Attribute = JSON.parse(response.data);
+        const responseParsed: Attribute = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -270,7 +270,7 @@ export const SetAttributeSingle = async (modelName: string, elementName: string,
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Attribute = JSON.parse(response.data);
+        const responseParsed: Attribute = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -286,7 +286,7 @@ export const GetSlots = async (modelName: string, name: string) => {
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Slot[] = JSON.parse(response.data);
+        const responseParsed: Slot[] = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -302,7 +302,7 @@ export const GetSlot = async (modelName: string, elementName: string, attributeN
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Slot = JSON.parse(response.data);
+        const responseParsed: Slot = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -318,7 +318,7 @@ export const AddSlot = async (modelName: string, elementName: string, attributeN
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Slot = JSON.parse(response.data);
+        const responseParsed: Slot = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -334,7 +334,7 @@ export const SetSlotValue = async (modelName: string, elementName: string, attri
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Slot = JSON.parse(response.data);
+        const responseParsed: Slot = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -350,7 +350,7 @@ export const GetValuesForAttribute = async (modelName: string, elementName: stri
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: ElementInfo[] = JSON.parse(response.data);
+        const responseParsed: ElementInfo[] = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);

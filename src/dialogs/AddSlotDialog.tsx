@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {RepoAPI} from "../repo/RepoAPI";
 import {toInt} from "../Util";
 import {FormLabel, InputLabel, MenuItem, Select} from "@material-ui/core";
+import {AddSlot, GetAttributes, GetValuesForAttribute} from "../requests/deepElementRequests";
 
 type FormDialogProps = {
     open: boolean,
@@ -22,7 +22,15 @@ const FormDialog: React.FC<FormDialogProps> = ({open, setOpen, modelName, elemen
     const [level, setLevel] = useState(-1);
     const [potency, setPotency] = useState(-1);
 
-    const availableAttributes = RepoAPI.GetAttributes(modelName, elementName)?.map(value => value.name) || [];
+    const [availableAttributes, setAvailableAttributes] = useState<string[]>([]);
+
+    useEffect(() => {
+        (async () => {
+            setAvailableAttributes((await GetAttributes(modelName, elementName))?.map(value => value.name) || []);
+        })()
+    }, []);
+
+    // const availableAttributes = await GetAttributes(modelName, elementName)?.map(value => value.name) || [];
     const [availableValues, setAvailableValues] = useState<string[]>([]);
 
     const [value, setValue] = useState(availableValues[0] || "");
@@ -32,10 +40,10 @@ const FormDialog: React.FC<FormDialogProps> = ({open, setOpen, modelName, elemen
         setOpen(false);
     };
 
-    const handleAdd = () => {
+    const handleAdd = async () => {
         console.log(modelName);
         console.log(elementName);
-        const repoResp = RepoAPI.AddSlot(modelName, elementName, attributeName, value, level, potency);
+        const repoResp = await AddSlot(modelName, elementName, attributeName, value, level, potency);
         if (repoResp === undefined) {
             setIsNoError(false);
         } else {
@@ -43,9 +51,9 @@ const FormDialog: React.FC<FormDialogProps> = ({open, setOpen, modelName, elemen
         }
     };
 
-    const updateAttribute = (newAttribute: string) => {
+    const updateAttribute = async (newAttribute: string) => {
         setAttributeName(newAttribute);
-        const availableValues = RepoAPI.GetValuesForAttribute(modelName, elementName, newAttribute) || [];
+        const availableValues = await GetValuesForAttribute(modelName, elementName, newAttribute) || [];
         setAvailableValues(availableValues.map(it => it.name));
     };
 

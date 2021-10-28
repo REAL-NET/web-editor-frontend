@@ -89,9 +89,8 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
         })
     };
 
-    const onLoad = (_reactFlowInstance: OnLoadParams) => {
-        let models = AllModels();
-        console.log(models);
+    const onLoad = async (_reactFlowInstance: OnLoadParams) => {
+        let models = await AllModels();
         console.log('flow loaded:', reactFlowInstance);
         setReactFlowInstance(_reactFlowInstance);
     };

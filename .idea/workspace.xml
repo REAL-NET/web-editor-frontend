@@ -7,7 +7,11 @@
       <change beforePath="$PROJECT_DIR$/src/Palette.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Palette.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PropertyBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/PropertyBar.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Scene.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Scene.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dialogs/AddAttributeDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dialogs/AddAttributeDialog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dialogs/AddSlotDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dialogs/AddSlotDialog.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/initialElements.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/initialElements.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/requests/deepElementRequests.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/requests/deepElementRequests.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/requests/deepModelRequests.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/requests/deepModelRequests.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +91,7 @@
       <workItem from="1634910221725" duration="2236000" />
       <workItem from="1635087980784" duration="249000" />
       <workItem from="1635257793652" duration="18154000" />
-      <workItem from="1635345670312" duration="3082000" />
+      <workItem from="1635345670312" duration="13340000" />
     </task>
     <task id="LOCAL-00001" summary="Add Requests.ts">
       <created>1617627816759</created>

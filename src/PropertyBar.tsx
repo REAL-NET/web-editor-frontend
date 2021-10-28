@@ -62,16 +62,31 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
     const [slots, setSlots] = useState<Slot[] | undefined>([]);
     // const [attributes, setAttributes] = useState<Attribute[] | undefined>([]);
 
+    function useFirstRender() {
+        const firstRender = useRef(true);
+
+        useEffect(() => {
+            firstRender.current = false;
+        }, []);
+
+        return firstRender.current;
+    }
+    const firstRender = useFirstRender();
+
     useEffect(() => {
-        (async () => {
-            setAttributes(await GetAttributes(modelName,element?.id || ""));
-        })()
+        if (!firstRender) {
+            (async () => {
+                setAttributes(await GetAttributes(modelName,element?.id || ""));
+            })()
+        }
     }, [element]);
 
     useEffect(() => {
-        (async () => {
-            setSlots(await GetSlots(modelName, element?.id || ""));
-        })()
+        if (!firstRender) {
+            (async () => {
+                setSlots(await GetSlots(modelName, element?.id || ""));
+            })()
+        }
     }, [element]);
 
     const attributesAndSlots =

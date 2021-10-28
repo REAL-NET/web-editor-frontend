@@ -18,15 +18,20 @@ const OverviewFlow = () => {
     // const metamodelName = 'RobotsMetamodel';
 
     const [reactFlowInstance, setReactFlowInstance] = useState<OnLoadParams>();
-    const [modelName, setModelName] = useState("TestModel2");
-    const [elements, setElements] = useState(getElements(modelName));
-    // const [elements, setElements] = useState<Elements>([]);
+    const [modelName, setModelName] = useState("RobotsModel");
+    // const [elements, setElements] = useState();
+    const [elements, setElements] = useState<Elements>([]);
     const [captureElementClick, setCaptureElementClick] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
     const [edgeType, setEdgeType] = useState(AssociationMetatype);
     const [level, setLevel] = useState(-1);
     const [potency, setPotency] = useState(-1);
 
+    useEffect(() => {
+        (async () => {
+            setElements(await getElements(modelName));
+        })()
+    }, []);
 
     // // model
     // useEffect(() => {

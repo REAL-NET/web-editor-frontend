@@ -1,4 +1,4 @@
-import React, {DragEvent, useEffect, useState} from 'react';
+import React, {DragEvent, useEffect, useRef, useState} from 'react';
 
 import './Palette.css';
 import './RobotsModelNode.css';
@@ -11,6 +11,7 @@ import {AssociationMetatype, GeneralizationMetatype} from "./Constants";
 import {getAttributeValue} from './requests/attributeRequests';
 import {AllModels, GetModel, GetModelMetaEdges, GetModelMetaNodes} from "./requests/deepModelRequests";
 import {getModel} from "./requests/modelRequests";
+import element from "../gateway/routes/element";
 
 const onDragStart = (event: DragEvent, metaInfo: string) => {
     event.dataTransfer.setData('application/reactflow', metaInfo);
@@ -112,6 +113,17 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
     const [edgesMetatypes, setEdgesMetatypes] = useState<ElementInfo[]>([]);
     const [metamodelElements, setMetamodelElements] = useState<ElementInfo[]>([]);
 
+    function useFirstRender() {
+        const firstRender = useRef(true);
+
+        useEffect(() => {
+            firstRender.current = false;
+        }, []);
+
+        return firstRender.current;
+    }
+    const firstRender = useFirstRender();
+
     useEffect(  () => {
         (async () => {
             setMenuItems(await getModelsMenuItems());
@@ -119,19 +131,27 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
     }, []);
 
     useEffect( () => {
-        (async () => {
-            setEdgesMetatypes(await getEdgesMetatypes(modelName));
-        })()
+        if (!firstRender) {
+            (async () => {
+                setEdgesMetatypes(await getEdgesMetatypes(modelName));
+            })()
+        }
     }, [modelName]);
 
     useEffect( () => {
-        (async () => {
-            setMetamodelElements(await getMetamodelElements(modelName));
-        })()
+        if (!firstRender) {
+            (async () => {
+                setMetamodelElements(await getMetamodelElements(modelName));
+            })()
+        }
     }, [modelName]);
 
     useEffect(() => {
-        setElements(() => getElements(modelName));
+        if (!firstRender) {
+            (async () => {
+                setElements(await getElements(modelName));
+            })();
+        }
     }, [modelName, setElements]);
 
     const getMetamodelElements = async (modelName: string) => {

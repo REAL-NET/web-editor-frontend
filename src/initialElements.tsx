@@ -1,9 +1,10 @@
-import {Elements, FlowElement} from 'react-flow-renderer';
+import {    FlowElement} from 'react-flow-renderer';
 import {GeneralizationEdgeStyle, GeneralizationEdgeType, GeneralizationMetatype} from "./Constants";
 import {GetRelationship} from "./requests/deepElementRequests";
 import {GetModel} from "./requests/deepModelRequests";
+import {type} from "os";
 
-const getElements = async (modelName: string) : Promise<Elements> => {
+const getElements = async (modelName: string) => {
     const model = await GetModel(modelName);
     if (model !== undefined) {
         const nodes = model.nodes.map((value, index) => {
@@ -16,7 +17,7 @@ const getElements = async (modelName: string) : Promise<Elements> => {
                 position: {x: 100, y: 60 * index}
             }
         }) as Array<FlowElement>;
-        const edges = model.relationships.map(async (value) => {
+        const edges = await Promise.all(model.relationships.map(async value => {
             const currentRelationship = await GetRelationship(modelName, value.name);
             if (currentRelationship !== undefined) {
                 let edge = {
@@ -35,7 +36,7 @@ const getElements = async (modelName: string) : Promise<Elements> => {
                 return edge;
             }
             return undefined;
-        }).filter(value => value !== undefined) as unknown as Array<FlowElement>;
+        }).filter(value => value !== undefined)) as Array<FlowElement>;
         return [...nodes, ...edges];
     }
     return [];

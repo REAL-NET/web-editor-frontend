@@ -5,11 +5,11 @@ import {ElementInfo} from "../model/ElementInfo";
 
 export const AllModels = async() => {
     try {
-        const response = await api.get(`deepModel/all/$`);
+        const response = await api.get(`deepModel/all`);
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: ModelInfo[] = JSON.parse(response.data);
+        const responseParsed: ModelInfo[] = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -25,7 +25,7 @@ export const GetModel = async (modelName: string) => {
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Model= JSON.parse(response.data);
+        const responseParsed: Model= response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -43,7 +43,7 @@ export const GetModelMetaNodes = async (modelName: string) => {
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: ElementInfo[] = JSON.parse(response.data);
+        const responseParsed: ElementInfo[] = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);
@@ -59,7 +59,7 @@ export const GetModelMetaEdges = async (modelName: string) => {
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: ElementInfo[] = JSON.parse(response.data);
+        const responseParsed: ElementInfo[] = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);

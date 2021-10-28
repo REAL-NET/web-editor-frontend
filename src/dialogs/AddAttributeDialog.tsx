@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {RepoAPI} from "../repo/RepoAPI";
 import {toInt} from "../Util";
 import {FormLabel, InputLabel, MenuItem, Select} from "@material-ui/core";
+import {AddAttribute, GetAttributes} from "../requests/deepElementRequests";
+import {GetModel, GetModelMetaNodes} from "../requests/deepModelRequests";
+import {Model} from "../model/Model";
+import {ElementInfo} from "../model/ElementInfo";
 
 type FormDialogProps = {
     open: boolean,
@@ -22,8 +25,22 @@ const FormDialog: React.FC<FormDialogProps> = ({open, setOpen, modelName, elemen
     const [level, setLevel] = useState(-1);
     const [potency, setPotency] = useState(-1);
 
+    const [model, setModel] = useState<Model | undefined>();
+    const [modelMetaNodes, setModelMetaNodes] = useState<ElementInfo[] | undefined>([]);
 
-    const availableTypes = [...(RepoAPI.GetModel(modelName)?.nodes || []), ...(RepoAPI.GetModelMetaNodes(modelName) || [])]
+    useEffect(() => {
+        (async () => {
+            setModel(await GetModel(modelName));
+        })()
+    }, []);
+
+    useEffect(() => {
+        (async () => {
+            setModelMetaNodes(await GetModelMetaNodes(modelName));
+        })()
+    }, []);
+
+    const availableTypes = [...(model?.nodes || []), ...(modelMetaNodes || [])]
         .map(value => `${value.model.name}::${value.name}`);
 
     const [typeName, setTypeName] = useState(availableTypes[0] || "");
@@ -37,7 +54,7 @@ const FormDialog: React.FC<FormDialogProps> = ({open, setOpen, modelName, elemen
         console.log(modelName);
         console.log(elementName);
         const sep = typeName.indexOf("::");
-        const repoResp = RepoAPI.AddAttribute(modelName, elementName, attributeName,
+        const repoResp = AddAttribute(modelName, elementName, attributeName,
             typeName.substr(0, sep), typeName.substr(sep + 2), level, potency);
         if (repoResp === undefined) {
             setIsNoError(false);
