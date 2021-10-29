@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c5975f99-cf70-4dce-9ccf-f7b0d9dc83f9" name="Default Changelist" comment="Move to root">
+    <list default="true" id="c5975f99-cf70-4dce-9ccf-f7b0d9dc83f9" name="Default Changelist" comment="Fix level and potency set">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gateway/routes/deepElement.ts" beforeDir="false" afterPath="$PROJECT_DIR$/gateway/routes/deepElement.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Palette.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Palette.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PropertyBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/PropertyBar.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Scene.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Scene.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/initialElements.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/initialElements.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +86,7 @@
       <workItem from="1634910221725" duration="2236000" />
       <workItem from="1635087980784" duration="249000" />
       <workItem from="1635257793652" duration="18154000" />
-      <workItem from="1635345670312" duration="22583000" />
+      <workItem from="1635345670312" duration="28817000" />
     </task>
     <task id="LOCAL-00001" summary="Add Requests.ts">
       <created>1617627816759</created>
@@ -131,7 +130,14 @@
       <option name="project" value="LOCAL" />
       <updated>1617643800405</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Fix level and potency set">
+      <created>1635445433254</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1635445433254</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -208,6 +214,7 @@
     <MESSAGE value="Add RepoAPI model controllers paths" />
     <MESSAGE value="Add repo api element controller methods" />
     <MESSAGE value="Move to root" />
-    <option name="LAST_COMMIT_MESSAGE" value="Move to root" />
+    <MESSAGE value="Fix level and potency set" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix level and potency set" />
   </component>
 </project>

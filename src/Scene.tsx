@@ -1,4 +1,4 @@
-import React, {DragEvent, MouseEvent, useEffect} from 'react';
+import React, {DragEvent, MouseEvent} from 'react';
 import ReactFlow, {
     addEdge,
     Background,
@@ -16,9 +16,7 @@ import './Scene.css'
 
 import ImageNode from './nodesWithImages/ImageNode';
 import RobotsModelNode from './RobotsModelNode';
-import {setAttributeValue} from './requests/attributeRequests';
 import {deleteElement, addEdgeElement, getEdge, addNodeElement} from './requests/elementRequests';
-import {FlowTransform} from "react-flow-renderer/dist/types";
 import {
     AssociationMetatype,
     GeneralizationEdgeStyle,
@@ -36,16 +34,13 @@ import {AllModels} from "./requests/deepModelRequests";
 
 type SceneProps = {
     modelName: string
-    // metamodelName: string
     elements: Elements
     setElements: React.Dispatch<React.SetStateAction<Elements>>
     reactFlowInstance: OnLoadParams | undefined
     setReactFlowInstance: Function
     setCurrentElementId: Function
     captureElementClick: boolean
-    edgeType: string,
-    setLevel: Function,
-    setPotency: Function
+    edgeType: string
 }
 
 const nodeTypes = {
@@ -53,13 +48,8 @@ const nodeTypes = {
     imageNode: ImageNode,
 };
 
-// const Scene: React.FC<SceneProps> = ({
-//                                          modelName, metamodelName, elements, setElements, reactFlowInstance,
-//                                          setReactFlowInstance, setCurrentElementId, captureElementClick
-//                                      }) => {
 const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
-                                         setReactFlowInstance, setCurrentElementId, captureElementClick, modelName, edgeType,
-                                     setLevel, setPotency}) => {
+                                         setReactFlowInstance, setCurrentElementId, captureElementClick, modelName, edgeType}) => {
     const onElementClick = async (_: MouseEvent, element: FlowElement) => {
         setCurrentElementId(element.id);
         const repoElement = await GetElement(modelName, element.id);
