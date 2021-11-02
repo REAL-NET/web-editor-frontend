@@ -4,8 +4,8 @@ import {MenuItem, Select, Checkbox, TextField, InputLabel, Button, FormLabel} fr
 
 import './Palette.css'
 import './Nodes.css'
-import AddAttributeDialog from "./dialogs/AddAttributeDialog";
-import AddSlotDialog from "./dialogs/AddSlotDialog";
+import AttributeDialog from "./dialogs/AttributeDialog";
+import SlotDialog from "./dialogs/SlotDialog";
 import {Attribute} from './model/Attribute';
 import {Slot} from "./model/Slot";
 
@@ -77,7 +77,8 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                         </div>)
                 }
                 <Button onClick={() => setAddAttributeOpen(true)} fullWidth={true}>Add Attribute</Button>
-                <AddAttributeDialog open={addAttributeOpen} setOpen={setAddAttributeOpen} modelName={modelName} elementName={element?.id || ""}/>
+                <AttributeDialog open={addAttributeOpen} setOpen={setAddAttributeOpen} modelName={modelName} elementName={element?.id || ""}
+                    setAttributes={setAttributes}/>
                 <br/>
                 <FormLabel>Slots:</FormLabel>
                 <br/>
@@ -89,7 +90,8 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                         </div>)
                 }
                 <Button onClick={() => setAddSlotOpen(true)} fullWidth={true}>Add Slot</Button>
-                <AddSlotDialog open={addSlotOpen} setOpen={setAddSlotOpen} modelName={modelName} elementName={element?.id || ""}/>
+                <SlotDialog open={addSlotOpen} setOpen={setAddSlotOpen} modelName={modelName} elementName={element?.id || ""}
+                    setSlots={setSlots}/>
             </div>
         )
 

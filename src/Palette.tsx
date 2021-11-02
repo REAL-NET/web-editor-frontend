@@ -1,4 +1,4 @@
-import React, {DragEvent, useEffect, useRef, useState} from 'react';
+import React, {DragEvent, useEffect, useState} from 'react';
 
 import './Palette.css';
 import './RobotsModelNode.css';
@@ -8,10 +8,7 @@ import {ElementInfo} from "./model/ElementInfo";
 import {InputLabel, MenuItem, Select} from "@material-ui/core";
 import {getElements} from "./initialElements";
 import {AssociationMetatype, GeneralizationMetatype} from "./Constants";
-import {getAttributeValue} from './requests/attributeRequests';
 import {AllModels, GetModel, GetModelMetaEdges, GetModelMetaNodes} from "./requests/deepModelRequests";
-import {getModel} from "./requests/modelRequests";
-import element from "../gateway/routes/element";
 
 const onDragStart = (event: DragEvent, metaInfo: string) => {
     event.dataTransfer.setData('application/reactflow', metaInfo);
@@ -113,35 +110,17 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
     const [edgesMetatypes, setEdgesMetatypes] = useState<ElementInfo[]>([]);
     const [metamodelElements, setMetamodelElements] = useState<ElementInfo[]>([]);
 
-    function useFirstRender() {
-        const firstRender = useRef(true);
-
-        useEffect(() => {
-            firstRender.current = false;
-        }, []);
-
-        return firstRender.current;
-    }
-    const firstRender = useFirstRender();
-
     useEffect(  () => {
         (async () => {
             setMenuItems(await getModelsMenuItems());
         })()
     }, []);
 
-    useEffect( () => {
-        if (!firstRender) {
-            (async () => {
-                setEdgesMetatypes(await getEdgesMetatypes(modelName));
-                setMetamodelElements(await getMetamodelElements(modelName));
-            })()
-        }
-    }, [modelName]);
-
     useEffect(() => {
         (async () => {
             setElements(await getElements(modelName));
+            setEdgesMetatypes(await getEdgesMetatypes(modelName));
+            setMetamodelElements(await getMetamodelElements(modelName));
         })();
     }, [modelName, setElements]);
 
@@ -154,12 +133,16 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
                 console.error(`Model ${modelName} is not retrieved from repo`);
                 return [];
             }
-            let metamodel = await GetModel(model.metamodel.name);
-            if (metamodel === undefined) {
-                console.error(`Metamodel ${metamodel} is not retrieved from repo`);
-                return [];
+            if (model.metamodel !== undefined) {
+                let metamodel = await GetModel(model.metamodel.name);
+                if (metamodel === undefined) {
+                    console.error(`Metamodel ${metamodel} is not retrieved from repo`);
+                    return [];
+                }
+                return metamodel.nodes;
             }
-            return metamodel.nodes;
+            console.error(`No metamodel is found in repo`);
+            return [];
         }
         return nodes;
     };
@@ -167,11 +150,21 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
     const getModelsMenuItems = async () => {
         const models = await AllModels();
         if (models === undefined) {
-            console.error("Models is not retrieved from repo");
+            console.error("Models are not retrieved from repo");
             return [];
         }
         return models.map(value => value.name);
     };
+
+    const PaletteItem = (props: { element: ElementInfo}) => {
+        return (
+            <div className="paletteNode" key={props.element.model.name + "$$" + props.element.name}
+                 onDragStart={(event: DragEvent) =>
+                     onDragStart(event, props.element.model.name + "$$" + props.element.name)} draggable>
+                {props.element.model.name + "::" + props.element.name}
+            </div>
+        );
+    }
 
     return (
         <aside>
@@ -188,7 +181,7 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
                         setModelName(evt.target.value as string);
                     }}
                 >
-                    {menuItems.map(value => <MenuItem value={value}>{value}</MenuItem>)}
+                    {menuItems.map(value => <MenuItem key={value} value={value}>{value}</MenuItem>)}
                 </Select>
             </div>
             <br/>
@@ -201,11 +194,12 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
                         setEdgeType(event.target.value as string)
                     })}
                 >
-                    <MenuItem value={AssociationMetatype}>{AssociationMetatype}</MenuItem>
-                    <MenuItem value={GeneralizationMetatype}>{GeneralizationMetatype}</MenuItem>
+                    <MenuItem key='AssociationMetatype' value={AssociationMetatype}>{AssociationMetatype}</MenuItem>
+                    <MenuItem key='GeneralizationMetatype' value={GeneralizationMetatype}>{GeneralizationMetatype}</MenuItem>
                     {edgesMetatypes.map(value =>
-                            <MenuItem
-                                value={value.model.name + "$$" + value.name}>{value.model.name + "::" + value.name}</MenuItem>
+                            <MenuItem key={value.model.name + "$$" + value.name} value={value.model.name + "$$" + value.name}>
+                                {value.model.name + "::" + value.name}
+                            </MenuItem>
                     )}
                 </Select>
             </div>
@@ -214,12 +208,7 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
                 <InputLabel>Elements:</InputLabel>
             </div>
             <br/>
-            {metamodelElements.map(value => {
-                return <div className="dndnode" onDragStart={(event: DragEvent) =>
-                    onDragStart(event, value.model.name + "$$" + value.name)} draggable>
-                    {value.model.name + "::" + value.name}
-                </div>
-            })}
+            {metamodelElements.map(value => <PaletteItem element={value}/>)}
         </aside>
     );
 };

@@ -8,16 +8,17 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import {toInt} from "../Util";
 import {FormLabel, InputLabel, MenuItem, Select} from "@material-ui/core";
 import {AddSlot, GetAttributes, GetValuesForAttribute} from "../requests/deepElementRequests";
+import {Slot} from "../model/Slot";
 
-type FormDialogProps = {
+type SlotDialogProps = {
     open: boolean,
     setOpen: Function,
     modelName: string,
-    elementName: string
+    elementName: string,
+    setSlots: Function
 }
 
-const FormDialog: React.FC<FormDialogProps> = ({open, setOpen, modelName, elementName}) => {
-
+const SlotDialog: React.FC<SlotDialogProps> = ({open, setOpen, modelName, elementName, setSlots}) => {
     const [attributeName, setAttributeName] = useState("");
     const [level, setLevel] = useState(-1);
     const [potency, setPotency] = useState(-1);
@@ -47,6 +48,7 @@ const FormDialog: React.FC<FormDialogProps> = ({open, setOpen, modelName, elemen
         if (repoResp === undefined) {
             setIsNoError(false);
         } else {
+            setSlots((slots: Slot[]) => slots.concat(repoResp));
             handleClose();
         }
     };
@@ -114,4 +116,4 @@ const FormDialog: React.FC<FormDialogProps> = ({open, setOpen, modelName, elemen
     );
 };
 
-export default FormDialog;
+export default SlotDialog;

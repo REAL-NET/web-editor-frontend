@@ -16,7 +16,7 @@ import './Scene.css'
 
 import ImageNode from './nodesWithImages/ImageNode';
 import RobotsModelNode from './RobotsModelNode';
-import {deleteElement, addEdgeElement, getEdge, addNodeElement} from './requests/elementRequests';
+import {deleteElement} from './requests/elementRequests';
 import {
     AssociationMetatype,
     GeneralizationEdgeStyle,
@@ -78,7 +78,7 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
     };
 
     const onLoad = async (_reactFlowInstance: OnLoadParams) => {
-        let models = await AllModels();
+        await AllModels();
         console.log('flow loaded:', reactFlowInstance);
         setReactFlowInstance(_reactFlowInstance);
     };

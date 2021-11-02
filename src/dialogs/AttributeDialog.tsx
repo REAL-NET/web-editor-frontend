@@ -11,16 +11,17 @@ import {AddAttribute, GetAttributes} from "../requests/deepElementRequests";
 import {GetModel, GetModelMetaNodes} from "../requests/deepModelRequests";
 import {Model} from "../model/Model";
 import {ElementInfo} from "../model/ElementInfo";
+import {Attribute} from "../model/Attribute";
 
-type FormDialogProps = {
+type AttributeDialogProps = {
     open: boolean,
     setOpen: Function,
     modelName: string,
-    elementName: string
+    elementName: string,
+    setAttributes: Function
 }
 
-const FormDialog: React.FC<FormDialogProps> = ({open, setOpen, modelName, elementName}) => {
-
+const AttributeDialog: React.FC<AttributeDialogProps> = ({open, setOpen, modelName, elementName, setAttributes}) => {
     const [attributeName, setAttributeName] = useState("");
     const [level, setLevel] = useState(-1);
     const [potency, setPotency] = useState(-1);
@@ -31,11 +32,6 @@ const FormDialog: React.FC<FormDialogProps> = ({open, setOpen, modelName, elemen
     useEffect(() => {
         (async () => {
             setModel(await GetModel(modelName));
-        })()
-    }, []);
-
-    useEffect(() => {
-        (async () => {
             setModelMetaNodes(await GetModelMetaNodes(modelName));
         })()
     }, []);
@@ -50,15 +46,16 @@ const FormDialog: React.FC<FormDialogProps> = ({open, setOpen, modelName, elemen
         setOpen(false);
     };
 
-    const handleAdd = () => {
+    const handleAdd = async () => {
         console.log(modelName);
         console.log(elementName);
         const sep = typeName.indexOf("::");
-        const repoResp = AddAttribute(modelName, elementName, attributeName,
+        const repoResp = await AddAttribute(modelName, elementName, attributeName,
             typeName.substr(0, sep), typeName.substr(sep + 2), level, potency);
         if (repoResp === undefined) {
             setIsNoError(false);
         } else {
+            setAttributes((attributes: Attribute[]) => attributes.concat(repoResp));
             handleClose();
         }
     };
@@ -119,4 +116,4 @@ const FormDialog: React.FC<FormDialogProps> = ({open, setOpen, modelName, elemen
     );
 };
 
-export default FormDialog;
+export default AttributeDialog;

@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c5975f99-cf70-4dce-9ccf-f7b0d9dc83f9" name="Default Changelist" comment="Fix level and potency set">
+    <list default="true" id="c5975f99-cf70-4dce-9ccf-f7b0d9dc83f9" name="Default Changelist" comment="Fix name set">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Palette.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/Palette.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Palette.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Palette.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PropertyBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/PropertyBar.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Scene.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Scene.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dialogs/AddAttributeDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dialogs/AttributeDialog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dialogs/AddSlotDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dialogs/SlotDialog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/initialElements.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/initialElements.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +89,10 @@
       <workItem from="1634910221725" duration="2236000" />
       <workItem from="1635087980784" duration="249000" />
       <workItem from="1635257793652" duration="18154000" />
-      <workItem from="1635345670312" duration="28817000" />
+      <workItem from="1635345670312" duration="30514000" />
+      <workItem from="1635536868487" duration="2568000" />
+      <workItem from="1635764995589" duration="11163000" />
+      <workItem from="1635861428806" duration="6503000" />
     </task>
     <task id="LOCAL-00001" summary="Add Requests.ts">
       <created>1617627816759</created>
@@ -137,7 +143,14 @@
       <option name="project" value="LOCAL" />
       <updated>1635445433254</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Fix name set">
+      <created>1635518957795</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1635518957795</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -215,6 +228,7 @@
     <MESSAGE value="Add repo api element controller methods" />
     <MESSAGE value="Move to root" />
     <MESSAGE value="Fix level and potency set" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix level and potency set" />
+    <MESSAGE value="Fix name set" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix name set" />
   </component>
 </project>

@@ -9,3 +9,11 @@ aside {
     text-align: center;
     font-size: 20px;
 }
+.paletteNode {
+    border: 1px solid black;
+    padding: 10px;
+    background: white;
+    width: max-content;
+    height: max-content;
+    border-radius: 3px;
+}
