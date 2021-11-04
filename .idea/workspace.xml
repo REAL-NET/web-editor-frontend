@@ -3,13 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c5975f99-cf70-4dce-9ccf-f7b0d9dc83f9" name="Default Changelist" comment="Fix attribute and slot show after adding">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Palette.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/Palette.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Palette.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Palette.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dialogs/AttributeDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dialogs/AttributeDialog.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dialogs/SlotDialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/dialogs/SlotDialog.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/initialElements.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/initialElements.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,7 +87,9 @@
       <workItem from="1635536868487" duration="2568000" />
       <workItem from="1635764995589" duration="11163000" />
       <workItem from="1635861428806" duration="7228000" />
-      <workItem from="1636040251904" duration="4185000" />
+      <workItem from="1636040251904" duration="5457000" />
+      <workItem from="1636052136332" duration="1449000" />
+      <workItem from="1636060867432" duration="297000" />
     </task>
     <task id="LOCAL-00001" summary="Add Requests.ts">
       <created>1617627816759</created>
