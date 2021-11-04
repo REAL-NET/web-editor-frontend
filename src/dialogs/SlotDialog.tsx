@@ -34,8 +34,13 @@ const SlotDialog: React.FC<SlotDialogProps> = ({open, setOpen, modelName, elemen
     // const availableAttributes = await GetAttributes(modelName, elementName)?.map(value => value.name) || [];
     const [availableValues, setAvailableValues] = useState<string[]>([]);
 
-    const [value, setValue] = useState(availableValues[0] || "");
-    const [isNoError, setIsNoError] = useState(availableValues.length > 0);
+    useEffect(() => {
+        setValue(availableValues[0] || "");
+        setIsNoError(availableValues.length > 0);
+    }, [availableValues]);
+
+    const [value, setValue] = useState("");
+    const [isNoError, setIsNoError] = useState(true);
 
     const handleClose = () => {
         setOpen(false);
@@ -55,8 +60,8 @@ const SlotDialog: React.FC<SlotDialogProps> = ({open, setOpen, modelName, elemen
 
     const updateAttribute = async (newAttribute: string) => {
         setAttributeName(newAttribute);
-        const availableValues = await GetValuesForAttribute(modelName, elementName, newAttribute) || [];
-        setAvailableValues(availableValues.map(it => it.name));
+        const values = await GetValuesForAttribute(modelName, elementName, newAttribute) || [];
+        setAvailableValues(values.map(it => it.name));
     };
 
     return (

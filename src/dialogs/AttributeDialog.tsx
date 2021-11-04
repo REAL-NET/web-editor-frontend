@@ -7,7 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {toInt} from "../Util";
 import {FormLabel, InputLabel, MenuItem, Select} from "@material-ui/core";
-import {AddAttribute, GetAttributes} from "../requests/deepElementRequests";
+import {AddAttribute} from "../requests/deepElementRequests";
 import {GetModel, GetModelMetaNodes} from "../requests/deepModelRequests";
 import {Model} from "../model/Model";
 import {ElementInfo} from "../model/ElementInfo";
@@ -28,6 +28,7 @@ const AttributeDialog: React.FC<AttributeDialogProps> = ({open, setOpen, modelNa
 
     const [model, setModel] = useState<Model | undefined>();
     const [modelMetaNodes, setModelMetaNodes] = useState<ElementInfo[] | undefined>([]);
+    const [availableTypes, setAvailableTypes] = useState<string[]>([]);
 
     useEffect(() => {
         (async () => {
@@ -36,11 +37,14 @@ const AttributeDialog: React.FC<AttributeDialogProps> = ({open, setOpen, modelNa
         })()
     }, []);
 
-    const availableTypes = [...(model?.nodes || []), ...(modelMetaNodes || [])]
-        .map(value => `${value.model.name}::${value.name}`);
+    useEffect(() => {
+        setAvailableTypes([...(model?.nodes || []), ...(modelMetaNodes || [])].map(value => `${value.model.name}::${value.name}`));
+        setTypeName(availableTypes[0] || "");
+        setIsNoError(availableTypes.length > 0);
+    }, [model, modelMetaNodes]);
 
-    const [typeName, setTypeName] = useState(availableTypes[0] || "");
-    const [isNoError, setIsNoError] = useState(availableTypes.length > 0);
+    const [typeName, setTypeName] = useState('');
+    const [isNoError, setIsNoError] = useState(true);
 
     const handleClose = () => {
         setOpen(false);

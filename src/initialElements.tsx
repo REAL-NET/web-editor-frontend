@@ -1,12 +1,8 @@
 import {FlowElement} from 'react-flow-renderer';
 import {GeneralizationEdgeStyle, GeneralizationEdgeType, GeneralizationMetatype} from "./Constants";
 import {
-    AddAttribute,
-    AddSlot,
-    GetAttribute,
     GetAttributes,
-    GetRelationship,
-    GetSlot, GetSlots
+    GetRelationship
 } from "./requests/deepElementRequests";
 import {GetModel, GetModelMetaNodes} from "./requests/deepModelRequests";
 
@@ -15,6 +11,7 @@ const getElements = async (modelName: string) => {
     if (model !== undefined) {
         let nodes: FlowElement[] = []
         if (model.nodes !== undefined) {
+            console.log(model.nodes)
             nodes = await Promise.all(model.nodes.map(async (value, index) => {
                 let xCoordinate = 100;
                 let yCoordinate = 60 * index;
@@ -92,6 +89,7 @@ const getElements = async (modelName: string) => {
         }
         let edges: FlowElement[] = []
         if (model.relationships !== undefined) {
+            console.log(model.relationships)
             edges = await Promise.all(model.relationships.map(async value => {
                 const currentRelationship = await GetRelationship(modelName, value.name);
                 if (currentRelationship !== undefined) {
@@ -102,17 +100,21 @@ const getElements = async (modelName: string) => {
                         label: currentRelationship.name
                     };
                     if (currentRelationship.type === GeneralizationMetatype) {
+                        console.log('1')
                         return {
                             ...edge,
                             type: GeneralizationEdgeType,
                             style: GeneralizationEdgeStyle
                         };
                     }
+                    console.log('2')
                     return edge;
                 }
+                console.log('3')
                 return undefined;
             }).filter(value => value !== undefined)) as Array<FlowElement>;
         }
+        console.log('fin')
         return [...nodes, ...edges];
     }
     return [];

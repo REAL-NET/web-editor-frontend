@@ -118,11 +118,13 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
 
     useEffect(() => {
         (async () => {
+            console.log('heh')
             setElements(await getElements(modelName));
+            console.log('haha')
             setEdgesMetatypes(await getEdgesMetatypes(modelName));
             setMetamodelElements(await getMetamodelElements(modelName));
         })();
-    }, [modelName, setElements]);
+    }, [modelName]);
 
     const getMetamodelElements = async (modelName: string) => {
         const nodes = await GetModelMetaNodes(modelName);
@@ -158,8 +160,7 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
 
     const PaletteItem = (props: { element: ElementInfo}) => {
         return (
-            <div className="paletteNode" key={props.element.model.name + "$$" + props.element.name}
-                 onDragStart={(event: DragEvent) =>
+            <div className="paletteNode" onDragStart={(event: DragEvent) =>
                      onDragStart(event, props.element.model.name + "$$" + props.element.name)} draggable>
                 {props.element.model.name + "::" + props.element.name}
             </div>
@@ -181,7 +182,7 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
                         setModelName(evt.target.value as string);
                     }}
                 >
-                    {menuItems.map(value => <MenuItem key={value} value={value}>{value}</MenuItem>)}
+                    {menuItems.map(value => <MenuItem key={value + "_" + Math.round(Math.random() * 10000000).toString()} value={value}>{value}</MenuItem>)}
                 </Select>
             </div>
             <br/>
@@ -197,7 +198,7 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
                     <MenuItem key='AssociationMetatype' value={AssociationMetatype}>{AssociationMetatype}</MenuItem>
                     <MenuItem key='GeneralizationMetatype' value={GeneralizationMetatype}>{GeneralizationMetatype}</MenuItem>
                     {edgesMetatypes.map(value =>
-                            <MenuItem key={value.model.name + "$$" + value.name} value={value.model.name + "$$" + value.name}>
+                            <MenuItem key={value.model.name + "$$" + value.name + "_" + Math.round(Math.random() * 10000000).toString()} value={value.model.name + "$$" + value.name}>
                                 {value.model.name + "::" + value.name}
                             </MenuItem>
                     )}
@@ -208,7 +209,7 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
                 <InputLabel>Elements:</InputLabel>
             </div>
             <br/>
-            {metamodelElements.map(value => <PaletteItem element={value}/>)}
+            {metamodelElements.map(value => <PaletteItem key={value.model.name + "$$" + value.name + "_" + Math.round(Math.random() * 10000000).toString()} element={value}/>)}
         </aside>
     );
 };

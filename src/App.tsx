@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Elements, OnLoadParams, ReactFlowProvider} from 'react-flow-renderer';
 
 import PropertyBar from './PropertyBar'
@@ -17,6 +17,10 @@ const OverviewFlow = () => {
     const [captureElementClick, setCaptureElementClick] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
     const [edgeType, setEdgeType] = useState(AssociationMetatype);
+
+    useEffect(() => {
+        console.log(elements)
+    }, [elements]);
 
     return (
         <div className="OverviewFlow">

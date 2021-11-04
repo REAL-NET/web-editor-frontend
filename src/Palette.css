@@ -13,7 +13,7 @@ aside {
     border: 1px solid black;
     padding: 10px;
     background: white;
-    width: max-content;
+    width: fit-content;
     height: max-content;
     border-radius: 3px;
 }
