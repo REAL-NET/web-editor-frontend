@@ -264,6 +264,22 @@ export const AddAttribute = async (modelName: string, elementName: string, attri
 //     return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/${modelName}/${elementName}/attribute/${attributeName}/${typeModel}/${typeName}/${level}/${potency}`))
 // }
 
+export const AddSimpleAttribute = async (modelName: string, elementName: string, attributeName: string, level: number, potency: number) => {
+    try {
+        const response = await api.post(`deepElement/${modelName}/${elementName}/attribute/${attributeName}/${level}/${potency}`);
+        if (response.data === undefined) {
+            return undefined;
+        }
+        const responseParsed: Attribute = response.data;
+        return responseParsed;
+    } catch (error) {
+        console.log(error);
+    }
+};
+// public static AddSimpleAttribute(modelName: string, elementName: string, attributeName: string, level: number, potency: number): Attribute | undefined {
+//     return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/${modelName}/${elementName}/attribute/${attributeName}/${level}/${potency}`))
+// }
+
 export const SetAttributeSingle = async (modelName: string, elementName: string, attributeName: string, single: boolean) => {
     try {
         const response = await api.put(`deepElement/${modelName}/${elementName}/attribute/${attributeName}/${single}`);
@@ -312,9 +328,9 @@ export const GetSlot = async (modelName: string, elementName: string, attributeN
 //     return this.ParseJson(Requests.Request("GET", `${RepoAPI.host}/Element/${modelName}/${elementName}/slot/${attributeName}`))
 // }
 
-export const AddSlot = async (modelName: string, elementName: string, attributeName: string, valueName: string, level: number, potency: number) => {
+export const AddSlot = async (modelName: string, elementName: string, attributeName: string, valueModel: string, valueName: string, level: number, potency: number) => {
     try {
-        const response = await api.post(`deepElement/${modelName}/${elementName}/slot/${attributeName}/${valueName}/${level}/${potency}`);
+        const response = await api.post(`deepElement/${modelName}/${elementName}/slot/${attributeName}/${valueModel}/${valueName}/${level}/${potency}`);
         if (response.data === undefined) {
             return undefined;
         }
@@ -324,13 +340,13 @@ export const AddSlot = async (modelName: string, elementName: string, attributeN
         console.log(error);
     }
 };
-// public static AddSlot(modelName: string, elementName: string, attributeName: string, valueName: string, level: number, potency: number): Slot | undefined {
-//     return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/${modelName}/${elementName}/slot/${attributeName}/${valueName}/${level}/${potency}`))
+// public static AddSlot(modelName: string, elementName: string, attributeName: string, valueModel: string, valueName: string, level: number, potency: number): Slot | undefined {
+//     return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/${modelName}/${elementName}/slot/${attributeName}/${valueModel}/${valueName}/${level}/${potency}`))
 // }
 
-export const SetSlotValue = async (modelName: string, elementName: string, attributeName: string, valueName: string) => {
+export const AddSimpleSlot = async (modelName: string, elementName: string, attributeName: string, value: string, level: number, potency: number) => {
     try {
-        const response = await api.put(`deepElement/${modelName}/${elementName}/slot/${attributeName}/${valueName}`);
+        const response = await api.post(`deepElement/${modelName}/${elementName}/slot/${attributeName}/${value}/${level}/${potency}`);
         if (response.data === undefined) {
             return undefined;
         }
@@ -340,8 +356,40 @@ export const SetSlotValue = async (modelName: string, elementName: string, attri
         console.log(error);
     }
 };
-// public static SetSlotValue(modelName: string, elementName: string, attributeName: string, valueName: string): Slot | undefined {
-//     return this.ParseJson(Requests.Request("PUT", `${RepoAPI.host}/Element/${modelName}/${elementName}/slot/${attributeName}/${valueName}`))
+// public static AddSimpleSlot(modelName: string, elementName: string, attributeName: string, value: string, level: number, potency: number): Slot | undefined {
+//     return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/${modelName}/${elementName}/slot/${attributeName}/${value}/${level}/${potency}`))
+// }
+
+export const SetSlotValue = async (modelName: string, elementName: string, attributeName: string, valueModel: string, newValue: string) => {
+    try {
+        const response = await api.put(`deepElement/${modelName}/${elementName}/slot/${attributeName}/${valueModel}/${newValue}`);
+        if (response.data === undefined) {
+            return undefined;
+        }
+        const responseParsed: Slot = response.data;
+        return responseParsed;
+    } catch (error) {
+        console.log(error);
+    }
+};
+// public static SetSlotValue(modelName: string, elementName: string, attributeName: string, valueModel: string, newValue: string): Slot | undefined {
+//     return this.ParseJson(Requests.Request("PUT", `${RepoAPI.host}/Element/${modelName}/${elementName}/slot/${attributeName}/${valueModel}/${newValue}`))
+// }
+
+export const SetSimpleSlotValue = async (modelName: string, elementName: string, attributeName: string, newValue: string) => {
+    try {
+        const response = await api.put(`deepElement/${modelName}/${elementName}/slot/${attributeName}/${newValue}`);
+        if (response.data === undefined) {
+            return undefined;
+        }
+        const responseParsed: Slot = response.data;
+        return responseParsed;
+    } catch (error) {
+        console.log(error);
+    }
+};
+// public static SetSimpleSlotValue(modelName: string, elementName: string, attributeName: string, newValue: string): Slot | undefined {
+//     return this.ParseJson(Requests.Request("PUT", `${RepoAPI.host}/Element/${modelName}/${elementName}/slot/${attributeName}/${newValue}`))
 // }
 
 export const GetValuesForAttribute = async (modelName: string, elementName: string, attributeName: string) => {

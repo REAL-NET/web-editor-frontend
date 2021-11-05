@@ -310,6 +310,27 @@ deepElementRouter.post('/:modelName/:elementName/attribute/:attributeName/:typeM
 //     return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/${modelName}/${elementName}/attribute/${attributeName}/${typeModel}/${typeName}/${level}/${potency}`))
 // }
 
+
+// Adds simple attribute
+deepElementRouter.post('/:modelName/:elementName/attribute/:attributeName/:level/:potency', function (req, res) {
+    let modelName = req.params.modelName;
+    let elementName = req.params.elementName;
+    let attributeName = req.params.attributeName;
+    let level = req.params.level;
+    let potency = req.params.potency;
+    axios
+        .post(`${host}/Element/${modelName}/${elementName}/attribute/${attributeName}/${level}/${potency}`)
+        .then(response => {
+            res.send(response.data);
+        })
+        .catch(error => {
+            console.log(error.message);
+        });
+});
+// public static AddSimpleAttribute(modelName: string, elementName: string, attributeName: string, level: number, potency: number): Attribute | undefined {
+//     return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/${modelName}/${elementName}/attribute/${attributeName}/${level}/${potency}`))
+// }
+
 // Sets attribute single
 deepElementRouter.put('/:modelName/:elementName/attribute/:attributeName/:single', function (req, res) {
     let modelName = req.params.modelName;
@@ -365,15 +386,16 @@ deepElementRouter.get('/:modelName/:elementName/slot/:attributeName', function (
 // }
 
 // Adds slot
-deepElementRouter.post('/:modelName/:elementName/slot/:attributeName/:valueName/:level/:potency', function (req, res) {
+deepElementRouter.post('/:modelName/:elementName/slot/:attributeName/:valueModel/:valueName/:level/:potency', function (req, res) {
     let modelName = req.params.modelName;
     let elementName = req.params.elementName;
     let attributeName = req.params.attributeName;
+    let valueModel = req.params.valueModel;
     let valueName = req.params.valueName;
     let level = req.params.level;
     let potency = req.params.potency;
     axios
-        .post(`${host}/Element/${modelName}/${elementName}/slot/${attributeName}/${valueName}/${level}/${potency}`)
+        .post(`${host}/Element/${modelName}/${elementName}/slot/${attributeName}/${valueModel}/${valueName}/${level}/${potency}`)
         .then(response => {
             res.send(response.data);
         })
@@ -381,18 +403,20 @@ deepElementRouter.post('/:modelName/:elementName/slot/:attributeName/:valueName/
             console.log(error.message);
         });
 });
-// public static AddSlot(modelName: string, elementName: string, attributeName: string, valueName: string, level: number, potency: number): Slot | undefined {
-//     return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/${modelName}/${elementName}/slot/${attributeName}/${valueName}/${level}/${potency}`))
+// public static AddSlot(modelName: string, elementName: string, attributeName: string, valueModel: string, valueName: string, level: number, potency: number): Slot | undefined {
+//     return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/${modelName}/${elementName}/slot/${attributeName}/${valueModel}/${valueName}/${level}/${potency}`))
 // }
 
-// Sets slot value
-deepElementRouter.put('/:modelName/:elementName/slot/:attributeName/:valueName', function (req, res) {
+// Adds simple slot
+deepElementRouter.post('/:modelName/:elementName/slot/:attributeName/:value=/:level/:potency', function (req, res) {
     let modelName = req.params.modelName;
     let elementName = req.params.elementName;
     let attributeName = req.params.attributeName;
-    let valueName = req.params.valueName;
+    let value = req.params.value;
+    let level = req.params.level;
+    let potency = req.params.potency;
     axios
-        .put(`${host}/Element/${modelName}/${elementName}/slot/${attributeName}/${valueName}`)
+        .post(`${host}/Element/${modelName}/${elementName}/slot/${attributeName}/${value}/${level}/${potency}`)
         .then(response => {
             res.send(response.data);
         })
@@ -400,8 +424,47 @@ deepElementRouter.put('/:modelName/:elementName/slot/:attributeName/:valueName',
             console.log(error.message);
         });
 });
-// public static SetSlotValue(modelName: string, elementName: string, attributeName: string, valueName: string): Slot | undefined {
-//     return this.ParseJson(Requests.Request("PUT", `${RepoAPI.host}/Element/${modelName}/${elementName}/slot/${attributeName}/${valueName}`))
+// public static AddSimpleSlot(modelName: string, elementName: string, attributeName: string, value: string, level: number, potency: number): Slot | undefined {
+//     return this.ParseJson(Requests.Request("POST", `${RepoAPI.host}/Element/${modelName}/${elementName}/slot/${attributeName}/${value}/${level}/${potency}`))
+// }
+
+// Sets slot value
+deepElementRouter.put('/:modelName/:elementName/slot/:attributeName/:valueModel/:newValue', function (req, res) {
+    let modelName = req.params.modelName;
+    let elementName = req.params.elementName;
+    let attributeName = req.params.attributeName;
+    let valueModel = req.params.valueModel;
+    let newValue = req.params.newValue;
+    axios
+        .put(`${host}/Element/${modelName}/${elementName}/slot/${attributeName}/${valueModel}/${newValue}`)
+        .then(response => {
+            res.send(response.data);
+        })
+        .catch(error => {
+            console.log(error.message);
+        });
+});
+// public static SetSlotValue(modelName: string, elementName: string, attributeName: string, valueModel: string, newValue: string): Slot | undefined {
+//     return this.ParseJson(Requests.Request("PUT", `${RepoAPI.host}/Element/${modelName}/${elementName}/slot/${attributeName}/${valueModel}/${newValue}`))
+// }
+
+// Sets simple slot value
+deepElementRouter.put('/:modelName/:elementName/slot/:attributeName/:newValue', function (req, res) {
+    let modelName = req.params.modelName;
+    let elementName = req.params.elementName;
+    let attributeName = req.params.attributeName;
+    let newValue = req.params.newValue;
+    axios
+        .put(`${host}/Element/${modelName}/${elementName}/slot/${attributeName}/${newValue}`)
+        .then(response => {
+            res.send(response.data);
+        })
+        .catch(error => {
+            console.log(error.message);
+        });
+});
+// public static SetSimpleSlotValue(modelName: string, elementName: string, attributeName: string, newValue: string): Slot | undefined {
+//     return this.ParseJson(Requests.Request("PUT", `${RepoAPI.host}/Element/${modelName}/${elementName}/slot/${attributeName}/${newValue}`))
 // }
 
 // Gets values for attribute
