@@ -5,7 +5,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {toInt} from "../Util";
 import {FormLabel, InputLabel, MenuItem, Select} from "@material-ui/core";
 import {AddAttribute} from "../requests/deepElementRequests";
 import {GetModel, GetModelMetaNodes} from "../requests/deepModelRequests";
@@ -47,6 +46,7 @@ const AttributeDialog: React.FC<AttributeDialogProps> = ({open, setOpen, modelNa
     const [isNoError, setIsNoError] = useState(true);
 
     const handleClose = () => {
+        setTypeName(availableTypes[0] || "");
         setOpen(false);
     };
 
@@ -86,7 +86,7 @@ const AttributeDialog: React.FC<AttributeDialogProps> = ({open, setOpen, modelNa
                         fullWidth={true}
                     >
                         {
-                            availableTypes.map(value => <MenuItem value={value}>{value}</MenuItem> )
+                            availableTypes.map(value => <MenuItem key={value + "_" + Math.round(Math.random() * 10000000).toString()} value={value}>{value}</MenuItem> )
                         }
                     </Select>
                     <br/>
@@ -95,7 +95,7 @@ const AttributeDialog: React.FC<AttributeDialogProps> = ({open, setOpen, modelNa
                         label="Level:"
                         type="number"
                         value={level}
-                        onChange={evt => setLevel(toInt(evt.target.value))}
+                        onChange={evt => setLevel(+evt.target.value)}
                         style={{marginTop: '0.5rem'}}
                     />
                     <TextField
@@ -103,7 +103,7 @@ const AttributeDialog: React.FC<AttributeDialogProps> = ({open, setOpen, modelNa
                         label="Potency:"
                         type="number"
                         value={potency}
-                        onChange={evt => setPotency(toInt(evt.target.value))}
+                        onChange={evt => setPotency(+evt.target.value)}
                         style={{marginTop: '0.5rem', marginLeft: '0.5rem'}}
                     />
                 </DialogContent>

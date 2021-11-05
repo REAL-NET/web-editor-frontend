@@ -5,7 +5,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {toInt} from "../Util";
 import {FormLabel, InputLabel, MenuItem, Select} from "@material-ui/core";
 import {AddSlot, GetAttributes, GetValuesForAttribute} from "../requests/deepElementRequests";
 import {Slot} from "../model/Slot";
@@ -43,13 +42,15 @@ const SlotDialog: React.FC<SlotDialogProps> = ({open, setOpen, modelName, elemen
     const [isNoError, setIsNoError] = useState(true);
 
     const handleClose = () => {
+        setAttributeName('');
+        setValue(availableValues[0] || "");
         setOpen(false);
     };
 
     const handleAdd = async () => {
         console.log(modelName);
         console.log(elementName);
-        const repoResp = await AddSlot(modelName, elementName, attributeName, value, level, potency);
+        const repoResp = await AddSlot(modelName, elementName, attributeName, modelName, value, level, potency);
         if (repoResp === undefined) {
             setIsNoError(false);
         } else {
@@ -73,11 +74,12 @@ const SlotDialog: React.FC<SlotDialogProps> = ({open, setOpen, modelName, elemen
                     <InputLabel style={{marginTop: '0.5rem'}}>Attribute:</InputLabel>
                     <Select
                         value={attributeName}
-                        onChange={evt => updateAttribute(evt.target.value as string)}
+                        onChange={async evt => await updateAttribute(`${evt.target.value}`)}
                         fullWidth={true}
                     >
                         {
-                            availableAttributes.map(value => <MenuItem value={value}>{value}</MenuItem> )
+                            availableAttributes.map(value => <MenuItem key={value + "_" + Math.round(Math.random() * 10000000).toString()}
+                                                                       value={value}>{value}</MenuItem>)
                         }
                     </Select>
                     <InputLabel style={{marginTop: '0.5rem'}}>Value:</InputLabel>
@@ -87,7 +89,8 @@ const SlotDialog: React.FC<SlotDialogProps> = ({open, setOpen, modelName, elemen
                         fullWidth={true}
                     >
                         {
-                            availableValues.map(value => <MenuItem value={value}>{value}</MenuItem> )
+                            availableValues.map(value => <MenuItem key={value + "_" + Math.round(Math.random() * 10000000).toString()}
+                                                                   value={value}>{value}</MenuItem>)
                         }
                     </Select>
                     <br/>
@@ -96,7 +99,7 @@ const SlotDialog: React.FC<SlotDialogProps> = ({open, setOpen, modelName, elemen
                         label="Level:"
                         type="number"
                         value={level}
-                        onChange={evt => setLevel(toInt(evt.target.value))}
+                        onChange={evt => setLevel(+evt.target.value)}
                         style={{marginTop: '0.5rem'}}
                     />
                     <TextField
@@ -104,7 +107,7 @@ const SlotDialog: React.FC<SlotDialogProps> = ({open, setOpen, modelName, elemen
                         label="Potency:"
                         type="number"
                         value={potency}
-                        onChange={evt => setPotency(toInt(evt.target.value))}
+                        onChange={evt => setPotency(+evt.target.value)}
                         style={{marginTop: '0.5rem', marginLeft: '0.5rem'}}
                     />
                 </DialogContent>

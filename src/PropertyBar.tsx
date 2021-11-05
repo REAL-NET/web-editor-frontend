@@ -71,7 +71,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                 <br/>
                 {
                     attributes?.map(value =>
-                        <div>
+                        <div key={value + "_" + Math.round(Math.random() * 10000000).toString()}>
                             <label>{value.name}: {value.type.name} L:{value.level} P:{value.potency}</label>
                             <br/>
                         </div>)
@@ -84,7 +84,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                 <br/>
                 {
                     slots?.map(value =>
-                        <div>
+                        <div key={value + "_" + Math.round(Math.random() * 10000000).toString()}>
                             <label>{value.attribute.name}: {value.value.name} L:{value.level} P:{value.potency}</label>
                             <br/>
                         </div>)

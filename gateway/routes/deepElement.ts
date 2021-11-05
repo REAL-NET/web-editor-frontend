@@ -408,7 +408,7 @@ deepElementRouter.post('/:modelName/:elementName/slot/:attributeName/:valueModel
 // }
 
 // Adds simple slot
-deepElementRouter.post('/:modelName/:elementName/slot/:attributeName/:value=/:level/:potency', function (req, res) {
+deepElementRouter.post('/:modelName/:elementName/slot/:attributeName/:value/:level/:potency', function (req, res) {
     let modelName = req.params.modelName;
     let elementName = req.params.elementName;
     let attributeName = req.params.attributeName;

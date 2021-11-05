@@ -1,34 +1,20 @@
 import React, {DragEvent, MouseEvent} from 'react';
-import ReactFlow, {
-    addEdge,
-    Background,
-    Elements,
-    removeElements,
-    Edge,
-    Connection,
-    Controls,
-    OnLoadParams,
-    Node,
-    FlowElement,
-} from 'react-flow-renderer';
+import ReactFlow, {addEdge, Background, Elements, removeElements, Edge, Connection, Controls, OnLoadParams, Node,
+    FlowElement,} from 'react-flow-renderer';
 
 import './Scene.css'
 
 import ImageNode from './nodesWithImages/ImageNode';
 import RobotsModelNode from './RobotsModelNode';
 import {deleteElement} from './requests/elementRequests';
+import {AssociationMetatype, GeneralizationEdgeStyle, GeneralizationEdgeType, GeneralizationMetatype} from "./Constants";
 import {
-    AssociationMetatype,
-    GeneralizationEdgeStyle,
-    GeneralizationEdgeType,
-    GeneralizationMetatype
-} from "./Constants";
-import {
+    AddSimpleAttribute, AddSimpleSlot,
     CreateAssociations,
     CreateGeneralization, DeleteElement,
     GetElement,
     InstantiateAssociation,
-    InstantiateNode
+    InstantiateNode, SetSimpleSlotValue,
 } from "./requests/deepElementRequests";
 import {AllModels} from "./requests/deepModelRequests";
 
@@ -61,13 +47,11 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
 
     // Any node moving
     const onDragOver = (event: DragEvent) => {
-        console.debug("On drag over")
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
     };
 
     const onElementsRemove = (elementsToRemove: Elements): void => {
-        console.debug("On elements remove")
         elementsToRemove.forEach(async value => {
             await DeleteElement(modelName, value.id);
         });
@@ -79,26 +63,10 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
 
     const onLoad = async (_reactFlowInstance: OnLoadParams) => {
         await AllModels();
-        console.log('flow loaded:', reactFlowInstance);
         setReactFlowInstance(_reactFlowInstance);
     };
 
     const onConnect = async (edgeParas: Edge | Connection) => {
-        // addEdgeElement(metamodelName, modelName, edgeParas.source !== null ? +edgeParas.source : -1,
-        //     edgeParas.target !== null ? +edgeParas.target : -1).then((id: string) => {
-        //     if (id !== '') {
-        //         getEdge(modelName, +id).then(edge => {
-        //             const newLink = {
-        //                 id: `${edge.id}`,
-        //                 source: `${edgeParas.source}`,
-        //                 target: `${edgeParas.target}`,
-        //                 label: `${edge.name}`
-        //             }
-        //             setElements((es: Elements) => es.concat(newLink));
-        //         });
-        //     }
-        // });
-        console.debug("On elements connect");
         const edge = edgeParas as Edge;
         let name: string, metaType: string = "", metaModel: string = "";
         if (edgeType === AssociationMetatype || edgeType === GeneralizationMetatype) {
@@ -119,24 +87,13 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
             } else {
                 await InstantiateAssociation(modelName, name, metaModel, metaType, edgeParas.source, edgeParas.target);
             }
-            console.debug(edgeParas);
         }
         edge.id = name;
         edge.label = name;
         setElements((elements: Elements) => addEdge(edgeParas, elements));
-        console.log('elements:', elements);
-    };
-
-    let id = 0;
-    const getId = function (): string {
-        while (elements.find(item => item.id === `${id}`) !== undefined) {
-            ++id;
-        }
-        return `${id}`;
     };
 
     const onDrop = async (event: DragEvent) => {
-        console.log("On elements drop")
         event.preventDefault();
         if (reactFlowInstance) {
             const metaInfo = event.dataTransfer.getData('application/reactflow');
@@ -145,11 +102,13 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
             const metaModel = metaInfo.substr(0, sepIndex);
             const id = Math.round(Math.random() * 10000000).toString();
             const name = metaType + "_" + id;
-            console.log(`${modelName}, ${name}, ${metaModel}, ${metaType}`)
             const node = await InstantiateNode(modelName, name, metaModel, metaType);
             if (node !== undefined) {
                 const position = reactFlowInstance.project({x: event.clientX, y: event.clientY - 40});
-                console.log(node.name)
+                await AddSimpleAttribute(modelName, name, 'xCoordinate', -1, -1);
+                await AddSimpleAttribute(modelName, name, 'yCoordinate', -1, -1);
+                await AddSimpleSlot(modelName, name, 'xCoordinate', `${event.clientX}`, -1, -1);
+                await AddSimpleSlot(modelName, name, 'yCoordinate', `${event.clientY - 40}`, -1, -1);
                 const newNode: Node = {
                     id: name,
                     type: 'default',
@@ -193,17 +152,13 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
         }
     };
 
-    // // Scene node stops being dragged/moved
-    // const onNodeDragStop = (event: MouseEvent, node: Node) => {
-    //     event.preventDefault();
-    //     setAttributeValue(modelName, +node.id, 'xCoordinate', `${node.position.x}`);
-    //     setAttributeValue(modelName, +node.id, 'yCoordinate', `${node.position.y}`);
-    // };
-
     const onNodeDragStop = (event: MouseEvent, node: Node) => {
         elements
             .filter(e => e.id === node.id)
-            .forEach(e => (e as Node).position = node.position);
+            .forEach(async e => {
+                await SetSimpleSlotValue(modelName, e.id, 'xCoordinate', `${node.position.x}`);
+                await SetSimpleSlotValue(modelName, e.id, 'yCoordinate', `${node.position.y}`);
+            });
     }
 
     return (

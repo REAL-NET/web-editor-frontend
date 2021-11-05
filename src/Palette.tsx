@@ -118,9 +118,7 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
 
     useEffect(() => {
         (async () => {
-            console.log('heh')
             setElements(await getElements(modelName));
-            console.log('haha')
             setEdgesMetatypes(await getEdgesMetatypes(modelName));
             setMetamodelElements(await getMetamodelElements(modelName));
         })();
