@@ -328,7 +328,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
     if (element !== undefined && isNode(element)) {
         return (
             <aside>
-                <TextFieldItem label="Label" value={element.data.label} setFunc={setName}/>
+                {modelName !== 'RobotsQRealModel' ? <TextFieldItem label="Label" value={element.data.label} setFunc={setName}/> : undefined}
                 <TextFieldItem label="Level" value={level} setFunc={setLevel}/>
                 <TextFieldItem label="Potency" value={potency} setFunc={setPotency}/>
                 {attributesAndSlots}
