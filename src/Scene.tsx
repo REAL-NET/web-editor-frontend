@@ -4,8 +4,9 @@ import ReactFlow, {addEdge, Background, Elements, removeElements, Edge, Connecti
 
 import './Scene.css'
 
-import ImageNode from './nodesWithImages/ImageNode';
-import RobotsModelNode from './RobotsModelNode';
+import ImageNode from './nodes/nodesWithImages/ImageNode';
+import RobotsModelNode from './nodes/RobotsModelNode';
+import RobotsQRealNode from './nodes/RobotsQRealNode';
 import {deleteElement} from './requests/elementRequests';
 import {AssociationMetatype, GeneralizationEdgeStyle, GeneralizationEdgeType, GeneralizationMetatype} from "./Constants";
 import {
@@ -32,6 +33,7 @@ type SceneProps = {
 const nodeTypes = {
     robotsNode: RobotsModelNode,
     imageNode: ImageNode,
+    robotsQRealNode: RobotsQRealNode,
 };
 
 const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
@@ -98,7 +100,9 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
         if (reactFlowInstance) {
             const metaInfo = event.dataTransfer.getData('application/reactflow');
             const sepIndex = metaInfo.indexOf("$$");
-            const metaType = metaInfo.substr(sepIndex + 2);
+            const pictureSepIndex = metaInfo.indexOf("%%");
+            const metaType = pictureSepIndex > -1 ? metaInfo.substr(sepIndex + 2, metaInfo.length - sepIndex - pictureSepIndex + 2)
+                : metaInfo.substr(sepIndex + 2);
             const metaModel = metaInfo.substr(0, sepIndex);
             const id = Math.round(Math.random() * 10000000).toString();
             const name = metaType + "_" + id;
@@ -109,12 +113,32 @@ const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
                 await AddSimpleAttribute(modelName, name, 'yCoordinate', -1, -1);
                 await AddSimpleSlot(modelName, name, 'xCoordinate', `${event.clientX}`, -1, -1);
                 await AddSimpleSlot(modelName, name, 'yCoordinate', `${event.clientY - 40}`, -1, -1);
-                const newNode: Node = {
-                    id: name,
-                    type: 'default',
-                    position,
-                    data: {label: node.name},
-                };
+                let newNode: Node;
+                if (modelName === 'RobotsQRealModel') {
+                    const picture = metaInfo.substr(pictureSepIndex + 2);
+                    newNode = {
+                        id: name,
+                        type: 'robotsQRealNode',
+                        position,
+                        data: {
+                            label: ''
+                        },
+                        style: {
+                            backgroundImage: `url(${picture})`,
+                            width: '100px',
+                            height: '100px',
+                        }
+                    };
+                } else {
+                    newNode = {
+                        id: name,
+                        type: 'default',
+                        position,
+                        data: {
+                            label: node.name
+                        },
+                    };
+                }
                 setElements((es: Elements) => es.concat(newNode));
             } else {
                 console.error("Some error on adding element");

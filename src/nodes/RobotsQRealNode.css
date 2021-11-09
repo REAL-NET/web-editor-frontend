@@ -1,0 +1,16 @@
+.robotsQRealNode {
+    /*border: 1px solid #1a192b;*/
+    /*border-radius: 2px;*/
+    /*margin-bottom: 10px;*/
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    cursor: grab;
+}
+.robotsQRealNodeHandle {
+    left: 50%;
+    border-radius: 100%;
+    background: grey;
+    width: 7px;
+    height: 7px;
+}

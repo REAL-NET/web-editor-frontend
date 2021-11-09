@@ -18,6 +18,24 @@ const getElements = async (modelName: string) => {
             nodes = await Promise.all(model.nodes.map(async (value, index) => {
                 let xCoordinate = 100;
                 let yCoordinate = 60 * index;
+                const nodeType = modelName === 'RobotsQRealModel' ? 'robotsQRealNode' : 'default';
+                const picture = modelName === 'RobotsQRealModel' ?
+                    (await GetSlot(modelName, value.name, 'Image'))?.simpleValue : undefined;
+                const nodeStyle = picture !== undefined ? {
+                        backgroundImage: `url(${picture})`,
+                        width: '100px',
+                        height: '100px',
+                    } : undefined;
+                const node = {
+                    id: value.name,
+                    type: nodeType,
+                    data: {
+                        // label: 'value.name'
+                        label: ''
+                    },
+                    position: {x: xCoordinate, y: yCoordinate},
+                    style: nodeStyle,
+                };
 
                 const attributes = await GetAttributes(modelName, value.name);
                 const xCoordinateAttribute = attributes?.filter(attribute => attribute.name === 'xCoordinate');
@@ -28,14 +46,7 @@ const getElements = async (modelName: string) => {
                     await AddSimpleAttribute(modelName, value.name, 'yCoordinate', -1, -1);
                     await AddSimpleSlot(modelName, value.name, 'xCoordinate', `${xCoordinate}`, -1, -1);
                     await AddSimpleSlot(modelName, value.name, 'yCoordinate', `${yCoordinate}`, -1, -1);
-                    return {
-                        id: value.name,
-                        type: 'default',
-                        data: {
-                            label: value.name
-                        },
-                        position: {x: xCoordinate, y: yCoordinate}
-                    }
+                    return node;
                 }
 
                 if (xCoordinateAttribute?.length === 0) {
@@ -54,14 +65,7 @@ const getElements = async (modelName: string) => {
                 if (slots === undefined || (xCoordinateSlot?.length === 0 && yCoordinateSlot?.length === 0)) {
                     await AddSimpleSlot(modelName, value.name, 'xCoordinate', `${xCoordinate}`, -1, -1);
                     await AddSimpleSlot(modelName, value.name, 'yCoordinate', `${yCoordinate}`, -1, -1);
-                    return {
-                        id: value.name,
-                        type: 'default',
-                        data: {
-                            label: value.name
-                        },
-                        position: {x: xCoordinate, y: yCoordinate}
-                    }
+                    return node;
                 }
 
                 if (xCoordinateSlot?.length === 0) {
@@ -75,11 +79,13 @@ const getElements = async (modelName: string) => {
                 const yCoord = (await GetSlot(modelName, value.name, 'yCoordinate'))?.simpleValue;
                 return {
                     id: value.name,
-                    type: 'default',
+                    type: nodeType,
                     data: {
-                        label: value.name
+                        // label: 'value.name'
+                        label: ''
                     },
-                    position: {x: xCoord !== undefined ? +xCoord : xCoordinate, y: yCoord !== undefined ? +yCoord : yCoordinate}
+                    position: {x: xCoord !== undefined ? +xCoord : xCoordinate, y: yCoord !== undefined ? +yCoord : yCoordinate},
+                    style: nodeStyle,
                 }
             })) as Array<FlowElement>;
         }

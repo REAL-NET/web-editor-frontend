@@ -3,7 +3,7 @@ import {Elements, isNode, isEdge, Edge} from "react-flow-renderer";
 import {MenuItem, Select, Checkbox, TextField, InputLabel, Button, FormLabel} from "@material-ui/core";
 
 import './Palette.css'
-import './Nodes.css'
+import './nodes/nodesWithImages/ImageNode.css'
 import AttributeDialog from "./dialogs/AttributeDialog";
 import SlotDialog from "./dialogs/SlotDialog";
 import {Attribute} from './model/Attribute';

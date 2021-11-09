@@ -1,18 +1,16 @@
 import React, {DragEvent, useEffect, useState} from 'react';
 
 import './Palette.css';
-import './RobotsModelNode.css';
-import './Nodes.css'
+import './nodes/RobotsModelNode.css';
+import './nodes/RobotsQRealNode.css';
+import './nodes/nodesWithImages/ImageNode.css'
 
 import {ElementInfo} from "./model/ElementInfo";
 import {InputLabel, MenuItem, Select} from "@material-ui/core";
 import {getElements} from "./initialElements";
 import {AssociationMetatype, GeneralizationMetatype} from "./Constants";
 import {AllModels, GetModel, GetModelMetaEdges, GetModelMetaNodes} from "./requests/deepModelRequests";
-
-const onDragStart = (event: DragEvent, metaInfo: string) => {
-    event.dataTransfer.setData('application/reactflow', metaInfo);
-};
+import {GetSlot} from "./requests/deepElementRequests";
 
 // const onDragStart = (event: DragEvent, nodeType: string, elementId: number) => {
 //     event.dataTransfer.setData('application/reactflow', `${nodeType} ${elementId}`);
@@ -78,25 +76,6 @@ const onDragStart = (event: DragEvent, metaInfo: string) => {
 //     const metamodelElements = metamodelFiltered.map(element => <RobotsNodePaletteItem element={element} key={element.name + element.id}/>);
 // }
 
-const getEdgesMetatypes = async (modelName: string) => {
-    const edges = await GetModelMetaEdges(modelName);
-    if (edges === undefined) {
-        console.error(`No meta edges retrieved for ${modelName}`);
-        const model = await GetModel(modelName);
-        if (model === undefined) {
-            console.error(`Model ${modelName} is not retrieved from repo`);
-            return [];
-        }
-        const metamodel = await GetModel(model.metamodel.name);
-        if (metamodel === undefined) {
-            console.error(`Metamodel ${metamodel} is not retrieved from repo`);
-            return [];
-        }
-        return metamodel.relationships;
-    }
-    return edges;
-};
-
 type PaletteBarProps = {
     setElements: Function,
     modelName: string,
@@ -109,6 +88,7 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
     const [menuItems, setMenuItems] = useState<string[]>([]);
     const [edgesMetatypes, setEdgesMetatypes] = useState<ElementInfo[]>([]);
     const [metamodelElements, setMetamodelElements] = useState<ElementInfo[]>([]);
+    const [metamodelElementsList, setMetamodelElementsList] = useState<JSX.Element[]>([]);
 
     useEffect(  () => {
         (async () => {
@@ -123,6 +103,47 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
             setMetamodelElements(await getMetamodelElements(modelName));
         })();
     }, [modelName]);
+
+    const PaletteItem = (props: { element: ElementInfo }) => {
+        return (
+            <div className="paletteNode" onDragStart={(event: DragEvent) =>
+                onDragStart(event, props.element.model.name + "$$" + props.element.name)} draggable>
+                {props.element.model.name + "::" + props.element.name}
+            </div>
+        );
+    }
+
+    const RobotsQRealPaletteNode = (props: { element: ElementInfo, picture: string }) => {
+        return (
+            <div className="robotsQRealNode"
+                 onDragStart={(event: DragEvent) => onDragStart(event, `${props.element.model.name}$$${props.element.name}
+                                %%${props.picture}`)}
+                 draggable
+                 style={{
+                     backgroundImage: `url(${props.picture})`,
+                     width: '100px',
+                     height: '100px',
+                 }}/>
+        );
+    }
+
+    useEffect(() => {
+        (async () => {
+            let newMetamodelElementsList: JSX.Element[] = [];
+            for (const metamodelElement of metamodelElements) {
+                let picture: string | undefined = undefined;
+                if (modelName === 'RobotsQRealModel') {
+                    picture = (await GetSlot(metamodelElement.model.name, metamodelElement.name, 'Image'))?.simpleValue;
+                }
+                if (picture !== undefined) {
+                    newMetamodelElementsList.push(RobotsQRealPaletteNode({element: metamodelElement, picture: picture}));
+                } else {
+                    newMetamodelElementsList.push(PaletteItem({element: metamodelElement}));
+                }
+            }
+            setMetamodelElementsList(newMetamodelElementsList);
+        })();
+    }, [metamodelElements]);
 
     const getMetamodelElements = async (modelName: string) => {
         const nodes = await GetModelMetaNodes(modelName);
@@ -147,6 +168,25 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
         return nodes;
     };
 
+    const getEdgesMetatypes = async (modelName: string) => {
+        const edges = await GetModelMetaEdges(modelName);
+        if (edges === undefined) {
+            console.error(`No meta edges retrieved for ${modelName}`);
+            const model = await GetModel(modelName);
+            if (model === undefined) {
+                console.error(`Model ${modelName} is not retrieved from repo`);
+                return [];
+            }
+            const metamodel = await GetModel(model.metamodel.name);
+            if (metamodel === undefined) {
+                console.error(`Metamodel ${metamodel} is not retrieved from repo`);
+                return [];
+            }
+            return metamodel.relationships;
+        }
+        return edges;
+    };
+
     const getModelsMenuItems = async () => {
         const models = await AllModels();
         if (models === undefined) {
@@ -156,14 +196,9 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
         return models.map(value => value.name);
     };
 
-    const PaletteItem = (props: { element: ElementInfo}) => {
-        return (
-            <div className="paletteNode" onDragStart={(event: DragEvent) =>
-                     onDragStart(event, props.element.model.name + "$$" + props.element.name)} draggable>
-                {props.element.model.name + "::" + props.element.name}
-            </div>
-        );
-    }
+    const onDragStart = (event: DragEvent, metaInfo: string) => {
+        event.dataTransfer.setData('application/reactflow', metaInfo);
+    };
 
     return (
         <aside>
@@ -207,7 +242,7 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
                 <InputLabel>Elements:</InputLabel>
             </div>
             <br/>
-            {metamodelElements.map(value => <PaletteItem key={value.model.name + "$$" + value.name + "_" + Math.round(Math.random() * 10000000).toString()} element={value}/>)}
+            {metamodelElementsList}
         </aside>
     );
 };
