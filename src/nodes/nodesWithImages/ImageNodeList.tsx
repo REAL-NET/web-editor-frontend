@@ -3,7 +3,7 @@ import React, {DragEvent} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 
-import '../Nodes.css'
+import './ImageNode.css'
 
 import image1 from './images/image1.png';
 import image2 from './images/image2.png';
