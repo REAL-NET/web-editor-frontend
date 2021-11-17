@@ -6,6 +6,7 @@
 }
 aside {
     border-left: 1px solid lightgrey;
+    border-right: 1px solid lightgrey;
     padding: 5px 15px;
     font-size: 12px;
     background: #fcfcfc;
@@ -15,7 +16,6 @@ aside {
     .OverviewFlow {
         flex-direction: row;
     }
-
     .OverviewFlow aside {
         width: 20%;
         max-width: 30%;

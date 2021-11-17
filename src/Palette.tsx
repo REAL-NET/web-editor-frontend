@@ -12,70 +12,6 @@ import {AssociationMetatype, GeneralizationMetatype} from "./Constants";
 import {AllModels, GetModel, GetModelMetaEdges, GetModelMetaNodes} from "./requests/deepModelRequests";
 import {GetSlot} from "./requests/deepElementRequests";
 
-// const onDragStart = (event: DragEvent, nodeType: string, elementId: number) => {
-//     event.dataTransfer.setData('application/reactflow', `${nodeType} ${elementId}`);
-//     event.dataTransfer.effectAllowed = 'move';
-// };
-
-// const Palette = (props: { metamodelName: string }) => {
-//     const [metamodel, setMetamodel] = useState<Array<{ id: number, name: string }>>([]);
-//
-//     useEffect(() => {
-//         let newMetamodel: Array<{ id: number, name: string }> = [];
-//         getModel(props.metamodelName).then(data => {
-//             if (data !== undefined) {
-//                 data.forEach((element: { id: number, name: string }) => {
-//                     getAttributeValue(props.metamodelName, element.id, 'isAbstract').then(data => {
-//                         if (data !== undefined && !data && element.name !== 'Link') {
-//                             newMetamodel.push(element);
-//                         }
-//                     });
-//                 });
-//             }
-//         }).finally(() => setMetamodel(newMetamodel));
-//     }, []);
-//
-//     const getMetamodelElements = (modelName: string): ElementInfo[] => {
-//         const nodes = await GetModelMetaNodes(modelName);
-//         if (nodes === undefined || nodes.length === 0) {
-//             console.error(`No meta nodes retrieved for ${modelName}`);
-//             const model = await GetModel(modelName);
-//             if (model === undefined) {
-//                 console.error(`Model ${modelName} is not retrieved from repo`);
-//                 return [];
-//             }
-//             let metamodel = await GetModel(model.metamodel.name);
-//             if (metamodel === undefined) {
-//                 console.error(`Metamodel ${metamodel} is not retrieved from repo`);
-//                 return [];
-//             }
-//             return metamodel.nodes;
-//         }
-//         return nodes;
-//     };
-//
-//     const getModelsMenuItems = () => {
-//         const models = AllModels();
-//         if (models === undefined) {
-//             console.error("Models is not retrieved from repo");
-//             return [];
-//         }
-//         return models.map(value => value.name);
-//     };
-//
-//     const RobotsNodePaletteItem = (props: { element: { id: number; name: string } }) => {
-//         return (
-//             <div className="robotsNode" key={props.element.id}
-//                  onDragStart={(event: DragEvent) => onDragStart(event, 'robotsNode', props.element.id)} draggable>
-//                 {props.element.name}
-//             </div>
-//         );
-//     }
-//
-//     const metamodelFiltered = metamodel.filter((element) => element.name !== '');
-//     const metamodelElements = metamodelFiltered.map(element => <RobotsNodePaletteItem element={element} key={element.name + element.id}/>);
-// }
-
 type PaletteBarProps = {
     setElements: Function,
     modelName: string,
@@ -85,7 +21,7 @@ type PaletteBarProps = {
     isDeep: boolean
 }
 
-const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelName, edgeType, setEdgeType}) => {
+const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelName, edgeType, setEdgeType, isDeep}) => {
     const [menuItems, setMenuItems] = useState<string[]>([]);
     const [edgesMetatypes, setEdgesMetatypes] = useState<ElementInfo[]>([]);
     const [metamodelElements, setMetamodelElements] = useState<ElementInfo[]>([]);
@@ -212,9 +148,6 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
     return (
         <aside>
             <div className="description">Palette</div>
-            {/*{metamodelElements}*/}
-            {/*Nodes with images*/}
-            {/*<ImageNodeList />*/}
             <div className='paletteMenuContainer'>
                 <InputLabel>Model:</InputLabel>
                 <Select
@@ -231,7 +164,7 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
                     )}
                 </Select>
             </div>
-            <div className='paletteMenuContainer'>
+            <div className='paletteMenuContainer' hidden={!isDeep}>
                 <InputLabel>Edge:</InputLabel>
                 <Select
                     id="edgeType"

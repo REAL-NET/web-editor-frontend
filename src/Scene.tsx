@@ -1,7 +1,16 @@
 import React, {DragEvent, MouseEvent} from 'react';
 import ReactFlow, {
-    addEdge, Background, Elements, removeElements, Edge, Connection, Controls, OnLoadParams, Node,
+    addEdge,
+    Background,
+    Connection,
+    ConnectionMode,
+    Controls,
+    Edge,
+    Elements,
     FlowElement,
+    Node,
+    OnLoadParams,
+    removeElements
 } from 'react-flow-renderer';
 
 import './Scene.css'
@@ -17,12 +26,15 @@ import {
     GeneralizationMetatype
 } from "./Constants";
 import {
-    AddSimpleAttribute, AddSimpleSlot,
+    AddSimpleAttribute,
+    AddSimpleSlot,
     CreateAssociations,
-    CreateGeneralization, DeleteElement,
+    CreateGeneralization,
+    DeleteElement,
     GetElement,
     InstantiateAssociation,
-    InstantiateNode, SetSimpleSlotValue,
+    InstantiateNode,
+    SetSimpleSlotValue,
 } from "./requests/deepElementRequests";
 import {AllModels} from "./requests/deepModelRequests";
 
@@ -34,8 +46,7 @@ type SceneProps = {
     setReactFlowInstance: Function,
     setCurrentElementId: Function,
     captureElementClick: boolean,
-    edgeType: string,
-    isDeep: boolean
+    edgeType: string
 }
 
 const nodeTypes = {
@@ -88,12 +99,12 @@ const Scene: React.FC<SceneProps> = ({
         const edge = edgeParas as Edge;
         let name: string, metaType: string = "", metaModel: string = "";
         if (edgeType === AssociationMetatype || edgeType === GeneralizationMetatype) {
-            name = `${edgeType}_${Math.round(Math.random() * 10000000).toString()}`;
+            name = `${edgeType}_${edgeParas.sourceHandle}-${edgeParas.targetHandle}`;
         } else {
             const sepIndex = edgeType.indexOf("$$");
             metaType = edgeType.substr(sepIndex + 2);
             metaModel = edgeType.substr(0, sepIndex);
-            name = `${metaType}_${Math.round(Math.random() * 10000000).toString()}`;
+            name = `${metaType}__${edgeParas.sourceHandle}-${edgeParas.targetHandle}`;
         }
         if (edgeParas.source != null && edgeParas.target != null) {
             if (edgeType === AssociationMetatype) {
@@ -105,6 +116,10 @@ const Scene: React.FC<SceneProps> = ({
             } else {
                 await InstantiateAssociation(modelName, name, metaModel, metaType, edgeParas.source, edgeParas.target);
             }
+            await AddSimpleAttribute(modelName, name, 'sourceHandle', -1, -1);
+            await AddSimpleAttribute(modelName, name, 'targetHandle', -1, -1);
+            await AddSimpleSlot(modelName, name, 'sourceHandle', `${edgeParas.sourceHandle}`, -1, -1);
+            await AddSimpleSlot(modelName, name, 'targetHandle', `${edgeParas.targetHandle}`, -1, -1);
         }
         edge.id = name;
         edge.label = name;
@@ -141,8 +156,8 @@ const Scene: React.FC<SceneProps> = ({
                         },
                         style: {
                             backgroundImage: `url(${picture})`,
-                            width: '100px',
-                            height: '100px',
+                            width: '50px',
+                            height: '50px',
                         }
                     };
                 } else {
@@ -159,36 +174,6 @@ const Scene: React.FC<SceneProps> = ({
             } else {
                 console.error("Some error on adding element");
             }
-            //
-            // const data = event.dataTransfer.getData('application/reactflow').split(' ');
-            // const type = data[0];
-            // const position = reactFlowInstance.project({x: event.clientX - 280, y: event.clientY - 40});
-            //
-            // let newNode: Node;
-            // if (type === 'ImageNode') {
-            //     newNode = {
-            //         id: getId(),
-            //         type: 'imageNode',
-            //         position,
-            //         data: {label: `${type}`},
-            //         style: {
-            //             backgroundImage: data[1],
-            //             height: Number(data[2]),
-            //             width: Number(data[3]),
-            //             border: '1px solid #777',
-            //             borderRadius: 2,
-            //             display: "flex",
-            //             justifyContent: "center",
-            //             alignItems: 'center',
-            //         }
-            //     };
-            //     setElements((es: Elements) => es.concat(newNode));
-            // } else {
-            //     const parentsId = data[1];
-            //     addNodeElement(modelName, +parentsId, type, position.x, position.y).then(node => {
-            //         setElements((es: Elements) => es.concat(node));
-            //     })
-            // }
         }
     };
 
@@ -216,6 +201,7 @@ const Scene: React.FC<SceneProps> = ({
                 onDragOver={onDragOver}
                 onNodeDragStop={onNodeDragStop}
                 onElementClick={captureElementClick ? onElementClick : undefined}
+                connectionMode={ConnectionMode.Loose}
             >
                 <Controls/>
                 <Background>

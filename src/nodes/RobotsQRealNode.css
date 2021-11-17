@@ -4,16 +4,20 @@
     float: left;
 }
 .robotsQRealNodeHandle {
-    left: 50%;
-    border-radius: 100%;
-    background: grey;
-    width: 7px;
-    height: 7px;
+    /*border-radius: 100%;*/
+    /*background: grey;*/
+    width: 10px;
+    height: 10px;
+    background: transparent;
+    z-index: 999;
+    /*border: none;*/
+    /*width: 10px;*/
+    /*height: 10px;*/
 }
 .robotsQRealNodeName {
     float: left;
     vertical-align: middle;
-    margin-top: 25px;
+    margin-top: 20px;
     margin-left: 5%;
 }
 .robotsQRealNodeContainer {
