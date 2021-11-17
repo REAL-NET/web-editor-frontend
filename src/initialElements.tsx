@@ -171,6 +171,7 @@ const getElements = async (modelName: string) => {
                             style: GeneralizationEdgeStyle
                         };
                     }
+                    console.log(edge)
                     return edge;
                 }
                 return undefined;

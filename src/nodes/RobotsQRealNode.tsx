@@ -7,13 +7,13 @@ const robotsQRealNode: FC<NodeProps> = ({data}) => {
     return (
         <div className="robotsQRealNode">
             <Handle
-                type="target"
+                type="source"
                 position={Position.Top}
                 id="1"
                 className="robotsQRealNodeHandle"
             />
             <Handle
-                type="target"
+                type="source"
                 position={Position.Right}
                 id="2"
                 className="robotsQRealNodeHandle"

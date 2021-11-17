@@ -10,7 +10,7 @@ import ReactFlow, {
     FlowElement,
     Node,
     OnLoadParams,
-    removeElements
+    removeElements, updateEdge
 } from 'react-flow-renderer';
 
 import './Scene.css'
@@ -85,9 +85,6 @@ const Scene: React.FC<SceneProps> = ({
             await DeleteElement(modelName, value.id);
         });
         setElements((elements: Elements) => removeElements(elementsToRemove, elements));
-        elementsToRemove.forEach(async element => {
-            await deleteElement(modelName, +element.id);
-        })
     };
 
     const onLoad = async (_reactFlowInstance: OnLoadParams) => {
@@ -186,6 +183,37 @@ const Scene: React.FC<SceneProps> = ({
             });
     }
 
+    const onEdgeUpdate = async (oldEdge: Edge, newConnection: Connection) => {
+        if (oldEdge.target === newConnection.target && oldEdge.source === newConnection.source) {
+            await SetSimpleSlotValue(modelName, oldEdge.id, 'sourceHandle', `${newConnection.sourceHandle}`);
+            await SetSimpleSlotValue(modelName, oldEdge.id, 'targetHandle', `${newConnection.targetHandle}`);
+            setElements((els) => updateEdge(oldEdge, newConnection, els));
+            return;
+        }
+
+        await DeleteElement(modelName, oldEdge.id);
+        let metaType: string = "", metaModel: string = "";
+        if (edgeType !== AssociationMetatype && edgeType !== GeneralizationMetatype) {
+            const sepIndex = edgeType.indexOf("$$");
+            metaType = edgeType.substr(sepIndex + 2);
+            metaModel = edgeType.substr(0, sepIndex);
+        }
+        if (newConnection.source != null && newConnection.target != null) {
+            if (edgeType === AssociationMetatype) {
+                await CreateAssociations(modelName, oldEdge.id, newConnection.source, newConnection.target, -1, -1, -1, -1, -1, -1);
+            } else if (edgeType === GeneralizationMetatype) {
+                await CreateGeneralization(modelName, oldEdge.id, newConnection.source, newConnection.target, -1, -1);
+            } else {
+                await InstantiateAssociation(modelName, oldEdge.id, metaModel, metaType, newConnection.source, newConnection.target);
+            }
+            await AddSimpleAttribute(modelName, oldEdge.id, 'sourceHandle', -1, -1);
+            await AddSimpleAttribute(modelName, oldEdge.id, 'targetHandle', -1, -1);
+            await AddSimpleSlot(modelName, oldEdge.id, 'sourceHandle', `${newConnection.sourceHandle}`, -1, -1);
+            await AddSimpleSlot(modelName, oldEdge.id, 'targetHandle', `${newConnection.targetHandle}`, -1, -1);
+        }
+        setElements((els) => updateEdge(oldEdge, newConnection, els));
+    }
+
     return (
         <div className="Scene">
             <ReactFlow
@@ -201,6 +229,7 @@ const Scene: React.FC<SceneProps> = ({
                 onDragOver={onDragOver}
                 onNodeDragStop={onNodeDragStop}
                 onElementClick={captureElementClick ? onElementClick : undefined}
+                onEdgeUpdate={onEdgeUpdate}
                 connectionMode={ConnectionMode.Loose}
             >
                 <Controls/>
