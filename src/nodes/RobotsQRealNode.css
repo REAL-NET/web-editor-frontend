@@ -1,11 +1,7 @@
 .robotsQRealNode {
-    /*border: 1px solid #1a192b;*/
-    /*border-radius: 2px;*/
-    /*margin-bottom: 10px;*/
-    /*display: flex;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
     cursor: grab;
+    margin: 2% 0;
+    float: left;
 }
 .robotsQRealNodeHandle {
     left: 50%;
@@ -13,4 +9,13 @@
     background: grey;
     width: 7px;
     height: 7px;
+}
+.robotsQRealNodeName {
+    float: left;
+    vertical-align: middle;
+    margin-top: 25px;
+    margin-left: 5%;
+}
+.robotsQRealNodeContainer {
+    overflow: hidden;
 }

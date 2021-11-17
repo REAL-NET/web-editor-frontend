@@ -17,6 +17,7 @@ const OverviewFlow = () => {
     const [captureElementClick, setCaptureElementClick] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
     const [edgeType, setEdgeType] = useState(AssociationMetatype);
+    const [isDeep,] = useState(false);
 
     return (
         <div className="OverviewFlow">
@@ -26,6 +27,7 @@ const OverviewFlow = () => {
                              elements={elements}
                              modelName={modelName}
                              setCurrentElementId={setCurrentElementId}
+                             isDeep={isDeep}
                 />
                 <Scene
                     modelName={modelName}
@@ -36,6 +38,7 @@ const OverviewFlow = () => {
                     setCurrentElementId={setCurrentElementId}
                     captureElementClick={captureElementClick}
                     edgeType={edgeType}
+                    isDeep={isDeep}
                 />
                 <Palette
                     setElements={setElements}
@@ -43,6 +46,7 @@ const OverviewFlow = () => {
                     setModelName={setModelName}
                     edgeType={edgeType}
                     setEdgeType={setEdgeType}
+                    isDeep={isDeep}
                 />
             </ReactFlowProvider>
         </div>

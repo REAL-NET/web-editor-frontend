@@ -17,14 +17,14 @@ const getElements = async (modelName: string) => {
         if (model.nodes !== undefined) {
             nodes = await Promise.all(model.nodes.map(async (value, index) => {
                 let xCoordinate = 100;
-                let yCoordinate = 60 * index;
+                let yCoordinate = 120 * index;
                 const nodeType = modelName === 'RobotsQRealModel' ? 'robotsQRealNode' : 'default';
                 const picture = modelName === 'RobotsQRealModel' ?
                     (await GetSlot(modelName, value.name, 'Image'))?.simpleValue : undefined;
                 const nodeStyle = picture !== undefined ? {
                         backgroundImage: `url(${picture})`,
-                        width: '100px',
-                        height: '100px',
+                        width: '50px',
+                        height: '50px',
                     } : undefined;
                 const node = {
                     id: value.name,

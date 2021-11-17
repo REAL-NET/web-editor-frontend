@@ -1,9 +1,3 @@
-aside {
-    border-left: 1px solid lightgrey;
-    padding: 5px 15px;
-    font-size: 12px;
-    background: #fcfcfc;
-}
 .description {
     padding-bottom: 10px;
     text-align: center;
@@ -16,4 +10,8 @@ aside {
     width: fit-content;
     height: max-content;
     border-radius: 3px;
+    margin: 5% 0;
+}
+.paletteMenuContainer {
+    margin-bottom: 10%;
 }

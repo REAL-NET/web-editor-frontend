@@ -19,14 +19,15 @@ import {
 } from "./requests/deepElementRequests";
 
 type PropertyBarProps = {
-    modelName: string
-    elements: Elements
-    id: string
-    setElements: Function
+    modelName: string,
+    elements: Elements,
+    id: string,
+    setElements: Function,
     setCurrentElementId: Function,
+    isDeep: boolean
 }
 
-const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, modelName, setCurrentElementId}) => {
+const PropertyBar: React.FC<PropertyBarProps> = ({elements, setElements, id, modelName, setCurrentElementId}) => {
 
     const element = elements.find(item => item.id === id)
     const idNumber: number = +id;
@@ -61,43 +62,44 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
 
         return firstRender.current;
     }
+
     const firstRender = useFirstRender();
 
     const attributesAndSlots =
-         (
+        (
             <div>
-                <br/>
-                <FormLabel>Attributes:</FormLabel>
-                <br/>
-                {
-                    attributes?.map(value =>
-                        <div key={value + "_" + Math.round(Math.random() * 10000000).toString()}>
-                            <label>{value.name}: {value.type.name} L:{value.level} P:{value.potency}</label>
-                            <br/>
-                        </div>)
-                }
-                <Button onClick={() => setAddAttributeOpen(true)} fullWidth={true}>Add Attribute</Button>
-                <AttributeDialog open={addAttributeOpen} setOpen={setAddAttributeOpen} modelName={modelName} elementName={element?.id || ""}
-                    setAttributes={setAttributes}/>
-                <br/>
-                <FormLabel>Slots:</FormLabel>
-                <br/>
-                {
-                    slots?.map(value =>
-                        <div key={value + "_" + Math.round(Math.random() * 10000000).toString()}>
-                            <label>{value.attribute.name}: {value.value.name} L:{value.level} P:{value.potency}</label>
-                            <br/>
-                        </div>)
-                }
-                <Button onClick={() => setAddSlotOpen(true)} fullWidth={true}>Add Slot</Button>
-                <SlotDialog open={addSlotOpen} setOpen={setAddSlotOpen} modelName={modelName} elementName={element?.id || ""}
-                    setSlots={setSlots}/>
+                <div className='propertyBarMenuContainer'>
+                    <FormLabel>Attributes:</FormLabel>
+                    {
+                        attributes?.map(value =>
+                            <div key={value + "_" + Math.round(Math.random() * 10000000).toString()}>
+                                <label>{value.name}: {value.type.name} L:{value.level} P:{value.potency}</label>
+                            </div>)
+                    }
+                    <Button onClick={() => setAddAttributeOpen(true)} fullWidth={true}>Add Attribute</Button>
+                    <AttributeDialog open={addAttributeOpen} setOpen={setAddAttributeOpen} modelName={modelName}
+                                     elementName={element?.id || ""}
+                                     setAttributes={setAttributes}/>
+                </div>
+                <div className='propertyBarMenuContainer'>
+                    <FormLabel>Slots:</FormLabel>
+                    {
+                        slots?.map(value =>
+                            <div key={value + "_" + Math.round(Math.random() * 10000000).toString()}>
+                                <label>{value.attribute.name}: {value.value.name} L:{value.level} P:{value.potency}</label>
+                            </div>)
+                    }
+                    <Button onClick={() => setAddSlotOpen(true)} fullWidth={true}>Add Slot</Button>
+                    <SlotDialog open={addSlotOpen} setOpen={setAddSlotOpen} modelName={modelName}
+                                elementName={element?.id || ""}
+                                setSlots={setSlots}/>
+                </div>
             </div>
         )
 
     //common effects
     useEffect(() => {
-        if (element  !== undefined) {
+        if (element !== undefined) {
             if (!firstRender) {
                 (async () => {
                     setAttributes(await GetAttributes(modelName, element?.id || ""));
@@ -328,7 +330,12 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
     if (element !== undefined && isNode(element)) {
         return (
             <aside>
-                {modelName !== 'RobotsQRealModel' ? <TextFieldItem label="Label" value={element.data.label} setFunc={setName}/> : undefined}
+                {modelName !== 'RobotsQRealModel' ?
+                    <TextFieldItem label="Label" value={element.data.label} setFunc={setName}/> :
+                    <div>
+                        <label>{element.id}</label>
+                    </div>
+                }
                 <TextFieldItem label="Level" value={level} setFunc={setLevel}/>
                 <TextFieldItem label="Potency" value={potency} setFunc={setPotency}/>
                 {attributesAndSlots}
@@ -361,7 +368,8 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
     } else if (element !== undefined && isEdge(element)) {
         return (
             <aside>
-                <TextFieldItem label="Label" value={element.label !== undefined ? element.label : ""} setFunc={setName}/>
+                <TextFieldItem label="Label" value={element.label !== undefined ? element.label : ""}
+                               setFunc={setName}/>
                 <TextFieldItem label="Level" value={level} setFunc={setLevel}/>
                 <TextFieldItem label="Potency" value={potency} setFunc={setPotency}/>
                 {attributesAndSlots}
@@ -395,8 +403,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({ elements, setElements, id, mo
                     </Select>
                 </div>
             </aside>)
-    }
-    else {
+    } else {
         return (
             <aside>
                 <div className="description">Property bar</div>

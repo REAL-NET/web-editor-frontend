@@ -2,9 +2,15 @@
     flex-direction: column;
     display: flex;
     height: 100%;
+    font-family: Calibri, serif;
 }
-
-
+aside {
+    border-left: 1px solid lightgrey;
+    padding: 5px 15px;
+    font-size: 12px;
+    background: #fcfcfc;
+    overflow: auto;
+}
 @media screen and (min-width: 768px) {
     .OverviewFlow {
         flex-direction: row;

@@ -1,6 +1,8 @@
 import React, {DragEvent, MouseEvent} from 'react';
-import ReactFlow, {addEdge, Background, Elements, removeElements, Edge, Connection, Controls, OnLoadParams, Node,
-    FlowElement,} from 'react-flow-renderer';
+import ReactFlow, {
+    addEdge, Background, Elements, removeElements, Edge, Connection, Controls, OnLoadParams, Node,
+    FlowElement,
+} from 'react-flow-renderer';
 
 import './Scene.css'
 
@@ -8,7 +10,12 @@ import ImageNode from './nodes/nodesWithImages/ImageNode';
 import RobotsModelNode from './nodes/RobotsModelNode';
 import RobotsQRealNode from './nodes/RobotsQRealNode';
 import {deleteElement} from './requests/elementRequests';
-import {AssociationMetatype, GeneralizationEdgeStyle, GeneralizationEdgeType, GeneralizationMetatype} from "./Constants";
+import {
+    AssociationMetatype,
+    GeneralizationEdgeStyle,
+    GeneralizationEdgeType,
+    GeneralizationMetatype
+} from "./Constants";
 import {
     AddSimpleAttribute, AddSimpleSlot,
     CreateAssociations,
@@ -20,14 +27,15 @@ import {
 import {AllModels} from "./requests/deepModelRequests";
 
 type SceneProps = {
-    modelName: string
-    elements: Elements
-    setElements: React.Dispatch<React.SetStateAction<Elements>>
-    reactFlowInstance: OnLoadParams | undefined
-    setReactFlowInstance: Function
-    setCurrentElementId: Function
-    captureElementClick: boolean
-    edgeType: string
+    modelName: string,
+    elements: Elements,
+    setElements: React.Dispatch<React.SetStateAction<Elements>>,
+    reactFlowInstance: OnLoadParams | undefined,
+    setReactFlowInstance: Function,
+    setCurrentElementId: Function,
+    captureElementClick: boolean,
+    edgeType: string,
+    isDeep: boolean
 }
 
 const nodeTypes = {
@@ -36,8 +44,16 @@ const nodeTypes = {
     robotsQRealNode: RobotsQRealNode,
 };
 
-const Scene: React.FC<SceneProps> = ({ elements, setElements, reactFlowInstance,
-                                         setReactFlowInstance, setCurrentElementId, captureElementClick, modelName, edgeType}) => {
+const Scene: React.FC<SceneProps> = ({
+                                         elements,
+                                         setElements,
+                                         reactFlowInstance,
+                                         setReactFlowInstance,
+                                         setCurrentElementId,
+                                         captureElementClick,
+                                         modelName,
+                                         edgeType
+                                     }) => {
     const onElementClick = async (_: MouseEvent, element: FlowElement) => {
         setCurrentElementId(element.id);
         const repoElement = await GetElement(modelName, element.id);

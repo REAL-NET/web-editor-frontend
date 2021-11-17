@@ -9,14 +9,50 @@ const robotsQRealNode: FC<NodeProps> = ({data}) => {
             <Handle
                 type="target"
                 position={Position.Top}
-                id="target"
+                id="target_1"
+                className="robotsQRealNodeHandle"
+            />
+            <Handle
+                type="target"
+                position={Position.Right}
+                id="target_2"
+                className="robotsQRealNodeHandle"
+            />
+            <Handle
+                type="target"
+                position={Position.Left}
+                id="target_3"
+                className="robotsQRealNodeHandle"
+            />
+            <Handle
+                type="target"
+                position={Position.Bottom}
+                id="target_4"
                 className="robotsQRealNodeHandle"
             />
             {data.label}
             <Handle
                 type="source"
+                position={Position.Top}
+                id="source_1"
+                className="robotsQRealNodeHandle"
+            />
+            <Handle
+                type="source"
+                position={Position.Right}
+                id="source_2"
+                className="robotsQRealNodeHandle"
+            />
+            <Handle
+                type="source"
+                position={Position.Left}
+                id="source_3"
+                className="robotsQRealNodeHandle"
+            />
+            <Handle
+                type="source"
                 position={Position.Bottom}
-                id="source"
+                id="source_4"
                 className="robotsQRealNodeHandle"
             />
         </div>

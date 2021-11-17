@@ -81,7 +81,8 @@ type PaletteBarProps = {
     modelName: string,
     setModelName: Function,
     edgeType: string,
-    setEdgeType: Function
+    setEdgeType: Function,
+    isDeep: boolean
 }
 
 const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelName, edgeType, setEdgeType}) => {
@@ -90,7 +91,7 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
     const [metamodelElements, setMetamodelElements] = useState<ElementInfo[]>([]);
     const [metamodelElementsList, setMetamodelElementsList] = useState<JSX.Element[]>([]);
 
-    useEffect(  () => {
+    useEffect(() => {
         (async () => {
             setMenuItems(await getModelsMenuItems());
         })()
@@ -115,15 +116,20 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
 
     const RobotsQRealPaletteNode = (props: { element: ElementInfo, picture: string }) => {
         return (
-            <div className="robotsQRealNode"
+            <div className='robotsQRealNodeContainer'>
+                <div className="robotsQRealNode"
                  onDragStart={(event: DragEvent) => onDragStart(event, `${props.element.model.name}$$${props.element.name}
                                 %%${props.picture}`)}
                  draggable
                  style={{
                      backgroundImage: `url(${props.picture})`,
-                     width: '100px',
-                     height: '100px',
+                     width: '50px',
+                     height: '50px'
                  }}/>
+                <div className='robotsQRealNodeName'>
+                    {props.element.name}
+                </div>
+            </div>
         );
     }
 
@@ -136,7 +142,10 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
                     picture = (await GetSlot(metamodelElement.model.name, metamodelElement.name, 'Image'))?.simpleValue;
                 }
                 if (picture !== undefined) {
-                    newMetamodelElementsList.push(RobotsQRealPaletteNode({element: metamodelElement, picture: picture}));
+                    newMetamodelElementsList.push(RobotsQRealPaletteNode({
+                        element: metamodelElement,
+                        picture: picture
+                    }));
                 } else {
                     newMetamodelElementsList.push(PaletteItem({element: metamodelElement}));
                 }
@@ -206,7 +215,7 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
             {/*{metamodelElements}*/}
             {/*Nodes with images*/}
             {/*<ImageNodeList />*/}
-            <div>
+            <div className='paletteMenuContainer'>
                 <InputLabel>Model:</InputLabel>
                 <Select
                     id="modelName"
@@ -215,11 +224,14 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
                         setModelName(evt.target.value as string);
                     }}
                 >
-                    {menuItems.map(value => <MenuItem key={value + "_" + Math.round(Math.random() * 10000000).toString()} value={value}>{value}</MenuItem>)}
+                    {menuItems.map(value =>
+                        <MenuItem key={value + "_" + Math.round(Math.random() * 10000000).toString()} value={value}>
+                            {value}
+                        </MenuItem>
+                    )}
                 </Select>
             </div>
-            <br/>
-            <div className="description">
+            <div className='paletteMenuContainer'>
                 <InputLabel>Edge:</InputLabel>
                 <Select
                     id="edgeType"
@@ -229,20 +241,21 @@ const Palette: React.FC<PaletteBarProps> = ({setElements, modelName, setModelNam
                     })}
                 >
                     <MenuItem key='AssociationMetatype' value={AssociationMetatype}>{AssociationMetatype}</MenuItem>
-                    <MenuItem key='GeneralizationMetatype' value={GeneralizationMetatype}>{GeneralizationMetatype}</MenuItem>
+                    <MenuItem key='GeneralizationMetatype'
+                              value={GeneralizationMetatype}>{GeneralizationMetatype}</MenuItem>
                     {edgesMetatypes.map(value =>
-                            <MenuItem key={value.model.name + "$$" + value.name + "_" + Math.round(Math.random() * 10000000).toString()} value={value.model.name + "$$" + value.name}>
-                                {value.model.name + "::" + value.name}
-                            </MenuItem>
+                        <MenuItem
+                            key={value.model.name + "$$" + value.name + "_" + Math.round(Math.random() * 10000000).toString()}
+                            value={value.model.name + "$$" + value.name}>
+                            {value.model.name + "::" + value.name}
+                        </MenuItem>
                     )}
                 </Select>
             </div>
-            <br/>
-            <div className="description">
+            <div className='paletteMenuContainer'>
                 <InputLabel>Elements:</InputLabel>
+                {metamodelElementsList}
             </div>
-            <br/>
-            {metamodelElementsList}
         </aside>
     );
 };
