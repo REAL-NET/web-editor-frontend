@@ -22,12 +22,13 @@ const OverviewFlow = () => {
     return (
         <div className="OverviewFlow">
             <ReactFlowProvider>
-                <PropertyBar id={currentElementId}
-                             setElements={setElements}
-                             elements={elements}
-                             modelName={modelName}
-                             setCurrentElementId={setCurrentElementId}
-                             isDeep={isDeep}
+                <PropertyBar
+                    id={currentElementId}
+                    setElements={setElements}
+                    elements={elements}
+                    modelName={modelName}
+                    setCurrentElementId={setCurrentElementId}
+                    isDeep={isDeep}
                 />
                 <Scene
                     modelName={modelName}

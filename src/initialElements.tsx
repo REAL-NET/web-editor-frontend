@@ -101,7 +101,8 @@ const getElements = async (modelName: string) => {
                         sourceHandle: sourceHandle,
                         target: currentRelationship.target.name,
                         targetHandle: targetHandle,
-                        label: currentRelationship.name
+                        label: currentRelationship.name,
+                        type: 'smoothstep',
                     };
 
                     const attributes = await GetAttributes(modelName, value.name);
@@ -162,7 +163,8 @@ const getElements = async (modelName: string) => {
                         sourceHandle: sourceHand !== undefined ? sourceHand : sourceHandle,
                         target: currentRelationship.target.name,
                         targetHandle: targetHand !== undefined ? targetHand : targetHandle,
-                        label: currentRelationship.name
+                        label: currentRelationship.name,
+                        type: 'smoothstep',
                     };
                     if (currentRelationship.type === GeneralizationMetatype) {
                         return {
@@ -171,7 +173,6 @@ const getElements = async (modelName: string) => {
                             style: GeneralizationEdgeStyle
                         };
                     }
-                    console.log(edge)
                     return edge;
                 }
                 return undefined;

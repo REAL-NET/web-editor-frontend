@@ -71,37 +71,42 @@ const PropertyBar: React.FC<PropertyBarProps> = ({
 
     const firstRender = useFirstRender();
 
-    const attributesAndSlots =
-        (
-            <div>
-                <div className='propertyBarMenuContainer'>
-                    <FormLabel>Attributes:</FormLabel>
-                    {
-                        attributes?.map(value =>
-                            <div key={value + "_" + Math.round(Math.random() * 10000000).toString()}>
-                                <label>{value.name}: {value.type.name} L:{value.level} P:{value.potency}</label>
-                            </div>)
-                    }
-                    <Button onClick={() => setAddAttributeOpen(true)} fullWidth={true}>Add Attribute</Button>
-                    <AttributeDialog open={addAttributeOpen} setOpen={setAddAttributeOpen} modelName={modelName}
-                                     elementName={element?.id || ""}
-                                     setAttributes={setAttributes}/>
+    const attributesAndSlots = () => {
+        if (isDeep) {
+            return (
+                <div>
+                    <div className='propertyBarMenuContainer'>
+                        <FormLabel>Attributes:</FormLabel>
+                        {
+                            attributes?.map(value =>
+                                <div key={value + "_" + Math.round(Math.random() * 10000000).toString()}>
+                                    <label>{value.name}: {value.type.name} L:{value.level} P:{value.potency}</label>
+                                </div>)
+                        }
+                        <Button onClick={() => setAddAttributeOpen(true)} fullWidth={true}>Add Attribute</Button>
+                        <AttributeDialog open={addAttributeOpen} setOpen={setAddAttributeOpen} modelName={modelName}
+                                         elementName={element?.id || ""}
+                                         setAttributes={setAttributes}/>
+                    </div>
+                    <div className='propertyBarMenuContainer'>
+                        <FormLabel>Slots:</FormLabel>
+                        {
+                            slots?.map(value =>
+                                <div key={value + "_" + Math.round(Math.random() * 10000000).toString()}>
+                                    <label>{value.attribute.name}: {value.value.name} L:{value.level} P:{value.potency}</label>
+                                </div>)
+                        }
+                        <Button onClick={() => setAddSlotOpen(true)} fullWidth={true}>Add Slot</Button>
+                        <SlotDialog open={addSlotOpen} setOpen={setAddSlotOpen} modelName={modelName}
+                                    elementName={element?.id || ""}
+                                    setSlots={setSlots}/>
+                    </div>
                 </div>
-                <div className='propertyBarMenuContainer'>
-                    <FormLabel>Slots:</FormLabel>
-                    {
-                        slots?.map(value =>
-                            <div key={value + "_" + Math.round(Math.random() * 10000000).toString()}>
-                                <label>{value.attribute.name}: {value.value.name} L:{value.level} P:{value.potency}</label>
-                            </div>)
-                    }
-                    <Button onClick={() => setAddSlotOpen(true)} fullWidth={true}>Add Slot</Button>
-                    <SlotDialog open={addSlotOpen} setOpen={setAddSlotOpen} modelName={modelName}
-                                elementName={element?.id || ""}
-                                setSlots={setSlots}/>
-                </div>
-            </div>
-        )
+            )
+        } else {
+            return <div/>
+        }
+    }
 
     //common effects
     useEffect(() => {

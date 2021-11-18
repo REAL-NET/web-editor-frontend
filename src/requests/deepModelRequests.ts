@@ -25,7 +25,7 @@ export const GetModel = async (modelName: string) => {
         if (response.data === undefined) {
             return undefined;
         }
-        const responseParsed: Model= response.data;
+        const responseParsed: Model = response.data;
         return responseParsed;
     } catch (error) {
         console.log(error);

@@ -4,12 +4,12 @@
     float: left;
 }
 .robotsQRealNodeHandle {
-    /*border-radius: 100%;*/
-    /*background: grey;*/
-    width: 10px;
-    height: 10px;
-    background: transparent;
-    z-index: 999;
+    border-radius: 0;
+    background: grey;
+    width: 10%;
+    height: 10%;
+    /*background: transparent;*/
+    /*z-index: 999;*/
     /*border: none;*/
     /*width: 10px;*/
     /*height: 10px;*/

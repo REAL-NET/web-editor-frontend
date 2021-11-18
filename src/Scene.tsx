@@ -18,7 +18,6 @@ import './Scene.css'
 import ImageNode from './nodes/nodesWithImages/ImageNode';
 import RobotsModelNode from './nodes/RobotsModelNode';
 import RobotsQRealNode from './nodes/RobotsQRealNode';
-import {deleteElement} from './requests/elementRequests';
 import {
     AssociationMetatype,
     GeneralizationEdgeStyle,
@@ -120,6 +119,7 @@ const Scene: React.FC<SceneProps> = ({
         }
         edge.id = name;
         edge.label = name;
+        edge.type = 'smoothstep';
         setElements((elements: Elements) => addEdge(edgeParas, elements));
     };
 
@@ -222,7 +222,7 @@ const Scene: React.FC<SceneProps> = ({
                 onLoad={onLoad}
                 onConnect={onConnect}
                 nodeTypes={nodeTypes}
-                deleteKeyCode={46}
+                deleteKeyCode='Delete'
                 snapToGrid
                 snapGrid={[25, 25]}
                 onDrop={onDrop}
