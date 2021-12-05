@@ -35,7 +35,6 @@ import {
     InstantiateNode,
     SetSimpleSlotValue,
 } from "./requests/deepElementRequests";
-import {AllModels} from "./requests/deepModelRequests";
 
 type SceneProps = {
     modelName: string,
@@ -64,6 +63,20 @@ const Scene: React.FC<SceneProps> = ({
                                          modelName,
                                          edgeType
                                      }) => {
+    const getUniqueId = () => {
+        let maxId = 0;
+        elements.forEach(element => {
+            const index = element.id.indexOf('_');
+            if (index > -1) {
+                const currentId = element.id.substr(index + 1, element.id.length - index);
+                if (+currentId > maxId) {
+                    maxId = +currentId;
+                }
+            }
+        })
+        return ++maxId;
+    }
+
     const onElementClick = async (_: MouseEvent, element: FlowElement) => {
         setCurrentElementId(element.id);
         const repoElement = await GetElement(modelName, element.id);
@@ -87,20 +100,19 @@ const Scene: React.FC<SceneProps> = ({
     };
 
     const onLoad = async (_reactFlowInstance: OnLoadParams) => {
-        await AllModels();
         setReactFlowInstance(_reactFlowInstance);
-    };
+    }
 
     const onConnect = async (edgeParas: Edge | Connection) => {
         const edge = edgeParas as Edge;
         let name: string, metaType: string = "", metaModel: string = "";
         if (edgeType === AssociationMetatype || edgeType === GeneralizationMetatype) {
-            name = `${edgeType}_${edgeParas.sourceHandle}-${edgeParas.targetHandle}`;
+            name = edgeType + '_' + getUniqueId().toString();
         } else {
             const sepIndex = edgeType.indexOf("$$");
             metaType = edgeType.substr(sepIndex + 2);
             metaModel = edgeType.substr(0, sepIndex);
-            name = `${metaType}__${edgeParas.sourceHandle}-${edgeParas.targetHandle}`;
+            name = metaType + '_' + getUniqueId().toString();
         }
         if (edgeParas.source != null && edgeParas.target != null) {
             if (edgeType === AssociationMetatype) {
@@ -132,8 +144,7 @@ const Scene: React.FC<SceneProps> = ({
             const metaType = pictureSepIndex > -1 ? metaInfo.substr(sepIndex + 2, metaInfo.length - sepIndex - pictureSepIndex + 2)
                 : metaInfo.substr(sepIndex + 2);
             const metaModel = metaInfo.substr(0, sepIndex);
-            const id = Math.round(Math.random() * 10000000).toString();
-            const name = metaType + "_" + id;
+            const name = metaType + '_' + getUniqueId().toString();
             const node = await InstantiateNode(modelName, name, metaModel, metaType);
             if (node !== undefined) {
                 const position = reactFlowInstance.project({x: event.clientX, y: event.clientY - 40});
@@ -167,7 +178,7 @@ const Scene: React.FC<SceneProps> = ({
                         },
                     };
                 }
-                setElements((es: Elements) => es.concat(newNode));
+                setElements((elements: Elements) => elements.concat(newNode));
             } else {
                 console.error("Some error on adding element");
             }
@@ -185,6 +196,10 @@ const Scene: React.FC<SceneProps> = ({
 
     const onEdgeUpdate = async (oldEdge: Edge, newConnection: Connection) => {
         if (oldEdge.target === newConnection.target && oldEdge.source === newConnection.source) {
+            if (oldEdge.targetHandle === newConnection.targetHandle && oldEdge.sourceHandle === newConnection.sourceHandle) {
+                return;
+            }
+
             await SetSimpleSlotValue(modelName, oldEdge.id, 'sourceHandle', `${newConnection.sourceHandle}`);
             await SetSimpleSlotValue(modelName, oldEdge.id, 'targetHandle', `${newConnection.targetHandle}`);
             setElements((els) => updateEdge(oldEdge, newConnection, els));

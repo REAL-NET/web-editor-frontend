@@ -93,8 +93,8 @@ const getElements = async (modelName: string) => {
             edges = await Promise.all(model.relationships.map(async value => {
                 const currentRelationship = await GetRelationship(modelName, value.name);
                 if (currentRelationship !== undefined) {
-                    let sourceHandle = '3';
-                    let targetHandle = '1';
+                    let sourceHandle = 'bottom';
+                    let targetHandle = 'top';
                     let edge = {
                         id: currentRelationship.name,
                         source: currentRelationship.source.name,

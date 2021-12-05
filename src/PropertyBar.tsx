@@ -36,7 +36,6 @@ const PropertyBar: React.FC<PropertyBarProps> = ({
                                                      isDeep
                                                  }) => {
     const element = elements.find(item => item.id === id)
-    const idNumber: number = +id;
 
     const [addAttributeOpen, setAddAttributeOpen] = useState(false);
     const [addSlotOpen, setAddSlotOpen] = useState(false);
@@ -304,7 +303,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({
                 <div hidden={!isDeep}>
                     <TextFieldItem label="Level" value={level} setFunc={setLevel}/>
                     <TextFieldItem label="Potency" value={potency} setFunc={setPotency}/>
-                    {attributesAndSlots}
+                    {attributesAndSlots()}
                 </div>
                 <TextFieldItem label="Background" value={nodeBg} setFunc={setNodeBg}/>
                 <div>
@@ -341,7 +340,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({
                 <div hidden={!isDeep}>
                     <TextFieldItem label="Level" value={level} setFunc={setLevel}/>
                     <TextFieldItem label="Potency" value={potency} setFunc={setPotency}/>
-                    {attributesAndSlots}
+                    {attributesAndSlots()}
                 </div>
                 <div>
                     <label>Hidden:</label>

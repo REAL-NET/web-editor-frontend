@@ -9,26 +9,26 @@ const robotsQRealNode: FC<NodeProps> = ({data}) => {
             <Handle
                 type="source"
                 position={Position.Top}
-                id="1"
+                id="top"
                 className="robotsQRealNodeHandle"
             />
             <Handle
                 type="source"
                 position={Position.Right}
-                id="2"
+                id="right"
                 className="robotsQRealNodeHandle"
             />
             {data.label}
             <Handle
                 type="source"
                 position={Position.Bottom}
-                id="3"
+                id="bottom"
                 className="robotsQRealNodeHandle"
             />
             <Handle
                 type="source"
                 position={Position.Left}
-                id="4"
+                id="left"
                 className="robotsQRealNodeHandle"
             />
         </div>

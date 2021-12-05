@@ -12,7 +12,7 @@ document.addEventListener('click', e => (e.target));
 
 const OverviewFlow = () => {
     const [reactFlowInstance, setReactFlowInstance] = useState<OnLoadParams>();
-    const [modelName, setModelName] = useState("RobotsQRealModel");
+    const [modelName, setModelName] = useState("Query");
     const [elements, setElements] = useState<Elements>([]);
     const [captureElementClick,] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
