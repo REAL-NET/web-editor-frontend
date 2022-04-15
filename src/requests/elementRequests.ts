@@ -1,7 +1,6 @@
 import api from './api'
-import {Elements} from 'react-flow-renderer';
 
-import {addAttribute, addEdgeAttributes, addNodeAttributes, getAttributeValue} from './attributesRequests';
+import {addAttribute} from './attributeRequests';
 import {getModelEdges} from './modelRequests';
 
 export const getEdge = async (modelName: string, id: number) => {
@@ -21,57 +20,6 @@ export const getNode = async (modelName: string, id: number) => {
         console.log(error);
     }
 };
-
-export const getModelElements = async (modelName: string, nodes: Array<{ id: number, name: string }>, edges: Array<{ id: number, name: string }>): Promise<Elements> => {
-    let elements: Elements = [];
-    for (let i = 0, length = nodes.length; i < length; ++i) {
-        await getNode(modelName, nodes[i].id).then(data => {
-            if (data !== undefined) {
-                const id: number = +JSON.stringify(data.id);
-                Promise.all([getAttributeValue(modelName, id, 'xCoordinate'), getAttributeValue(modelName, id, 'yCoordinate')]).then(attributeValues => {
-                    if (attributeValues[0] === undefined || attributeValues[0].length === 0 || attributeValues[1] === undefined || attributeValues[1].length === 0) {
-                        addAttribute(modelName, id, 'xCoordinate', '0');
-                        addAttribute(modelName, id, 'yCoordinate', '0');
-                        elements.push(
-                            {
-                                id: `${data.id}`,
-                                type: 'robotsNode',
-                                data: {label: data.name},
-                                position: {x: 0, y: 0},
-                            }
-                        );
-                    } else {
-                        elements.push(
-                            {
-                                id: `${data.id}`,
-                                type: 'robotsNode',
-                                data: {label: data.name},
-                                position: {x: attributeValues[0], y: attributeValues[1]},
-                            }
-                        );
-                    }
-                });
-            }
-        });
-    }
-
-    for (let i = 0, length = edges.length; i < length; ++i) {
-        await getEdge(modelName, edges[i].id).then(data => {
-            if (data !== undefined) {
-                elements.push(
-                    {
-                        id: `${data.id}`,
-                        source: `${data.from.id}`,
-                        target: `${data.to.id}`,
-                        label: `${data.name}`
-                    }
-                );
-            }
-        })
-    }
-
-    return elements;
-}
 
 export const setElementName = async (modelName: string, id: number, value: string) => {
     try {
@@ -109,26 +57,30 @@ export const setEdgeToElement = async (modelName: string, edgeId: number, elemen
     }
 }
 
-export const addNodeElement = async (modelName: string, parentsId: number, type: string, xCoordinate: number, yCoordinate: number) => {
+export const addNodeElement = async (modelName: string, parentsId: number, kind: string, xCoordinate: number, yCoordinate: number) => {
     let id = '';
     let newNode = {
         id: '',
         type: '',
+        className: '',
         position: {x: 0, y: 0},
         data: {label: ''},
+        dragHandle: ''
     }
     await addElement(modelName, parentsId).then((newNodeId: string) => {
         id = newNodeId;
         return Promise.all([getNode(modelName, +newNodeId), addAttribute(modelName, +newNodeId, 'xCoordinate', `${xCoordinate}`),
             addAttribute(modelName, +newNodeId, 'yCoordinate', `${yCoordinate}`)]);
-    }).then(data => {
-        const nodeName = data[0].name;
-        // addNodeAttributes(modelName, +id);
+        }).then(data => {
+        const name = kind !== 'materializationPlank' ? data[0].name : '';
+        const dragHandle = kind === 'materializationPlank' ? '.materializationPlankNodeHandle' : '.nodeHandle';
         newNode = {
             id: `${id}`,
-            type,
+            type: `${kind}Node`,
+            className: `${kind}Node`,
             position: {x: xCoordinate, y: yCoordinate},
-            data: {label: `${nodeName}`},
+            data: {label: `${name}`},
+            dragHandle: dragHandle
         };
     });
     return newNode;
