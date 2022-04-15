@@ -1,0 +1,76 @@
+.operatorNode {
+    border: 1px solid #b85450;
+    padding: 10px;
+    background: #f8cecc;
+    width: max-content;
+    height: max-content;
+}
+
+.operatorInternalsNode {
+    border: 1px solid #6c8ebf;
+    padding: 10px;
+    background: #dae8fc;
+    width: max-content;
+    height: max-content;
+}
+
+.readerNode {
+    border: 1px solid #d6b656;
+    border-radius: 10%;
+    padding: 10px;
+    background: #fff2cc;
+    width: max-content;
+    height: max-content;
+}
+
+.materializationPlankNode {
+    /*width: 280px;*/
+    height: 0;
+    z-index: 100;
+    border: 1px dashed #6d1f00;
+}
+
+.nodeResizeHandle {
+    /*left: 50%;*/
+    /*borderRadius: 0%;*/
+    /*background: grey;*/
+    /*width: 7px;*/
+    /*height: 7px;*/
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    left: 0;
+}
+
+.nodeHandle {
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    width: 8px;
+    height: 8px;
+    background-color: #1153aa;
+    opacity: 0.75;
+    border-radius: 4px;
+    cursor: se-resize;
+}
+
+.materializationPlankNodeResizeHandle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    left: 0;
+}
+
+.materializationPlankNodeHandle {
+    position: absolute;
+    bottom: -1px;
+    right: -2px;
+    width: 2px;
+    height: 2px;
+    background-color: #1153aa;
+    opacity: 0.75;
+    border-radius: 4px;
+    cursor: se-resize;
+}
