@@ -18,18 +18,4 @@ modelRouter.get('/model/:modelName', function (req, res) {
         });
 });
 
-// Gets metamodel
-modelRouter.get('/metamodel/:metamodelName', function (req, res) {
-    const metamodelName = req.params.metamodelName;
-    axios
-        .get(`${host}/Model/` + metamodelName)
-        .then(response => {
-            res.send(response.data);
-        })
-        .catch(error => {
-            console.log(error.message);
-            res.send([]);
-        });
-});
-
 export default modelRouter;

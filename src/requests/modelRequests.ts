@@ -26,12 +26,3 @@ export const getModelEdges = async (modelName: string) => {
         console.log(error);
     }
 };
-
-export const getMetamodel = async (metamodelName: string) => {
-    try {
-        const response = await api.get(`model/metamodel/${metamodelName}`);
-        return response.data.elements;
-    } catch (error) {
-        console.log(error);
-    }
-};
