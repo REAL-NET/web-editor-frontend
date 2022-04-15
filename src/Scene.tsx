@@ -1,46 +1,59 @@
-import React, {DragEvent, MouseEvent, useEffect} from 'react';
+import React, {DragEvent, MouseEvent, useCallback} from 'react';
 import ReactFlow, {
-    addEdge,
     Background,
-    Elements,
-    removeElements,
+    applyNodeChanges,
+    applyEdgeChanges,
+    addEdge,
     Edge,
     Connection,
     Controls,
-    OnLoadParams,
     Node,
-    FlowElement,
+    ReactFlowInstance,
 } from 'react-flow-renderer';
 
 import './Scene.css'
 
-import ImageNode from './nodesWithImages/ImageNode';
-import RobotsModelNode from './RobotsModelNode';
-import {setAttributeValue} from './requests/attributesRequests';
+import OperatorNode from './nodes/OperatorNode';
+import OperatorInternalsNode from './nodes/OperatorInternalsNode';
+import ReaderNode from './nodes/ReaderNode';
+import MaterializationPlankNode from './nodes/MaterializationPlankNode';
+import ImageNode from './nodes/ImageNode';
+import RobotsModelNode from './nodes/RobotsModelNode';
+import {setAttributeValue} from './requests/attributeRequests';
 import {deleteElement, addEdgeElement, getEdge, addNodeElement} from './requests/elementRequests';
 
 type SceneProps = {
     modelName: string
     metamodelName: string
-    elements: Elements
-    setElements: React.Dispatch<React.SetStateAction<Elements>>
-    reactFlowInstance: OnLoadParams | undefined
+    nodes: Node[]
+    edges: Edge[]
+    setNodes: React.Dispatch<React.SetStateAction<Node[]>>
+    setEdges: React.Dispatch<React.SetStateAction<Edge[]>>
+    reactFlowInstance: ReactFlowInstance | undefined
     setReactFlowInstance: Function
     setCurrentElementId: Function
     captureElementClick: boolean
 }
 
 const nodeTypes = {
+    operatorNode: OperatorNode,
+    operatorInternalsNode: OperatorInternalsNode,
+    readerNode: ReaderNode,
+    materializationPlankNode: MaterializationPlankNode,
     robotsNode: RobotsModelNode,
     imageNode: ImageNode,
 };
 
 const Scene: React.FC<SceneProps> = ({
-                                         modelName, metamodelName, elements, setElements, reactFlowInstance,
+                                         modelName, metamodelName, nodes, edges, setNodes, setEdges, reactFlowInstance,
                                          setReactFlowInstance, setCurrentElementId, captureElementClick
                                      }) => {
-    const onElementClick = (_: MouseEvent, element: FlowElement) => {
-        setCurrentElementId(element.id);
+    const onNodeClick = (_: MouseEvent, node: Node) => {
+        setCurrentElementId(node.id);
+    };
+
+    const onEdgeClick = (_: MouseEvent, edge: Edge) => {
+        setCurrentElementId(edge.id);
     };
 
     // Any node moving
@@ -49,14 +62,19 @@ const Scene: React.FC<SceneProps> = ({
         event.dataTransfer.dropEffect = 'move';
     };
 
-    const onElementsRemove = (elementsToRemove: Elements): void => {
-        setElements((elements: Elements) => removeElements(elementsToRemove, elements));
-        elementsToRemove.forEach(element => {
-            deleteElement(modelName, +element.id);
-        })
-    };
+    // TODO: add delete handling with backend
+    const onNodesChange = useCallback(
+        (changes) => setNodes((ns) => applyNodeChanges(changes, ns)),
+        []
+    );
+    
+    // TODO: add delete handling with backend
+    const onEdgesChange = useCallback(
+        (changes) => setEdges((es) => applyEdgeChanges(changes, es)),
+        []
+    );
 
-    const onLoad = (_reactFlowInstance: OnLoadParams) => setReactFlowInstance(_reactFlowInstance);
+    const onInit = (_reactFlowInstance: ReactFlowInstance) => setReactFlowInstance(_reactFlowInstance);
 
     const onConnect = (edgeParas: Edge | Connection): void => {
         addEdgeElement(metamodelName, modelName, edgeParas.source !== null ? +edgeParas.source : -1,
@@ -69,7 +87,7 @@ const Scene: React.FC<SceneProps> = ({
                         target: `${edgeParas.target}`,
                         label: `${edge.name}`
                     }
-                    setElements((es: Elements) => es.concat(newLink));
+                    setEdges((edges: Edge[]) => addEdge(newLink, edges));
                 });
             }
         });
@@ -77,7 +95,10 @@ const Scene: React.FC<SceneProps> = ({
 
     let id = 0;
     const getId = function (): string {
-        while (elements.find(item => item.id === `${id}`) !== undefined) {
+        while (nodes.find(item => item.id === `${id}`) !== undefined) {
+            ++id;
+        }
+        while (edges.find(item => item.id === `${id}`) !== undefined) {
             ++id;
         }
         return `${id}`;
@@ -87,16 +108,16 @@ const Scene: React.FC<SceneProps> = ({
         event.preventDefault();
         if (reactFlowInstance) {
             const data = event.dataTransfer.getData('application/reactflow').split(' ');
-            const type = data[0];
+            const kind = data[0];
             const position = reactFlowInstance.project({x: event.clientX - 280, y: event.clientY - 40});
 
             let newNode: Node;
-            if (type === 'ImageNode') {
+            if (kind === 'ImageNode') {
                 newNode = {
                     id: getId(),
                     type: 'imageNode',
                     position,
-                    data: {label: `${type}`},
+                    data: {label: `${kind}`},
                     style: {
                         backgroundImage: data[1],
                         height: Number(data[2]),
@@ -108,11 +129,11 @@ const Scene: React.FC<SceneProps> = ({
                         alignItems: 'center',
                     }
                 };
-                setElements((es: Elements) => es.concat(newNode));
+                setNodes((nodes: Node[]) => nodes.concat(newNode));
             } else {
                 const parentsId = data[1];
-                addNodeElement(modelName, +parentsId, type, position.x, position.y).then(node => {
-                    setElements((es: Elements) => es.concat(node));
+                addNodeElement(modelName, +parentsId, kind, position.x, position.y).then(node => {
+                    setNodes((nodes: Node[]) => nodes.concat(node));
                 })
             }
         }
@@ -128,18 +149,21 @@ const Scene: React.FC<SceneProps> = ({
     return (
         <div className="Scene">
             <ReactFlow
-                elements={elements}
-                onElementsRemove={onElementsRemove}
-                onLoad={onLoad}
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onInit={onInit}
                 onConnect={onConnect}
                 nodeTypes={nodeTypes}
-                deleteKeyCode={46}
+                deleteKeyCode={'46'}
                 snapToGrid
                 snapGrid={[25, 25]}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onNodeDragStop={onNodeDragStop}
-                onElementClick={captureElementClick ? onElementClick : undefined}
+                onNodeClick={captureElementClick ? onNodeClick : undefined}
+                onEdgeClick={captureElementClick ? onEdgeClick : undefined}
             >
                 <Controls/>
                 <Background>
