@@ -1,7 +1,7 @@
 import React from 'react';
-import { Elements } from 'react-flow-renderer';
+import {Edge, Node} from 'react-flow-renderer';
 
-let initialElements : Elements = [
+let initialNodes : Node[] = [
     {
         id: 'cn1',
         type: 'exampleNode',
@@ -82,6 +82,9 @@ let initialElements : Elements = [
         data: { label: 'Another output node' },
         position: { x: 400, y: 450 },
     },
+];
+
+let initialEdges: Edge[] = [
     { id: 'e1-2', source: '1', target: '2', label: 'this is an edge label' },
     { id: 'e1-3', source: '1', target: '3' },
     {
@@ -113,7 +116,7 @@ let initialElements : Elements = [
         label: 'a step edge',
         animated: true,
         labelStyle: { fill: '#f6ab6c', fontWeight: 700 },
-    },
-];
+    }
+]
 
-export {initialElements};
+export {initialNodes, initialEdges};
