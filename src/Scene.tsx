@@ -21,7 +21,14 @@ import MaterializationPlankNode from './nodes/MaterializationPlankNode';
 import ImageNode from './nodes/ImageNode';
 import RobotsModelNode from './nodes/RobotsModelNode';
 import {setAttributeValue} from './requests/attributeRequests';
-import {addEdgeElement, addNodeElement, getEdge} from './requests/elementRequests';
+import {
+    addElement,
+    getEdge,
+    getNode,
+    setEdgeFromElement,
+    setEdgeToElement
+} from './requests/elementRequests';
+import {getModelEdges} from "./requests/modelRequests";
 
 type SceneProps = {
     modelName: string
@@ -146,6 +153,52 @@ const Scene: React.FC<SceneProps> = ({
         setAttributeValue(modelName, +node.id, 'xCoordinate', `${node.position.x}`);
         setAttributeValue(modelName, +node.id, 'yCoordinate', `${node.position.y}`);
     };
+
+    const addNodeElement = async (modelName: string, parentsId: number, kind: string, xCoordinate: number, yCoordinate: number) => {
+        let id = '';
+        let newNode: Node = {
+            data: {},
+            id: '',
+            position: {x: -1, y: -1}
+        }
+        await addElement(modelName, parentsId).then((newNodeId: string) => {
+            id = newNodeId;
+            return Promise.all([getNode(modelName, +newNodeId), setAttributeValue(modelName, +newNodeId, 'xCoordinate', `${xCoordinate}`),
+                setAttributeValue(modelName, +newNodeId, 'yCoordinate', `${yCoordinate}`)]);
+        }).then(data => {
+            const name = kind !== 'materializationPlank' ? data[0].name : '';
+            const dragHandle = kind === 'materializationPlank' ? '.materializationPlankNodeHandle' : '.nodeHandle';
+            const style = kind === 'materializationPlank' ? {zIndex: 100} : {};
+            newNode = {
+                id: `${id}`,
+                type: `${kind}Node`,
+                className: `${kind}Node`,
+                position: {x: xCoordinate, y: yCoordinate},
+                data: {label: `${name}`},
+                dragHandle: dragHandle,
+                style: style
+            };
+        });
+        return newNode;
+    }
+
+    const addEdgeElement = async (metamodelName: string, modelName: string, fromElementId: number, toElementId: number): Promise<string> => {
+        let id = '';
+        await getModelEdges(metamodelName).then((edges: Array<{id: number, name: string}>) => {
+            for (let i = 0, length = edges.length; i < length; ++i) {
+                if (edges[i].name === 'Link') {
+                    return getEdge(metamodelName, edges[i].id)
+                }
+            }
+        }).then((edge: {id: number, name: string}) => {
+            return addElement(modelName, edge.id);
+        }).then((newEdgeId: string) => {
+            setEdgeFromElement(modelName, +newEdgeId, fromElementId);
+            setEdgeToElement(modelName, +newEdgeId, toElementId);
+            id = newEdgeId;
+        });
+        return id;
+    }
 
     return (
         <div className="Scene">

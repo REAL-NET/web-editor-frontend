@@ -1,7 +1,4 @@
-import api from './api'
-
-import {addAttribute, setAttributeValue} from './attributeRequests';
-import {getModelEdges} from './modelRequests';
+import api from './api';
 
 export const getEdge = async (modelName: string, id: number) => {
     try {
@@ -55,54 +52,6 @@ export const setEdgeToElement = async (modelName: string, edgeId: number, elemen
     } catch (error) {
         console.log(error);
     }
-}
-
-export const addNodeElement = async (modelName: string, parentsId: number, kind: string, xCoordinate: number, yCoordinate: number) => {
-    let id = '';
-    let newNode = {
-        id: '',
-        type: '',
-        className: '',
-        position: {x: 0, y: 0},
-        data: {label: ''},
-        dragHandle: ''
-    }
-    await addElement(modelName, parentsId).then((newNodeId: string) => {
-        id = newNodeId;
-        return Promise.all([getNode(modelName, +newNodeId), setAttributeValue(modelName, +newNodeId, 'xCoordinate', `${xCoordinate}`),
-            setAttributeValue(modelName, +newNodeId, 'yCoordinate', `${yCoordinate}`)]);
-        }).then(data => {
-        const name = kind !== 'materializationPlank' ? data[0].name : '';
-        const dragHandle = kind === 'materializationPlank' ? '.materializationPlankNodeHandle' : '.nodeHandle';
-        newNode = {
-            id: `${id}`,
-            type: `${kind}Node`,
-            className: `${kind}Node`,
-            position: {x: xCoordinate, y: yCoordinate},
-            data: {label: `${name}`},
-            dragHandle: dragHandle
-        };
-    });
-    return newNode;
-}
-
-export const addEdgeElement = async (metamodelName: string, modelName: string, fromElementId: number, toElementId: number): Promise<string> => {
-    let id = '';
-    await getModelEdges(metamodelName).then((edges: Array<{id: number, name: string}>) => {
-        for (let i = 0, length = edges.length; i < length; ++i) {
-            if (edges[i].name === 'Link') {
-                return getEdge(metamodelName, edges[i].id)
-            }
-        }
-    }).then((edge: {id: number, name: string}) => {
-        return addElement(modelName, edge.id);
-    }).then((newEdgeId: string) => {
-        setEdgeFromElement(modelName, +newEdgeId, fromElementId);
-        setEdgeToElement(modelName, +newEdgeId, toElementId);
-        // addEdgeAttributes(modelName, +newEdgeId);
-        id = newEdgeId;
-    });
-    return id;
 }
 
 export const deleteElement = async (modelName: string, id: number) => {
