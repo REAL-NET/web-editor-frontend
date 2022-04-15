@@ -1,22 +1,24 @@
 import React, {useState, useEffect} from 'react';
-import {Elements, OnLoadParams, ReactFlowProvider} from 'react-flow-renderer';
+import {Edge, Node, ReactFlowInstance, ReactFlowProvider} from 'react-flow-renderer';
 
 import PropertyBar from './PropertyBar'
 import Palette from './Palette';
 import Scene from './Scene';
 import {getModelNodes, getModelEdges} from './requests/modelRequests';
-import {getModelElements} from './requests/elementRequests';
+import {getEdge, getNode} from './requests/elementRequests';
 
 import './App.css';
+import {addAttribute, getAttributeValue} from "./requests/attributeRequests";
 
 document.addEventListener('click', e => (e.target));
 
 const OverviewFlow = () => {
-    const modelName = 'RobotsTestModel';
-    const metamodelName = 'RobotsMetamodel';
+    const modelName = 'QueryModel';
+    const metamodelName = 'QueryMetamodel';
 
-    const [reactFlowInstance, setReactFlowInstance] = useState<OnLoadParams>();
-    const [elements, setElements] = useState<Elements>([]);
+    const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance>();
+    const [nodes, setNodes] = useState<Node[]>([]);
+    const [edges, setEdges] = useState<Edge[]>([]);
     const [captureElementClick, setCaptureElementClick] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
 
@@ -35,19 +37,93 @@ const OverviewFlow = () => {
                     edges.push(element);
                 });
             }
-            getModelElements(modelName, nodes, edges).then(modelElements => setElements(modelElements));
+            getNodes(modelName, nodes).then(nodes => setNodes(nodes));
+            getEdges(modelName, edges).then(edges => setEdges(edges));
         });
     }, []);
+
+
+
+    const getNodes = async (modelName: string, nodes: Array<{ id: number, name: string }> ): Promise<Node[]> => {
+        let currentNodes: Node[] = [];
+        for (let i = 0, length = nodes.length; i < length; ++i) {
+            await getNode(modelName, nodes[i].id).then(data => {
+                if (data !== undefined) {
+                    const id: number = +JSON.stringify(data.id);
+                    Promise.all([getAttributeValue(modelName, id, 'xCoordinate'), getAttributeValue(modelName, id, 'yCoordinate'), getAttributeValue(modelName, id, 'kind')]).then(attributeValues => {
+                        const kind = attributeValues[2] ?? 'unknown';
+                        const name = kind !== 'materializationPlank' && kind !== 'operationInternals' ? data.name : '';
+                        const dragHandle = kind === 'materializationPlank' ? '.materializationPlankNodeHandle' : '.nodeHandle';
+                        if (attributeValues[0] === undefined || attributeValues[0].length === 0 || attributeValues[1] === undefined || attributeValues[1].length === 0) {
+                            addAttribute(modelName, id, 'xCoordinate', '0');
+                            addAttribute(modelName, id, 'yCoordinate', '0');
+                            currentNodes.push(
+                                {
+                                    id: `${data.id}`,
+                                    type: `${kind}Node`,
+                                    className: `${kind}Node`,
+                                    data: {label: name},
+                                    position: {x: 0, y: 0},
+                                    dragHandle: dragHandle
+                                }
+                            );
+                        } else {
+                            currentNodes.push(
+                                {
+                                    id: `${data.id}`,
+                                    type: `${kind}Node`,
+                                    className: `${kind}Node`,
+                                    data: {label: name},
+                                    position: {x: attributeValues[0], y: attributeValues[1]},
+                                    dragHandle: dragHandle
+                                }
+                            );
+                        }
+                    });
+                }
+            });
+        }
+
+        return currentNodes;
+    }
+
+    const getEdges = async (modelName: string, edges: Array<{ id: number, name: string }>): Promise<Edge[]> => {
+        let currentEdges: Edge[] = [];
+        for (let i = 0, length = edges.length; i < length; ++i) {
+            await getEdge(modelName, edges[i].id).then(data => {
+                if (data !== undefined) {
+                    currentEdges.push(
+                        {
+                            id: `${data.id}`,
+                            source: `${data.from.id}`,
+                            target: `${data.to.id}`,
+                            label: `${data.name}`
+                        }
+                    );
+                }
+            })
+        }
+        return currentEdges;
+    }
 
     return (
         <div className="OverviewFlow">
             <ReactFlowProvider>
-                <PropertyBar modelName={modelName} id={currentElementId} setElements={setElements} elements={elements}/>
+                <PropertyBar
+                    modelName={modelName}
+                    id={currentElementId}
+                    nodes={nodes}
+                    edges={edges}
+                    setNodes={setNodes}
+                    setEdges={setEdges}
+                />
                 <Scene
                     modelName={modelName}
                     metamodelName={metamodelName}
-                    elements={elements}
-                    setElements={setElements}
+                    nodes={nodes}
+                    edges={edges}
+                    setNodes={setNodes}
+                    setEdges={setEdges}
                     reactFlowInstance={reactFlowInstance}
                     setReactFlowInstance={setReactFlowInstance}
                     setCurrentElementId={setCurrentElementId}
