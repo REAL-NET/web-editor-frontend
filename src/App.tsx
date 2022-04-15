@@ -56,6 +56,7 @@ const OverviewFlow = () => {
                         const kind = attributeValues[2] ?? 'unknown';
                         const name = kind !== 'materializationPlank' && kind !== 'operationInternals' ? data.name : '';
                         const dragHandle = kind === 'materializationPlank' ? '.materializationPlankNodeHandle' : '.nodeHandle';
+                        const style = kind === 'materializationPlank' ? {zIndex: 100} : {};
                         if (attributeValues[0] === undefined || attributeValues[0].length === 0 || attributeValues[1] === undefined || attributeValues[1].length === 0) {
                             addAttribute(modelName, id, 'xCoordinate', '0');
                             addAttribute(modelName, id, 'yCoordinate', '0');
@@ -66,7 +67,8 @@ const OverviewFlow = () => {
                                     className: `${kind}Node`,
                                     data: {label: name},
                                     position: {x: 0, y: 0},
-                                    dragHandle: dragHandle
+                                    dragHandle: dragHandle,
+                                    style: style
                                 }
                             );
                         } else {

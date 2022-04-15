@@ -13,7 +13,7 @@ const readerNode: FC<NodeProps> = ({data}) => {
                 id="source1"
             />
             <ResizableBox width={80} height={30} handle={<div className='nodeResizeHandle'></div>} draggableOpts={{ grid: [5, 5] }} minConstraints={[80, 30]}>
-                <span>{data.label}</span>
+                <span className='label'>{data.label}</span>
             </ResizableBox>
             <Handle
                 type="source"

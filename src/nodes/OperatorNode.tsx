@@ -13,8 +13,8 @@ const operatorNode: FC<NodeProps> = ({data}) => {
                 position={Position.Top}
                 id="source1"
             />
-            <ResizableBox width={80} height={30} handle={<div className='nodeResizeHandle'></div>} draggableOpts={{ grid: [5, 55] }} minConstraints={[80, 30]}>
-                <span>{data.label}</span>
+            <ResizableBox width={80} height={30} handle={<div className='nodeResizeHandle'></div>} draggableOpts={{ grid: [5, 5] }} minConstraints={[80, 30]}>
+                <span className='label'>{data.label}</span>
             </ResizableBox>
             <Handle
                 type="source"
