@@ -67,7 +67,7 @@ const Scene: React.FC<SceneProps> = ({
         (changes) => setNodes((ns) => applyNodeChanges(changes, ns)),
         []
     );
-    
+
     // TODO: add delete handling with backend
     const onEdgesChange = useCallback(
         (changes) => setEdges((es) => applyEdgeChanges(changes, es)),

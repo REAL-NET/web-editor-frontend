@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {Elements, isNode, isEdge} from 'react-flow-renderer';
+import {isNode, isEdge, Node, Edge} from 'react-flow-renderer';
 import {MenuItem, Select, Checkbox, TextField, InputLabel} from '@material-ui/core';
 
-import {getNodeAttributes, getEdgeAttributes, setAttributeValue} from './requests/attributesRequests';
+import {getNodeAttributes, getEdgeAttributes, setAttributeValue} from './requests/attributeRequests';
 import {Attribute} from './Attribute';
 import {setElementName} from './requests/elementRequests';
 
@@ -10,13 +10,15 @@ import './PropertyBar.css';
 
 type PropertyBarProps = {
     modelName: string
-    elements: Elements
-    setElements: React.Dispatch<React.SetStateAction<Elements>>
+    nodes: Node[]
+    edges: Edge[]
+    setNodes: React.Dispatch<React.SetStateAction<Node[]>>
+    setEdges: React.Dispatch<React.SetStateAction<Edge[]>>
     id: string
 }
 
-const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElements, id}) => {
-    const element = elements.find(item => item.id === id)
+const PropertyBar: React.FC<PropertyBarProps> = ({modelName, nodes, edges, setNodes, setEdges, id}) => {
+    const element = nodes.find(item => item.id === id) || edges.find(item => item.id === id);
     const idNumber: number = +id;
 
     //common states
@@ -39,7 +41,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
         if ((element !== undefined) && isNode(element)) {
 
             setNodeIsDraggable(isNode(element) && (element.draggable || element.draggable === undefined)); // because if draggable undefined node is draggable
-            setIsHidden((element.isHidden !== undefined) && element.isHidden);
+            setIsHidden((element.hidden !== undefined) && element.hidden);
             setNodeIsConnectable(isNode(element) && (element.connectable === true || element.connectable === undefined));
 
         } else if (element !== undefined && isEdge(element)) {
@@ -52,103 +54,107 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
     }, [element]);
 
     useEffect(() => {
-        setElements((els: Elements) =>
-            els.map((el) => {
-                if (el.id === id) {
-                    // when you update a simple type you can just update the value
-                    el.isHidden = isHidden;
+        setNodes((nodes: Node[]) =>
+            nodes.map((node) => {
+                if (node.id === id) {
+                    node.hidden = isHidden;
                 }
-                return el;
+                return node;
             })
         );
-    }, [isHidden, setElements]);
+        setEdges((edges: Edge[]) =>
+            edges.map((edge) => {
+                if (edge.id === id) {
+                    edge.hidden = isHidden;
+                }
+                return edge;
+            })
+        );
+    }, [isHidden, setNodes, setEdges]);
 
     useEffect(() => {
-        setElements((els: Elements) =>
-            els.map((el) => {
-                if (el.id === id) {
-                    if (isNode(el)) {
-                        // it's important that you create a new object here
-                        // in order to notify react flow about the change
-                        el.data = {
-                            ...el.data,
-                            label: name,
-                        };
-                    } else {
-                        el = {
-                            ...el,
-                            label: name,
-                        };
-                    }
+        setNodes((nodes: Node[]) =>
+            nodes.map((node) => {
+                if (node.id === id) {
+                    node.data = {
+                        ...node.data,
+                        label: name,
+                    };
                     setElementName(modelName, idNumber, name);
                 }
-                return el;
+                return node;
             })
         );
-    }, [name, setElements]);
+        setEdges((edges: Edge[]) =>
+            edges.map((edge) => {
+                if (edge.id === id) {
+                    edge = {
+                        ...edge,
+                        label: name,
+                    };
+                    setElementName(modelName, idNumber, name);
+                }
+                return edge;
+            })
+        );
+    }, [name, setNodes, setEdges]);
 
     useEffect(() => {
-        setElements((els: Elements) =>
-            els.map((el) => {
-                if (el.id === id && isNode(el)) {
-                    // when you update a simple type you can just update the value
-                    el.connectable = nodeIsConnectable;
+        setNodes((nodes: Node[]) =>
+            nodes.map((node) => {
+                if (node.id === id) {
+                    node.connectable = nodeIsConnectable;
                 }
-                return el;
+                return node;
             })
         );
-    }, [nodeIsConnectable, setElements]);
+    }, [nodeIsConnectable, setNodes]);
 
     //node effects
     useEffect(() => {
-        setElements((els: Elements) =>
-            els.map((el) => {
-                if (el.id === id && isNode(el)) {
-                    // when you update a simple type you can just update the value
-                    el.draggable = nodeIsDraggable;
+        setNodes((nodes: Node[]) =>
+            nodes.map((node) => {
+                if (node.id === id) {
+                    node.draggable = nodeIsDraggable;
                 }
-                return el;
+                return node;
             })
         );
-    }, [nodeIsDraggable, setElements]);
+    }, [nodeIsDraggable, setNodes]);
 
     useEffect(() => {
-        setElements((els: Elements) =>
-            els.map((el) => {
-                if (el.id === id) {
-                    // it's important that you create a new object here
-                    // in order to notify react flow about the change
-                    el.style = {...el.style, backgroundColor: nodeBg};
+        setNodes((nodes: Node[]) =>
+            nodes.map((node) => {
+                if (node.id === id) {
+                    node.style = {...node.style, backgroundColor: nodeBg};
                 }
-                return el;
+                return node;
             })
         );
-    }, [nodeBg, setElements]);
+    }, [nodeBg, setNodes]);
 
     //edge effects
     useEffect(() => {
-        setElements((els: Elements) =>
-            els.map((el) => {
-                if (isEdge(el) && el.id === id) {
-                    // when you update a simple type you can just update the value
-                    el.animated = edgeIsAnimated;
+        setEdges((edges: Edge[]) =>
+            edges.map((edge) => {
+                if (edge.id === id) {
+                    edge.animated = edgeIsAnimated;
                 }
-                return el;
+                return edge;
             })
         );
-    }, [edgeIsAnimated, setElements]);
+    }, [edgeIsAnimated, setEdges]);
 
     useEffect(() => {
-        setElements((els: Elements) =>
-            els.map((el) => {
-                if (isEdge(el) && el.id === id) {
-                    // when you update a simple type you can just update the value
-                    el.type = edgeType;
+        setEdges((edges: Edge[]) =>
+            edges.map((edge) => {
+                if (edge.id === id) {
+                    edge.type = edgeType;
                 }
-                return el;
+                return edge;
             })
         );
-    }, [edgeType, setElements]);
+    }, [edgeType, setEdges]);
 
     useEffect(() => {
         if (element !== undefined && isNode(element)) {
@@ -250,7 +256,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, elements, setElemen
             <div>
                 <label>Id: {idNumber}</label>
             </div>
-            <TextFieldItem label="Label" value={element.label !== undefined ? element.label : ""} setFunc={setName}/>
+            <TextFieldItem label="Label" value={typeof element.label === 'string' ? element.label : ""} setFunc={setName}/>
             <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden}/>
             <CheckboxItem label="Animated" setFunc={setEdgeIsAnimated} value={edgeIsAnimated}/>
             <div>
