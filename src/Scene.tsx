@@ -1,12 +1,13 @@
 import React, {DragEvent, MouseEvent, useCallback} from 'react';
 import ReactFlow, {
-    Background,
-    applyNodeChanges,
-    applyEdgeChanges,
     addEdge,
-    Edge,
+    applyEdgeChanges,
+    applyNodeChanges,
+    Background,
     Connection,
+    ConnectionMode,
     Controls,
+    Edge,
     Node,
     ReactFlowInstance,
 } from 'react-flow-renderer';
@@ -20,7 +21,7 @@ import MaterializationPlankNode from './nodes/MaterializationPlankNode';
 import ImageNode from './nodes/ImageNode';
 import RobotsModelNode from './nodes/RobotsModelNode';
 import {setAttributeValue} from './requests/attributeRequests';
-import {deleteElement, addEdgeElement, getEdge, addNodeElement} from './requests/elementRequests';
+import {addEdgeElement, addNodeElement, getEdge} from './requests/elementRequests';
 
 type SceneProps = {
     modelName: string
@@ -156,7 +157,7 @@ const Scene: React.FC<SceneProps> = ({
                 onInit={onInit}
                 onConnect={onConnect}
                 nodeTypes={nodeTypes}
-                deleteKeyCode={'46'}
+                deleteKeyCode={'Delete'}
                 snapToGrid
                 snapGrid={[25, 25]}
                 onDrop={onDrop}
@@ -164,6 +165,7 @@ const Scene: React.FC<SceneProps> = ({
                 onNodeDragStop={onNodeDragStop}
                 onNodeClick={captureElementClick ? onNodeClick : undefined}
                 onEdgeClick={captureElementClick ? onEdgeClick : undefined}
+                connectionMode={ConnectionMode.Loose}
             >
                 <Controls/>
                 <Background>

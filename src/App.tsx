@@ -19,7 +19,7 @@ const OverviewFlow = () => {
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance>();
     const [nodes, setNodes] = useState<Node[]>([]);
     const [edges, setEdges] = useState<Edge[]>([]);
-    const [captureElementClick, setCaptureElementClick] = useState<boolean>(true);
+    const [captureElementClick,] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
 
     // model
@@ -37,12 +37,14 @@ const OverviewFlow = () => {
                     edges.push(element);
                 });
             }
-            getNodes(modelName, nodes).then(nodes => setNodes(nodes));
-            getEdges(modelName, edges).then(edges => setEdges(edges));
+            getNodes(modelName, nodes).then(nodes => {
+                setNodes(nodes);
+                getEdges(modelName, edges).then(edges => {
+                    setEdges(edges)
+                });
+            });
         });
     }, []);
-
-
 
     const getNodes = async (modelName: string, nodes: Array<{ id: number, name: string }> ): Promise<Node[]> => {
         let currentNodes: Node[] = [];

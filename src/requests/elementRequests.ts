@@ -1,6 +1,6 @@
 import api from './api'
 
-import {addAttribute} from './attributeRequests';
+import {addAttribute, setAttributeValue} from './attributeRequests';
 import {getModelEdges} from './modelRequests';
 
 export const getEdge = async (modelName: string, id: number) => {
@@ -69,8 +69,8 @@ export const addNodeElement = async (modelName: string, parentsId: number, kind:
     }
     await addElement(modelName, parentsId).then((newNodeId: string) => {
         id = newNodeId;
-        return Promise.all([getNode(modelName, +newNodeId), addAttribute(modelName, +newNodeId, 'xCoordinate', `${xCoordinate}`),
-            addAttribute(modelName, +newNodeId, 'yCoordinate', `${yCoordinate}`)]);
+        return Promise.all([getNode(modelName, +newNodeId), setAttributeValue(modelName, +newNodeId, 'xCoordinate', `${xCoordinate}`),
+            setAttributeValue(modelName, +newNodeId, 'yCoordinate', `${yCoordinate}`)]);
         }).then(data => {
         const name = kind !== 'materializationPlank' ? data[0].name : '';
         const dragHandle = kind === 'materializationPlank' ? '.materializationPlankNodeHandle' : '.nodeHandle';
