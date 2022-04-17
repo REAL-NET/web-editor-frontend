@@ -20,7 +20,7 @@ import ReaderNode from './nodes/ReaderNode';
 import MaterializationPlankNode from './nodes/MaterializationPlankNode';
 import ImageNode from './nodes/ImageNode';
 import RobotsModelNode from './nodes/RobotsModelNode';
-import {setAttributeValue} from './requests/attributeRequests';
+import {addAttribute, getAttributeValue, setAttributeValue} from './requests/attributeRequests';
 import {
     addElement,
     getEdge,
@@ -161,24 +161,43 @@ const Scene: React.FC<SceneProps> = ({
             id: '',
             position: {x: -1, y: -1}
         }
-        await addElement(modelName, parentsId).then((newNodeId: string) => {
-            id = newNodeId;
-            return Promise.all([getNode(modelName, +newNodeId), setAttributeValue(modelName, +newNodeId, 'xCoordinate', `${xCoordinate}`),
-                setAttributeValue(modelName, +newNodeId, 'yCoordinate', `${yCoordinate}`)]);
-        }).then(data => {
-            const name = kind !== 'materializationPlank' ? data[0].name : '';
-            const dragHandle = kind === 'materializationPlank' ? '.materializationPlankNodeHandle' : '.nodeHandle';
-            const style = kind === 'materializationPlank' ? {zIndex: 100} : {};
-            newNode = {
-                id: `${id}`,
-                type: `${kind}Node`,
-                className: `${kind}Node`,
-                position: {x: xCoordinate, y: yCoordinate},
-                data: {label: `${name}`},
-                dragHandle: dragHandle,
-                style: style
-            };
-        });
+        const newNodeId = await addElement(modelName, parentsId);
+        const data = await Promise.all([getNode(modelName, +newNodeId), setAttributeValue(modelName, +newNodeId, 'xCoordinate', `${xCoordinate}`),
+            setAttributeValue(modelName, +newNodeId, 'yCoordinate', `${yCoordinate}`)]);
+        const name = kind !== 'materializationPlank' && kind !== 'operatorInternals' ? data[0].name : '';
+        const dragHandle = kind === 'materializationPlank' ? '.materializationPlankNodeHandle' : '.nodeHandle';
+        const style = kind === 'materializationPlank' ? {zIndex: 10} : kind === 'operatorInternals' ? {zIndex: -10} : {zIndex: 0};
+        let parentNode = undefined;
+        let extent: 'parent' | undefined = undefined;
+        if (kind !== 'materializationPlank' && kind !== 'operatorInternals') {
+            const operatorInternalsNodes = nodes.filter(node => node.type === 'operatorInternalsNode');
+            for (const node of operatorInternalsNodes) {
+                // check if dropped node is inside operator internals node
+                if (yCoordinate >= node.position.y && (yCoordinate + 30) <= (node.position.y + node.height!) &&
+                    xCoordinate >= node.position.x && (xCoordinate + 80) <= (node.position.x + node.width!)) {
+                    parentNode = `${node.id}`;
+                    // position relative
+                    xCoordinate = xCoordinate - node.position.x;
+                    yCoordinate = yCoordinate - node.position.y;
+                    extent = 'parent';
+                    const contents = await getAttributeValue(modelName, +node.id, 'contents');
+                    if (contents !== undefined) {
+                        setAttributeValue(modelName, +node.id, 'contents', contents === '' ? `${name}` : contents + `, ${name}`);
+                    }
+                }
+            }
+        }
+        newNode = {
+            id: `${newNodeId}`,
+            type: `${kind}Node`,
+            className: `${kind}Node`,
+            position: {x: xCoordinate, y: yCoordinate},
+            data: {label: `${name}`},
+            dragHandle: dragHandle,
+            parentNode: parentNode,
+            extent: extent,
+            style: style
+        };
         return newNode;
     }
 

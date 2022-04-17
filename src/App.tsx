@@ -49,7 +49,7 @@ const OverviewFlow = () => {
         for (let i = 0, length = nodes.length; i < length; ++i) {
             const data = await getNode(modelName, nodes[i].id);
             if (data !== undefined) {
-                const id = parseInt(data.id);
+                const id = +data.id;
                 const attributeValues = await Promise.all([getAttributeValue(modelName, id, 'xCoordinate'), getAttributeValue(modelName, id, 'yCoordinate'), getAttributeValue(modelName, id, 'kind')]);
                 const kind = attributeValues[2] ?? 'unknown';
                 const name = kind !== 'materializationPlank' && kind !== 'operatorInternals' ? data.name : '';
@@ -77,7 +77,7 @@ const OverviewFlow = () => {
         const operatorInternalsNodes = currentNodes.filter(node => node.type === 'operatorInternalsNode');
         if (operatorInternalsNodes !== undefined) {
             for (const node of operatorInternalsNodes) {
-                const contents = await getAttributeValue(modelName, parseInt(node.id), 'contents');
+                const contents = await getAttributeValue(modelName, +node.id, 'contents');
                 if (contents !== undefined && contents !== '') {
                     const contentsNodes = contents.split(', ');
                     contentsNodes.forEach((contentsNodeName: string) => {
