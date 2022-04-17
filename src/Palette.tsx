@@ -40,7 +40,7 @@ const Palette = (props: { metamodelName: string }) => {
 
     const PaletteItem = (props: { element: { id: number; name: string, kind: string } }) => {
         return (
-            <div className={`${props.element.kind}Node`} key={props.element.id} style={props.element.kind !== 'materializationPlank' ? {width: '100px', height: '30px', marginBottom: '5px'} : {}}
+            <div className={`${props.element.kind}Node`} key={props.element.id} style={props.element.kind !== 'materializationPlank' ? {width: '100px', height: '30px', marginBottom: '5px'} : {marginBottom: '5px'}}
                  onDragStart={(event: DragEvent) => onDragStart(event, props.element.kind, props.element.id)} draggable>
                 {props.element.kind !== 'materializationPlank' ? props.element.name : ''}
             </div>

@@ -106,7 +106,8 @@ const OverviewFlow = () => {
                             id: `${data.id}`,
                             source: `${data.from.id}`,
                             target: `${data.to.id}`,
-                            label: `${data.name}`
+                            // label: `${data.name}`,
+                            type: 'straight'
                         }
                     );
                 }

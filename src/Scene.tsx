@@ -22,7 +22,7 @@ import ImageNode from './nodes/ImageNode';
 import RobotsModelNode from './nodes/RobotsModelNode';
 import {addAttribute, getAttributeValue, setAttributeValue} from './requests/attributeRequests';
 import {
-    addElement,
+    addElement, deleteElement,
     getEdge,
     getNode,
     setEdgeFromElement,
@@ -70,15 +70,23 @@ const Scene: React.FC<SceneProps> = ({
         event.dataTransfer.dropEffect = 'move';
     };
 
-    // TODO: add delete handling with backend
     const onNodesChange = useCallback(
-        (changes) => setNodes((ns) => applyNodeChanges(changes, ns)),
+        (changes) => {
+            if (changes[0].type === 'remove') {
+                deleteElement(modelName, +changes[0].id);
+            }
+            setNodes((ns) => applyNodeChanges(changes, ns))
+        },
         []
     );
 
-    // TODO: add delete handling with backend
     const onEdgesChange = useCallback(
-        (changes) => setEdges((es) => applyEdgeChanges(changes, es)),
+        (changes) => {
+            if (changes[0].type === 'remove') {
+                deleteElement(modelName, +changes[0].id);
+            }
+            setEdges((es) => applyEdgeChanges(changes, es))
+        },
         []
     );
 
@@ -118,10 +126,8 @@ const Scene: React.FC<SceneProps> = ({
             const data = event.dataTransfer.getData('application/reactflow').split(' ');
             const kind = data[0];
             const position = reactFlowInstance.project({x: event.clientX - 280, y: event.clientY - 40});
-
-            let newNode: Node;
             if (kind === 'ImageNode') {
-                newNode = {
+                const newNode: Node = {
                     id: getId(),
                     type: 'imageNode',
                     position,
@@ -155,12 +161,6 @@ const Scene: React.FC<SceneProps> = ({
     };
 
     const addNodeElement = async (modelName: string, parentsId: number, kind: string, xCoordinate: number, yCoordinate: number) => {
-        let id = '';
-        let newNode: Node = {
-            data: {},
-            id: '',
-            position: {x: -1, y: -1}
-        }
         const newNodeId = await addElement(modelName, parentsId);
         const data = await Promise.all([getNode(modelName, +newNodeId), setAttributeValue(modelName, +newNodeId, 'xCoordinate', `${xCoordinate}`),
             setAttributeValue(modelName, +newNodeId, 'yCoordinate', `${yCoordinate}`)]);
@@ -187,7 +187,7 @@ const Scene: React.FC<SceneProps> = ({
                 }
             }
         }
-        newNode = {
+        const newNode: Node = {
             id: `${newNodeId}`,
             type: `${kind}Node`,
             className: `${kind}Node`,
@@ -219,6 +219,8 @@ const Scene: React.FC<SceneProps> = ({
         return id;
     }
 
+    const snapGrid: [number, number] = [5, 5];
+
     return (
         <div className="Scene">
             <ReactFlow
@@ -231,7 +233,7 @@ const Scene: React.FC<SceneProps> = ({
                 nodeTypes={nodeTypes}
                 deleteKeyCode={'Delete'}
                 snapToGrid
-                snapGrid={[25, 25]}
+                snapGrid={snapGrid}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onNodeDragStop={onNodeDragStop}
