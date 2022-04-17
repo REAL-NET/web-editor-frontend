@@ -49,38 +49,46 @@ const OverviewFlow = () => {
         for (let i = 0, length = nodes.length; i < length; ++i) {
             const data = await getNode(modelName, nodes[i].id);
             if (data !== undefined) {
-                const id: number = +JSON.stringify(data.id);
+                const id = parseInt(data.id);
                 const attributeValues = await Promise.all([getAttributeValue(modelName, id, 'xCoordinate'), getAttributeValue(modelName, id, 'yCoordinate'), getAttributeValue(modelName, id, 'kind')]);
                 const kind = attributeValues[2] ?? 'unknown';
                 const name = kind !== 'materializationPlank' && kind !== 'operatorInternals' ? data.name : '';
                 const dragHandle = kind === 'materializationPlank' ? '.materializationPlankNodeHandle' : '.nodeHandle';
                 const style = kind === 'materializationPlank' ? {zIndex: 10} : kind === 'operatorInternals' ? {zIndex: -10} : {zIndex: 0};
+                let node: Node = {
+                    id: `${id}`,
+                    type: `${kind}Node`,
+                    className: `${kind}Node`,
+                    data: {label: name},
+                    position: {x: 0, y: 0},
+                    dragHandle: dragHandle,
+                    style: style
+                }
                 if (attributeValues[0] === undefined || attributeValues[0].length === 0 || attributeValues[1] === undefined || attributeValues[1].length === 0) {
                     addAttribute(modelName, id, 'xCoordinate', '0');
                     addAttribute(modelName, id, 'yCoordinate', '0');
-                    currentNodes.push(
-                        {
-                            id: `${data.id}`,
-                            type: `${kind}Node`,
-                            className: `${kind}Node`,
-                            data: {label: name},
-                            position: {x: 0, y: 0},
-                            dragHandle: dragHandle,
-                            style: style
-                        }
-                    );
                 } else {
-                    currentNodes.push(
-                        {
-                            id: `${data.id}`,
-                            type: `${kind}Node`,
-                            className: `${kind}Node`,
-                            data: {label: name},
-                            position: {x: attributeValues[0], y: attributeValues[1]},
-                            dragHandle: dragHandle,
-                            style: style
+                    node.position = {x: attributeValues[0], y: attributeValues[1]};
+                }
+                currentNodes.push(node);
+            }
+        }
+
+        const operatorInternalsNodes = currentNodes.filter(node => node.type === 'operatorInternalsNode');
+        if (operatorInternalsNodes !== undefined) {
+            for (const node of operatorInternalsNodes) {
+                const contents = await getAttributeValue(modelName, parseInt(node.id), 'contents');
+                if (contents !== undefined && contents !== '') {
+                    const contentsNodes = contents.split(', ');
+                    contentsNodes.forEach((contentsNodeName: string) => {
+                        let contentsNode = currentNodes.find(node => node.data.label === contentsNodeName);
+                        if (contentsNode !== undefined) {
+                            const parentNode = `${node.id}`;
+                            const extent = 'parent';
+                            contentsNode.parentNode = parentNode;
+                            contentsNode.extent = extent;
                         }
-                    );
+                    })
                 }
             }
         }
