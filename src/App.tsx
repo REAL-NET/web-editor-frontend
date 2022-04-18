@@ -9,6 +9,7 @@ import {getEdge, getNode} from './requests/elementRequests';
 
 import './App.css';
 import {addAttribute, getAttributeValue} from "./requests/attributeRequests";
+import {Errors, queryCheckWithErrorInfo} from "./requests/сonstraintsCheckRequests";
 
 document.addEventListener('click', e => (e.target));
 
@@ -21,6 +22,7 @@ const OverviewFlow = () => {
     const [edges, setEdges] = useState<Edge[]>([]);
     const [captureElementClick,] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
+    const [checkErrorInfo, setCheckErrorInfo] = useState<number[]>([]);
 
     // model
     useEffect(() => {
@@ -41,6 +43,17 @@ const OverviewFlow = () => {
             setNodes(currentNodes);
             const currentEdges = await getEdges(modelName, edgesArray);
             setEdges(currentEdges);
+
+            const checkResult = await queryCheckWithErrorInfo(modelName);
+            if (checkResult !== undefined) {
+                if (!checkResult.result) {
+                    let codes: number[] = [];
+                    checkResult.errors.forEach((error: Errors) => codes.push(error.code));
+                    setCheckErrorInfo(codes);
+                } else {
+                    setCheckErrorInfo([]);
+                }
+            }
         });
     }, []);
 
@@ -132,6 +145,8 @@ const OverviewFlow = () => {
                     setReactFlowInstance={setReactFlowInstance}
                     setCurrentElementId={setCurrentElementId}
                     captureElementClick={captureElementClick}
+                    checkErrorInfo={checkErrorInfo}
+                    setCheckErrorInfo={setCheckErrorInfo}
                 />
                 <Palette metamodelName={metamodelName}/>
             </ReactFlowProvider>

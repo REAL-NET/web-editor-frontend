@@ -9,6 +9,8 @@ import ReactFlow, {
     Controls,
     Edge,
     Node,
+    EdgeChange,
+    NodeChange,
     ReactFlowInstance,
 } from 'react-flow-renderer';
 
@@ -20,7 +22,7 @@ import ReaderNode from './nodes/ReaderNode';
 import MaterializationPlankNode from './nodes/MaterializationPlankNode';
 import ImageNode from './nodes/ImageNode';
 import RobotsModelNode from './nodes/RobotsModelNode';
-import {addAttribute, getAttributeValue, setAttributeValue} from './requests/attributeRequests';
+import {setAttributeValue} from './requests/attributeRequests';
 import {
     addElement, deleteElement,
     getEdge,
@@ -29,6 +31,8 @@ import {
     setEdgeToElement
 } from './requests/elementRequests';
 import {getModelEdges} from "./requests/modelRequests";
+import CheckBar from "./CheckBar";
+import {Errors, queryCheckWithErrorInfo} from "./requests/сonstraintsCheckRequests";
 
 type SceneProps = {
     modelName: string
@@ -41,6 +45,8 @@ type SceneProps = {
     setReactFlowInstance: Function
     setCurrentElementId: Function
     captureElementClick: boolean
+    checkErrorInfo: number[]
+    setCheckErrorInfo: React.Dispatch<React.SetStateAction<number[]>>
 }
 
 const nodeTypes = {
@@ -54,7 +60,7 @@ const nodeTypes = {
 
 const Scene: React.FC<SceneProps> = ({
                                          modelName, metamodelName, nodes, edges, setNodes, setEdges, reactFlowInstance,
-                                         setReactFlowInstance, setCurrentElementId, captureElementClick
+                                         setReactFlowInstance, setCurrentElementId, captureElementClick, checkErrorInfo, setCheckErrorInfo
                                      }) => {
     const onNodeClick = (_: MouseEvent, node: Node) => {
         setCurrentElementId(node.id);
@@ -71,9 +77,9 @@ const Scene: React.FC<SceneProps> = ({
     };
 
     const onNodesChange = useCallback(
-        (changes) => {
+        (changes: NodeChange[]) => {
             if (changes[0].type === 'remove') {
-                deleteElement(modelName, +changes[0].id);
+                deleteElement(modelName, +changes[0].id).then(() => check());
             }
             setNodes((ns) => applyNodeChanges(changes, ns))
         },
@@ -81,9 +87,9 @@ const Scene: React.FC<SceneProps> = ({
     );
 
     const onEdgesChange = useCallback(
-        (changes) => {
+        (changes: EdgeChange[]) => {
             if (changes[0].type === 'remove') {
-                deleteElement(modelName, +changes[0].id);
+                deleteElement(modelName, +changes[0].id).then(() => check());
             }
             setEdges((es) => applyEdgeChanges(changes, es))
         },
@@ -104,6 +110,7 @@ const Scene: React.FC<SceneProps> = ({
             }
             setEdges((edges: Edge[]) => addEdge(newLink, edges));
         }
+        check();
     }
 
     let id = 0;
@@ -116,6 +123,19 @@ const Scene: React.FC<SceneProps> = ({
         }
         return `${id}`;
     };
+
+    const check = async () => {
+        const checkResult = await queryCheckWithErrorInfo(modelName);
+        if (checkResult !== undefined) {
+            if (!checkResult.result) {
+                let codes: number[] = [];
+                checkResult.errors.forEach((error: Errors) => codes.push(error.code));
+                setCheckErrorInfo(codes);
+            } else {
+                setCheckErrorInfo([]);
+            }
+        }
+    }
 
     const onDrop = async (event: DragEvent) => {
         event.preventDefault();
@@ -145,6 +165,7 @@ const Scene: React.FC<SceneProps> = ({
                 const parentsId = data[1];
                 const newNode = await addNodeElement(modelName, +parentsId, kind, position.x, position.y);
                 setNodes(nodes => nodes.concat(newNode));
+                check();
             }
         }
     };
@@ -154,6 +175,7 @@ const Scene: React.FC<SceneProps> = ({
         event.preventDefault();
         setAttributeValue(modelName, +node.id, 'xCoordinate', `${node.position.x}`);
         setAttributeValue(modelName, +node.id, 'yCoordinate', `${node.position.y}`);
+        check();
     };
 
     const addNodeElement = async (modelName: string, parentsId: number, kind: string, xCoordinate: number, yCoordinate: number) => {
@@ -240,6 +262,7 @@ const Scene: React.FC<SceneProps> = ({
                     gap={25}
                     size={1}
                 </Background>
+                <CheckBar checkErrorInfo={checkErrorInfo}/>
             </ReactFlow>
         </div>
     );

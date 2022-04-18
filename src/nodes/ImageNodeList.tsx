@@ -1,7 +1,8 @@
 import React, {DragEvent} from 'react';
 
-import {makeStyles} from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
+import {Theme} from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import List from '@mui/material/List';
 
 import './Nodes.css'
 
@@ -41,7 +42,7 @@ const ImageNodeList = () => {
         </li>
     );
 
-    const useStyles = makeStyles((theme) => ({
+    const useStyles = makeStyles((theme: Theme) => ({
         root: {
             width: '100%',
             backgroundColor: theme.palette.background.paper,
