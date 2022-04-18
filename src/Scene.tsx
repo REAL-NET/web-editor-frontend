@@ -92,22 +92,19 @@ const Scene: React.FC<SceneProps> = ({
 
     const onInit = (_reactFlowInstance: ReactFlowInstance) => setReactFlowInstance(_reactFlowInstance);
 
-    const onConnect = (edgeParas: Edge | Connection): void => {
-        addEdgeElement(metamodelName, modelName, edgeParas.source !== null ? +edgeParas.source : -1,
-            edgeParas.target !== null ? +edgeParas.target : -1).then((id: string) => {
-            if (id !== '') {
-                getEdge(modelName, +id).then(edge => {
-                    const newLink = {
-                        id: `${edge.id}`,
-                        source: `${edgeParas.source}`,
-                        target: `${edgeParas.target}`,
-                        label: `${edge.name}`
-                    }
-                    setEdges((edges: Edge[]) => addEdge(newLink, edges));
-                });
+    const onConnect = async (edgeParas: Edge | Connection) => {
+        const newEdgeId = await addEdgeElement(metamodelName, modelName, edgeParas.source !== null ? +edgeParas.source : -1, edgeParas.target !== null ? +edgeParas.target : -1);
+        if (newEdgeId !== undefined && newEdgeId !== '') {
+            const newEdge = await getEdge(modelName, +newEdgeId);
+            const newLink = {
+                id: `${newEdge.id}`,
+                source: `${edgeParas.source}`,
+                target: `${edgeParas.target}`,
+                label: `${newEdge.name}`
             }
-        });
-    };
+            setEdges((edges: Edge[]) => addEdge(newLink, edges));
+        }
+    }
 
     let id = 0;
     const getId = function (): string {
@@ -120,7 +117,7 @@ const Scene: React.FC<SceneProps> = ({
         return `${id}`;
     };
 
-    const onDrop = (event: DragEvent) => {
+    const onDrop = async (event: DragEvent) => {
         event.preventDefault();
         if (reactFlowInstance) {
             const data = event.dataTransfer.getData('application/reactflow').split(' ');
@@ -146,9 +143,8 @@ const Scene: React.FC<SceneProps> = ({
                 setNodes((nodes: Node[]) => nodes.concat(newNode));
             } else {
                 const parentsId = data[1];
-                addNodeElement(modelName, +parentsId, kind, position.x, position.y).then(node => {
-                    setNodes((nodes: Node[]) => nodes.concat(node));
-                })
+                const newNode = await addNodeElement(modelName, +parentsId, kind, position.x, position.y);
+                setNodes(nodes => nodes.concat(newNode));
             }
         }
     };
@@ -162,9 +158,8 @@ const Scene: React.FC<SceneProps> = ({
 
     const addNodeElement = async (modelName: string, parentsId: number, kind: string, xCoordinate: number, yCoordinate: number) => {
         const newNodeId = await addElement(modelName, parentsId);
-        const data = await Promise.all([getNode(modelName, +newNodeId), setAttributeValue(modelName, +newNodeId, 'xCoordinate', `${xCoordinate}`),
-            setAttributeValue(modelName, +newNodeId, 'yCoordinate', `${yCoordinate}`)]);
-        const name = kind !== 'materializationPlank' && kind !== 'operatorInternals' ? data[0].name : '';
+        const newNode = await getNode(modelName, +newNodeId);
+        const name = kind !== 'materializationPlank' && kind !== 'operatorInternals' ? newNode.name : '';
         const dragHandle = kind === 'materializationPlank' ? '.materializationPlankNodeHandle' : '.nodeHandle';
         const style = kind === 'materializationPlank' ? {zIndex: 10} : kind === 'operatorInternals' ? {zIndex: -10} : {zIndex: 0};
         let parentNode = undefined;
@@ -176,18 +171,22 @@ const Scene: React.FC<SceneProps> = ({
                 if (yCoordinate >= node.position.y && (yCoordinate + 30) <= (node.position.y + node.height!) &&
                     xCoordinate >= node.position.x && (xCoordinate + 80) <= (node.position.x + node.width!)) {
                     parentNode = `${node.id}`;
+                    extent = 'parent';
                     // position relative
                     xCoordinate = xCoordinate - node.position.x;
                     yCoordinate = yCoordinate - node.position.y;
-                    extent = 'parent';
-                    const contents = await getAttributeValue(modelName, +node.id, 'contents');
-                    if (contents !== undefined) {
-                        setAttributeValue(modelName, +node.id, 'contents', contents === '' ? `${name}` : contents + `, ${name}`);
+
+                    const newEdgeId = await addEdgeElement(metamodelName, modelName, +node.id, newNodeId);
+                    console.log(newEdgeId)
+                    if (newEdgeId !== undefined && newEdgeId !== '') {
+                        setAttributeValue(modelName, +newEdgeId, 'type', 'internals');
                     }
                 }
             }
         }
-        const newNode: Node = {
+        setAttributeValue(modelName, +newNodeId, 'xCoordinate', `${xCoordinate}`);
+        setAttributeValue(modelName, +newNodeId, 'yCoordinate', `${yCoordinate}`);
+        const node: Node = {
             id: `${newNodeId}`,
             type: `${kind}Node`,
             className: `${kind}Node`,
@@ -198,25 +197,20 @@ const Scene: React.FC<SceneProps> = ({
             extent: extent,
             style: style
         };
-        return newNode;
+        return node;
     }
 
-    const addEdgeElement = async (metamodelName: string, modelName: string, fromElementId: number, toElementId: number): Promise<string> => {
-        let id = '';
-        await getModelEdges(metamodelName).then((edges: Array<{id: number, name: string}>) => {
-            for (let i = 0, length = edges.length; i < length; ++i) {
-                if (edges[i].name === 'Link') {
-                    return getEdge(metamodelName, edges[i].id)
-                }
+    const addEdgeElement = async (metamodelName: string, modelName: string, fromElementId: number, toElementId: number) => {
+        const edgesArray: Array<{id: number, name: string}> = await getModelEdges(metamodelName);
+        console.log(edgesArray)
+        for (let i = 0, length = edgesArray.length; i < length; ++i) {
+            if (edgesArray[i].name === 'link') {
+                const newEdgeId: string = await addElement(modelName, edgesArray[i].id);
+                setEdgeFromElement(modelName, +newEdgeId, fromElementId);
+                setEdgeToElement(modelName, +newEdgeId, toElementId);
+                return newEdgeId;
             }
-        }).then((edge: {id: number, name: string}) => {
-            return addElement(modelName, edge.id);
-        }).then((newEdgeId: string) => {
-            setEdgeFromElement(modelName, +newEdgeId, fromElementId);
-            setEdgeToElement(modelName, +newEdgeId, toElementId);
-            id = newEdgeId;
-        });
-        return id;
+        }
     }
 
     const snapGrid: [number, number] = [5, 5];

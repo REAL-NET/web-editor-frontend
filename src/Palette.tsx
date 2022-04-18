@@ -22,7 +22,7 @@ const Palette = (props: { metamodelName: string }) => {
         getModel(props.metamodelName).then(data => {
             if (data !== undefined) {
                 data.forEach((element: { id: number, name: string }) => {
-                    if (element.name !== 'Link') {
+                    if (element.name !== 'link') {
                         getAttributeValue(props.metamodelName, element.id, 'isAbstract').then(data => {
                             if (!data) {
                                 getAttributeValue(props.metamodelName, element.id, 'kind').then(data => {
