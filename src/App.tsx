@@ -25,26 +25,26 @@ const OverviewFlow = () => {
     // model
     useEffect(() => {
         Promise.all([getModelNodes(modelName), getModelEdges(modelName)]).then(async data => {
-            let nodes: Array<{ id: number, name: string }> = [];
-            let edges: Array<{ id: number, name: string }> = [];
+            let nodesArray: Array<{ id: number, name: string }> = [];
+            let edgesArray: Array<{ id: number, name: string }> = [];
             if (data[0] !== undefined) {
                 data[0].forEach((element: { id: number, name: string }) => {
-                    nodes.push(element);
+                    nodesArray.push(element);
                 });
             }
             if (data[1] !== undefined) {
                 data[1].forEach((element: { id: number, name: string }) => {
-                    edges.push(element);
+                    edgesArray.push(element);
                 });
             }
-            const currentNodes = await getNodes(modelName, nodes);
+            const currentNodes = await getNodes(modelName, nodesArray);
             setNodes(currentNodes);
-            const currentEdges = await getEdges(modelName, edges);
+            const currentEdges = await getEdges(modelName, edgesArray);
             setEdges(currentEdges);
         });
     }, []);
 
-    const getNodes = async (modelName: string, nodes: Array<{ id: number, name: string }> ): Promise<Node[]> => {
+    const getNodes = async (modelName: string, nodes: Array<{ id: number, name: string }>): Promise<Node[]> => {
         let currentNodes: Node[] = [];
         for (let i = 0, length = nodes.length; i < length; ++i) {
             const data = await getNode(modelName, nodes[i].id);
@@ -74,45 +74,39 @@ const OverviewFlow = () => {
             }
         }
 
-        const operatorInternalsNodes = currentNodes.filter(node => node.type === 'operatorInternalsNode');
-        if (operatorInternalsNodes !== undefined) {
-            for (const node of operatorInternalsNodes) {
-                const contents = await getAttributeValue(modelName, +node.id, 'contents');
-                if (contents !== undefined && contents !== '') {
-                    const contentsNodes = contents.split(', ');
-                    contentsNodes.forEach((contentsNodeName: string) => {
-                        let contentsNode = currentNodes.find(node => node.data.label === contentsNodeName);
-                        if (contentsNode !== undefined) {
-                            const parentNode = `${node.id}`;
-                            const extent = 'parent';
-                            contentsNode.parentNode = parentNode;
-                            contentsNode.extent = extent;
-                        }
-                    })
-                }
-            }
-        }
-
         return currentNodes;
     }
 
     const getEdges = async (modelName: string, edges: Array<{ id: number, name: string }>): Promise<Edge[]> => {
         let currentEdges: Edge[] = [];
         for (let i = 0, length = edges.length; i < length; ++i) {
-            await getEdge(modelName, edges[i].id).then(data => {
-                if (data !== undefined) {
+            const edge = await getEdge(modelName, edges[i].id);
+            if (edge !== undefined) {
+                const type = await getAttributeValue(modelName, edge.id, 'type');
+                if (type === 'internals') {
+                    setNodes((nodes: Node[]) =>
+                        nodes.map((node) => {
+                            if (node.id === `${edge.to.id}`) {
+                                node.parentNode = `${edge.from.id}`;
+                                node.extent = 'parent';
+                            }
+                            return node;
+                        })
+                    );
+                } else {
                     currentEdges.push(
                         {
-                            id: `${data.id}`,
-                            source: `${data.from.id}`,
-                            target: `${data.to.id}`,
-                            // label: `${data.name}`,
+                            id: `${edge.id}`,
+                            source: `${edge.from.id}`,
+                            target: `${edge.to.id}`,
+                            // label: `${edge.name}`,
                             type: 'straight'
                         }
                     );
                 }
-            })
+            }
         }
+        
         return currentEdges;
     }
 
