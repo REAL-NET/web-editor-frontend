@@ -1,4 +1,4 @@
-import React, {DragEvent, MouseEvent, useCallback} from 'react';
+import React, {DragEvent, MouseEvent} from 'react';
 import ReactFlow, {
     addEdge,
     applyEdgeChanges,
@@ -22,7 +22,7 @@ import ReaderNode from './nodes/ReaderNode';
 import MaterializationPlankNode from './nodes/MaterializationPlankNode';
 import ImageNode from './nodes/ImageNode';
 import RobotsModelNode from './nodes/RobotsModelNode';
-import {setAttributeValue} from './requests/attributeRequests';
+import {getAttributeValue, setAttributeValue} from './requests/attributeRequests';
 import {
     addElement, deleteElement,
     getEdge,
@@ -76,25 +76,55 @@ const Scene: React.FC<SceneProps> = ({
         event.dataTransfer.dropEffect = 'move';
     };
 
-    const onNodesChange = useCallback(
-        (changes: NodeChange[]) => {
-            if (changes[0].type === 'remove') {
-                deleteElement(modelName, +changes[0].id).then(() => check());
+    const onNodesChange = ((changes: NodeChange[]) => {
+        changes.forEach(async change => {
+            if (change.type === 'remove') {
+                const deletedNode = nodes.find(node => node.id === change.id);
+                if (deletedNode !== undefined && deletedNode.type === 'operatorInternalsNode')
+                {
+                    const children = nodes.filter(node => node.parentNode === `${change.id}`);
+                    for (const child of children) {
+                        changes.push({ type: 'remove', id: child.id});
+                        deleteElement(modelName, +child.id);
+                    }
+                    const edgesModel: Array<{ id: number, name: string }> = await getModelEdges(modelName);
+                    const childEdges: number[] = [];
+                    for (const edgeModel of edgesModel) {
+                        const edge = await getEdge(modelName, +edgeModel.id);
+                        if (edge !== undefined) {
+                            const source = children.find(child => +child.id === edge.from.id)
+                            const target = children.find(child => +child.id === edge.to.id)
+                            if (source !== undefined || target !== undefined) {
+                                childEdges.push(edge.id);
+                                deleteElement(modelName, edge.id);
+                            } else {
+                                const type = await getAttributeValue(modelName, edge.id, 'type');
+                                if (type === 'internals') {
+                                    deleteElement(modelName, edge.id);
+                                }
+                            }
+                        }
+                    }
+                    childEdges.forEach(childEdge => {
+                        changes.push({ type: 'remove', id: `${childEdge}`});
+                    })
+                }
+                await deleteElement(modelName, +change.id);
             }
-            setNodes((ns) => applyNodeChanges(changes, ns))
-        },
-        []
-    );
+        })
+        check();
+        setNodes((ns) => applyNodeChanges(changes, ns));
+    });
 
-    const onEdgesChange = useCallback(
-        (changes: EdgeChange[]) => {
-            if (changes[0].type === 'remove') {
-                deleteElement(modelName, +changes[0].id).then(() => check());
+    const onEdgesChange = ((changes: EdgeChange[]) => {
+        changes.forEach(async change => {
+            if (change.type === 'remove') {
+                await deleteElement(modelName, +change.id);
             }
-            setEdges((es) => applyEdgeChanges(changes, es))
-        },
-        []
-    );
+        })
+        check();
+        setEdges((es) => applyEdgeChanges(changes, es));
+    });
 
     const onInit = (_reactFlowInstance: ReactFlowInstance) => setReactFlowInstance(_reactFlowInstance);
 
@@ -199,7 +229,6 @@ const Scene: React.FC<SceneProps> = ({
                     yCoordinate = yCoordinate - node.position.y;
 
                     const newEdgeId = await addEdgeElement(metamodelName, modelName, +node.id, newNodeId);
-                    console.log(newEdgeId)
                     if (newEdgeId !== undefined && newEdgeId !== '') {
                         setAttributeValue(modelName, +newEdgeId, 'type', 'internals');
                     }
@@ -224,7 +253,6 @@ const Scene: React.FC<SceneProps> = ({
 
     const addEdgeElement = async (metamodelName: string, modelName: string, fromElementId: number, toElementId: number) => {
         const edgesArray: Array<{id: number, name: string}> = await getModelEdges(metamodelName);
-        console.log(edgesArray)
         for (let i = 0, length = edgesArray.length; i < length; ++i) {
             if (edgesArray[i].name === 'link') {
                 const newEdgeId: string = await addElement(modelName, edgesArray[i].id);
