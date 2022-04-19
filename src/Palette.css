@@ -4,8 +4,43 @@ aside {
     font-size: 12px;
     background: #fcfcfc;
 }
+
 .description {
     padding-bottom: 10px;
     text-align: center;
     font-size: 20px;
+}
+
+.kindName {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.kindContainer {
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid lightgrey;
+}
+
+.paletteItem {
+    margin: 5px 0 5px 0;
+    width: 80px;
+    height: 30px;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: grab;
+}
+
+.paletteItem.operatorInternalsNode {
+    width: 200px;
+    height: 60px;
+}
+
+.paletteItem.materializationPlankNode {
+    margin: 10px 0 5px 0;
+    height: 0;
+    border: 1px dashed #6d1f00;
+    width: 200px;
 }

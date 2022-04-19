@@ -9,17 +9,17 @@ const readerNode: FC<NodeProps> = ({data}) => {
         <div className='readerNode'>
             <Handle
                 type="source"
-                position={Position.Left}
+                position={Position.Top}
                 id="portLeft"
             />
             <ResizableBox width={80} height={30} handle={<div className='nodeResizeHandle'></div>} draggableOpts={{ grid: [5, 5] }} minConstraints={[80, 30]}>
                 <span className='label'>{data.label}</span>
             </ResizableBox>
-            <Handle
-                type="source"
-                position={Position.Right}
-                id="portRight"
-            />
+            {/*<Handle*/}
+            {/*    type="source"*/}
+            {/*    position={Position.Right}*/}
+            {/*    id="portRight"*/}
+            {/*/>*/}
             <div className='nodeHandle'></div>
         </div>
     );
