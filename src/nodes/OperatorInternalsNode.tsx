@@ -7,7 +7,7 @@ import './QueryNodes.css';
 const operatorInternalsNode: FC<NodeProps> = ({data}) => {
     return (
         <div className='operatorInternalsNode'>
-            <ResizableBox width={350} height={80} handle={<div className='nodeResizeHandle'></div>} draggableOpts={{ grid: [5, 5] }} minConstraints={[120, 40]}>
+            <ResizableBox width={data.width} height={data.height} handle={<div className='nodeResizeHandle'></div>} draggableOpts={{ grid: [5, 5] }} minConstraints={[120, 40]}>
                 {/*<span>{data.label}</span>*/}
             </ResizableBox>
             <div className='nodeHandle'></div>

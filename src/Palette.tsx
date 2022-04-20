@@ -15,26 +15,31 @@ const onDragStart = (event: DragEvent, kind: string, id: number) => {
 };
 
 const Palette = (props: { metamodelName: string }) => {
-    const [metamodel, setMetamodel] = useState<Array<{ id: number, name: string, kind: string }>>([]);
+    const [metamodel, setMetamodel] = useState<Array<{ id: number, name: string, kind: string, type: string }>>([]);
 
     useEffect(() => {
         async function getMetamodel() {
-            let newMetamodel: Array<{ id: number, name: string, kind: string }> = [];
-            const model = await getModel(props.metamodelName)
+            let newMetamodel: Array<{ id: number, name: string, kind: string, type: string }> = [];
+            const model = await getModel(props.metamodelName);
             if (model !== undefined) {
-                model.forEach((element: { id: number, name: string }) => {
+                for (const element of model) {
                     if (element.name !== 'link' && element.name !== '') {
-                        getAttributeValue(props.metamodelName, element.id, 'isAbstract').then(data => {
-                            if (!data) {
-                                getAttributeValue(props.metamodelName, element.id, 'kind').then(data => {
-                                    if (data !== undefined) {
-                                        newMetamodel.push({id: element.id, name: element.name, kind: data});
+                        const isAbstract = await getAttributeValue(props.metamodelName, element.id, 'isAbstract');
+                        if (isAbstract !== undefined && !isAbstract) {
+                            const kind = await getAttributeValue(props.metamodelName, element.id, 'kind');
+                            if (kind !== undefined) {
+                                if (kind === 'operator') {
+                                    const type = await getAttributeValue(props.metamodelName, element.id, 'type');
+                                    if (type !== undefined) {
+                                        newMetamodel.push({id: element.id, name: element.name, kind: kind, type: type});
                                     }
-                                });
+                                } else {
+                                    newMetamodel.push({id: element.id, name: element.name, kind: kind, type: ''});
+                                }
                             }
-                        });
+                        }
                     }
-                });
+                }
                 setMetamodel(newMetamodel);
             }
         }
@@ -45,17 +50,18 @@ const Palette = (props: { metamodelName: string }) => {
         return (
             <div className={`paletteItem ${props.element.kind}Node`} key={props.element.id}
                  onDragStart={(event: DragEvent) => onDragStart(event, props.element.kind, props.element.id)} draggable>
-                {props.element.kind !== 'materializationPlank' ? props.element.name : ''}
+                {props.element.kind !== 'materializationLine' ? props.element.name : ''}
             </div>
         );
     }
 
-    const operators = metamodel.filter((element) => element.kind === 'operator');
+    const positionalOperators = metamodel.filter((element) => element.kind === 'operator' && element.type === 'positional');
+    const tupleOperators = metamodel.filter((element) => element.kind === 'operator' && element.type === 'tuple');
     const reader = metamodel.filter((element) => element.kind === 'reader');
     const operatorInternals = metamodel.filter((element) => element.kind === 'operatorInternals');
-    const materializationPlank = metamodel.filter((element) => element.kind === 'materializationPlank');
+    const materializationLine = metamodel.filter((element) => element.kind === 'materializationLine');
 
-    const elementsToPalleteItems = (elements: { id: number; name: string, kind: string }[]) => {
+    const elementsToPaletteItems = (elements: { id: number; name: string, kind: string, type: string }[]) => {
         return elements.map(element => {
             return <PaletteItem element={element} key={element.name + element.id} />
         });
@@ -65,20 +71,24 @@ const Palette = (props: { metamodelName: string }) => {
         <aside>
             <div className="description">Palette</div>
             <div className="kindContainer">
-                <div className="kindName">Operators</div>
-                {elementsToPalleteItems(operators)}
+                <div className="kindName">Positional operators</div>
+                {elementsToPaletteItems(positionalOperators)}
+            </div>
+            <div className="kindContainer">
+                <div className="kindName">Tuple operators</div>
+                {elementsToPaletteItems(tupleOperators)}
             </div>
             <div className="kindContainer">
                 <div className="kindName">Reader</div>
-                {elementsToPalleteItems(reader)}
+                {elementsToPaletteItems(reader)}
             </div>
             <div className="kindContainer">
                 <div className="kindName">Operator internals</div>
-                {elementsToPalleteItems(operatorInternals)}
+                {elementsToPaletteItems(operatorInternals)}
             </div>
             <div className="kindContainer">
-                <div className="kindName">Materialization plank</div>
-                {elementsToPalleteItems(materializationPlank)}
+                <div className="kindName">Materialization Line</div>
+                {elementsToPaletteItems(materializationLine)}
                 {/*Nodes with images*/}
                 {/*<ImageNodeList />*/}
             </div>

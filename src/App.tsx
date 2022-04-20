@@ -63,16 +63,20 @@ const OverviewFlow = () => {
             const data = await getNode(modelName, nodes[i].id);
             if (data !== undefined) {
                 const id = +data.id;
-                const attributeValues = await Promise.all([getAttributeValue(modelName, id, 'xCoordinate'), getAttributeValue(modelName, id, 'yCoordinate'), getAttributeValue(modelName, id, 'kind')]);
-                const kind = attributeValues[2] ?? 'unknown';
-                const name = kind !== 'materializationPlank' && kind !== 'operatorInternals' ? data.name : '';
-                const dragHandle = kind === 'materializationPlank' ? '.materializationPlankNodeHandle' : '.nodeHandle';
-                const style = kind === 'materializationPlank' ? {zIndex: 10} : kind === 'operatorInternals' ? {zIndex: -10} : {zIndex: 0};
+                const attributeValues = await Promise.all([getAttributeValue(modelName, id, 'xCoordinate'),
+                    getAttributeValue(modelName, id, 'yCoordinate'), getAttributeValue(modelName, id, 'kind'),
+                    getAttributeValue(modelName, id, 'width'), getAttributeValue(modelName, id, 'height')]);
+                const kind = attributeValues[2] ?? 'unknown'
+                const width = attributeValues[3] ?? (kind === 'operator' || kind === 'reader' ? 80 : 350);
+                const height = attributeValues[4] ?? (kind === 'operator' || kind === 'reader' ? 50 : 80);
+                const name = kind !== 'materializationLine' && kind !== 'operatorInternals' ? data.name : '';
+                const dragHandle = kind === 'materializationLine' ? '.materializationLineNodeHandle' : '.nodeHandle';
+                const style = kind === 'materializationLine' ? {zIndex: 10} : kind === 'operatorInternals' ? {zIndex: -10} : {zIndex: 0};
                 let node: Node = {
                     id: `${id}`,
                     type: `${kind}Node`,
                     className: `${kind}Node`,
-                    data: {label: name},
+                    data: {label: name, width: width, height: height},
                     position: {x: 0, y: 0},
                     dragHandle: dragHandle,
                     style: style

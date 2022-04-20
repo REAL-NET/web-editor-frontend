@@ -38,7 +38,7 @@ aside {
     height: 60px;
 }
 
-.paletteItem.materializationPlankNode {
+.paletteItem.materializationLineNode {
     margin: 10px 0 5px 0;
     height: 0;
     border: 1px dashed #6d1f00;

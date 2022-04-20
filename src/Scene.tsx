@@ -19,7 +19,7 @@ import './Scene.css'
 import OperatorNode from './nodes/OperatorNode';
 import OperatorInternalsNode from './nodes/OperatorInternalsNode';
 import ReaderNode from './nodes/ReaderNode';
-import MaterializationPlankNode from './nodes/MaterializationPlankNode';
+import MaterializationLineNode from './nodes/MaterializationLineNode';
 import ImageNode from './nodes/ImageNode';
 import RobotsModelNode from './nodes/RobotsModelNode';
 import {getAttributeValue, setAttributeValue} from './requests/attributeRequests';
@@ -53,7 +53,7 @@ const nodeTypes = {
     operatorNode: OperatorNode,
     operatorInternalsNode: OperatorInternalsNode,
     readerNode: ReaderNode,
-    materializationPlankNode: MaterializationPlankNode,
+    materializationLineNode: MaterializationLineNode,
     robotsNode: RobotsModelNode,
     imageNode: ImageNode,
 };
@@ -76,15 +76,14 @@ const Scene: React.FC<SceneProps> = ({
         event.dataTransfer.dropEffect = 'move';
     };
 
-    const onNodesChange = ((changes: NodeChange[]) => {
-        changes.forEach(async change => {
+    const onNodesChange = (async (changes: NodeChange[]) => {
+        await Promise.all(changes.map(async (change) => {
             if (change.type === 'remove') {
                 const deletedNode = nodes.find(node => node.id === change.id);
-                if (deletedNode !== undefined && deletedNode.type === 'operatorInternalsNode')
-                {
+                if (deletedNode !== undefined && deletedNode.type === 'operatorInternalsNode') {
                     const children = nodes.filter(node => node.parentNode === `${change.id}`);
                     for (const child of children) {
-                        changes.push({ type: 'remove', id: child.id});
+                        changes.push({type: 'remove', id: child.id});
                         deleteElement(modelName, +child.id);
                     }
                     const edgesModel: Array<{ id: number, name: string }> = await getModelEdges(modelName);
@@ -106,22 +105,24 @@ const Scene: React.FC<SceneProps> = ({
                         }
                     }
                     childEdges.forEach(childEdge => {
-                        changes.push({ type: 'remove', id: `${childEdge}`});
+                        changes.push({type: 'remove', id: `${childEdge}`});
                     })
                 }
                 await deleteElement(modelName, +change.id);
             }
-        })
-        check();
+        }));
+        if (changes.find(change => change.type === 'remove') !== undefined) {
+            check();
+        }
         setNodes((ns) => applyNodeChanges(changes, ns));
     });
 
-    const onEdgesChange = ((changes: EdgeChange[]) => {
-        changes.forEach(async change => {
+    const onEdgesChange = (async (changes: EdgeChange[]) => {
+        await Promise.all(changes.map(async (change) => {
             if (change.type === 'remove') {
                 await deleteElement(modelName, +change.id);
             }
-        })
+        }));
         check();
         setEdges((es) => applyEdgeChanges(changes, es));
     });
@@ -201,22 +202,22 @@ const Scene: React.FC<SceneProps> = ({
     };
 
     // Scene node stops being dragged/moved
-    const onNodeDragStop = (event: MouseEvent, node: Node) => {
+    const onNodeDragStop = async (event: MouseEvent, node: Node) => {
         event.preventDefault();
-        setAttributeValue(modelName, +node.id, 'xCoordinate', `${node.position.x}`);
-        setAttributeValue(modelName, +node.id, 'yCoordinate', `${node.position.y}`);
+        await Promise.all([setAttributeValue(modelName, +node.id, 'xCoordinate', `${node.position.x}`),
+            setAttributeValue(modelName, +node.id, 'yCoordinate', `${node.position.y}`)]);
         check();
     };
 
     const addNodeElement = async (modelName: string, parentsId: number, kind: string, xCoordinate: number, yCoordinate: number) => {
         const newNodeId = await addElement(modelName, parentsId);
         const newNode = await getNode(modelName, +newNodeId);
-        const name = kind !== 'materializationPlank' && kind !== 'operatorInternals' ? newNode.name : '';
-        const dragHandle = kind === 'materializationPlank' ? '.materializationPlankNodeHandle' : '.nodeHandle';
-        const style = kind === 'materializationPlank' ? {zIndex: 10} : kind === 'operatorInternals' ? {zIndex: -10} : {zIndex: 0};
+        const name = kind !== 'materializationLine' && kind !== 'operatorInternals' ? newNode.name : '';
+        const dragHandle = kind === 'materializationLine' ? '.materializationLineNodeHandle' : '.nodeHandle';
+        const style = kind === 'materializationLine' ? {zIndex: 10} : kind === 'operatorInternals' ? {zIndex: -10} : {zIndex: 0};
         let parentNode = undefined;
         let extent: 'parent' | undefined = undefined;
-        if (kind !== 'materializationPlank' && kind !== 'operatorInternals') {
+        if (kind !== 'materializationLine' && kind !== 'operatorInternals') {
             const operatorInternalsNodes = nodes.filter(node => node.type === 'operatorInternalsNode');
             for (const node of operatorInternalsNodes) {
                 // check if dropped node is inside operator internals node
@@ -235,14 +236,18 @@ const Scene: React.FC<SceneProps> = ({
                 }
             }
         }
-        setAttributeValue(modelName, +newNodeId, 'xCoordinate', `${xCoordinate}`);
-        setAttributeValue(modelName, +newNodeId, 'yCoordinate', `${yCoordinate}`);
+        const size = await Promise.all([getAttributeValue(modelName, newNodeId, 'width'),
+            getAttributeValue(modelName, newNodeId, 'height'),
+            setAttributeValue(modelName, +newNodeId, 'xCoordinate', `${xCoordinate}`),
+            setAttributeValue(modelName, +newNodeId, 'yCoordinate', `${yCoordinate}`)]);
+        const width = size[0] ?? (kind === 'operator' || kind === 'reader' ? 80 : 350);
+        const height = size[1] ?? (kind === 'operator' || kind === 'reader' ? 50 : 80);
         const node: Node = {
             id: `${newNodeId}`,
             type: `${kind}Node`,
             className: `${kind}Node`,
             position: {x: xCoordinate, y: yCoordinate},
-            data: {label: `${name}`},
+            data: {label: `${name}`, width: width, height: height},
             dragHandle: dragHandle,
             parentNode: parentNode,
             extent: extent,
