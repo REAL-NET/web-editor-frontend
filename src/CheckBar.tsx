@@ -12,6 +12,10 @@ const errors = [
     {
         code: 2,
         description: "Positional operator does not have any readers"
+    },
+    {
+        code: 3,
+        description: "Tuple operator have a reader"
     }
 ]
 

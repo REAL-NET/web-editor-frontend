@@ -136,7 +136,7 @@ const Scene: React.FC<SceneProps> = ({
                 id: `${newEdge.id}`,
                 source: `${edgeParas.source}`,
                 target: `${edgeParas.target}`,
-                label: `${newEdge.name}`
+                // label: `${newEdge.name}`
             }
             setEdges((edges: Edge[]) => addEdge(newLink, edges));
         }
