@@ -77,41 +77,41 @@ const Scene: React.FC<SceneProps> = ({
     };
 
     const onNodesChange = (async (changes: NodeChange[]) => {
-        await Promise.all(changes.map(async (change) => {
-            if (change.type === 'remove') {
-                const deletedNode = nodes.find(node => node.id === change.id);
-                if (deletedNode !== undefined && deletedNode.type === 'operatorInternalsNode') {
-                    const children = nodes.filter(node => node.parentNode === `${change.id}`);
-                    for (const child of children) {
-                        changes.push({type: 'remove', id: child.id});
-                        deleteElement(modelName, +child.id);
-                    }
-                    const edgesModel: Array<{ id: number, name: string }> = await getModelEdges(modelName);
-                    const childEdges: number[] = [];
-                    for (const edgeModel of edgesModel) {
-                        const edge = await getEdge(modelName, +edgeModel.id);
-                        if (edge !== undefined) {
-                            const source = children.find(child => +child.id === edge.from.id)
-                            const target = children.find(child => +child.id === edge.to.id)
-                            if (source !== undefined || target !== undefined) {
-                                childEdges.push(edge.id);
-                                deleteElement(modelName, edge.id);
-                            } else {
-                                const type = await getAttributeValue(modelName, edge.id, 'type');
-                                if (type === 'internals') {
+        if (changes.find(change => change.type === 'remove') !== undefined) {
+            await Promise.all(changes.map(async (change) => {
+                if (change.type === 'remove') {
+                    const deletedNode = nodes.find(node => node.id === change.id);
+                    if (deletedNode !== undefined && deletedNode.type === 'operatorInternalsNode') {
+                        const children = nodes.filter(node => node.parentNode === `${change.id}`);
+                        for (const child of children) {
+                            changes.push({type: 'remove', id: child.id});
+                            deleteElement(modelName, +child.id);
+                        }
+                        const edgesModel: Array<{ id: number, name: string }> = await getModelEdges(modelName);
+                        const childEdges: number[] = [];
+                        for (const edgeModel of edgesModel) {
+                            const edge = await getEdge(modelName, +edgeModel.id);
+                            if (edge !== undefined) {
+                                const source = children.find(child => +child.id === edge.from.id)
+                                const target = children.find(child => +child.id === edge.to.id)
+                                if (source !== undefined || target !== undefined) {
+                                    childEdges.push(edge.id);
                                     deleteElement(modelName, edge.id);
+                                } else {
+                                    const type = await getAttributeValue(modelName, edge.id, 'type');
+                                    if (type === 'internals') {
+                                        deleteElement(modelName, edge.id);
+                                    }
                                 }
                             }
                         }
+                        childEdges.forEach(childEdge => {
+                            changes.push({type: 'remove', id: `${childEdge}`});
+                        })
                     }
-                    childEdges.forEach(childEdge => {
-                        changes.push({type: 'remove', id: `${childEdge}`});
-                    })
+                    await deleteElement(modelName, +change.id);
                 }
-                await deleteElement(modelName, +change.id);
-            }
-        }));
-        if (changes.find(change => change.type === 'remove') !== undefined) {
+            }));
             check();
         }
         setNodes((ns) => applyNodeChanges(changes, ns));
