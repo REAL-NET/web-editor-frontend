@@ -20,7 +20,7 @@ const errors = [
 ]
 
 const CheckBar = (props: { checkErrorInfo: number[]} ) => {
-    const [currentErrors, setCurrentErrors] = useState<{ code: number, description: string }[]>([]);
+    const [currentErrors, setCurrentErrors] = useState<Array<{ code: number, description: string }>>([]);
     const [className, setClassName] = useState<string>('hidden');
 
     useEffect(() => {
@@ -28,25 +28,28 @@ const CheckBar = (props: { checkErrorInfo: number[]} ) => {
             setCurrentErrors([])
             setClassName('hidden');
         } else {
+            const newErrors: Array<{ code: number, description: string }> = [];
             props.checkErrorInfo.forEach(errorCode => {
-                const currentError = errors.find((error) => error.code === errorCode);
-                if (currentError !== undefined && currentErrors.find(error => error.code === currentError.code) === undefined) {
-                    setCurrentErrors(currentErrors.concat(currentError));
-                    setClassName('alert');
-                }
+                const newError = errors.find(error => error.code === errorCode);
+                const description = newError !== undefined ? newError.description : 'Unknown error';
+                newErrors.push({code: errorCode, description: description});
             });
+            setCurrentErrors(newErrors);
+            setClassName('alertContainer');
         }
     }, [props.checkErrorInfo]);
 
     const errorsList = currentErrors.map(error => {
-        return (<div key={error.code}>{error.description}</div>)
+        return (
+            <Alert className="alert" variant="filled" severity="error">
+                {error.description}
+            </Alert>
+        )
     });
 
     return (
         <div className={className}>
-            <Alert variant="filled" severity="error">
-                {errorsList}
-            </Alert>
+            {errorsList}
         </div>
     );
 };

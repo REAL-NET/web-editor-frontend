@@ -2,11 +2,15 @@ aside {
     font-size: 12px;
 }
 
-.alert {
-    width: 300px;
-    float: right;
+.alertContainer {
     margin-right: 10px;
     margin-bottom: 10px;
+}
+
+.alert {
+    float: right;
+    width: 300px;
+    margin-bottom: 5px;
 }
 
 .hidden {
