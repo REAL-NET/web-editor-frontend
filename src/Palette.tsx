@@ -22,7 +22,7 @@ const Palette = (props: { metamodelName: string }) => {
             let newMetamodel: Array<{ id: number, name: string, kind: string, type: string }> = [];
             const model = await getModel(props.metamodelName);
             if (model !== undefined) {
-                for (const element of model) {
+                await Promise.all(model.map(async (element: {id: number, name: string}) => {
                     if (element.name !== 'link' && element.name !== '') {
                         const isAbstract = await getAttributeValue(props.metamodelName, element.id, 'isAbstract');
                         if (isAbstract !== undefined && !isAbstract) {
@@ -39,7 +39,7 @@ const Palette = (props: { metamodelName: string }) => {
                             }
                         }
                     }
-                }
+                }))
                 setMetamodel(newMetamodel);
             }
         }

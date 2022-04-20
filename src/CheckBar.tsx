@@ -41,7 +41,7 @@ const CheckBar = (props: { checkErrorInfo: number[]} ) => {
 
     const errorsList = currentErrors.map(error => {
         return (
-            <Alert className="alert" variant="filled" severity="error">
+            <Alert className="alert" key={error.code} variant="filled" severity="error">
                 {error.description}
             </Alert>
         )
