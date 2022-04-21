@@ -268,7 +268,7 @@ const Scene: React.FC<SceneProps> = ({
             type: `${kind}Node`,
             className: `${kind}Node`,
             position: {x: xCoordinate, y: yCoordinate},
-            data: {label: `${name}`, width: width, height: height, isSelected: false},
+            data: {label: `${name}`, width: width, height: height, isSelected: false, modelName: modelName, id: newNodeId},
             dragHandle: dragHandle,
             parentNode: parentNode,
             extent: extent,

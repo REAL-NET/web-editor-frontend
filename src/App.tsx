@@ -66,7 +66,7 @@ const OverviewFlow = () => {
                 const attributeValues = await Promise.all([getAttributeValue(modelName, id, 'xCoordinate'),
                     getAttributeValue(modelName, id, 'yCoordinate'), getAttributeValue(modelName, id, 'kind'),
                     getAttributeValue(modelName, id, 'width'), getAttributeValue(modelName, id, 'height')]);
-                const kind = attributeValues[2] ?? 'unknown'
+                const kind = attributeValues[2] ?? 'unknown';
                 const width = attributeValues[3] ?? (kind === 'operator' || kind === 'reader' ? 80 : 350);
                 const height = attributeValues[4] ?? (kind === 'operator' || kind === 'reader' ? 50 : 80);
                 const name = kind !== 'materializationLine' && kind !== 'operatorInternals' ? data.name : '';
@@ -76,7 +76,7 @@ const OverviewFlow = () => {
                     id: `${id}`,
                     type: `${kind}Node`,
                     className: `${kind}Node`,
-                    data: {label: name, width: width, height: height, isSelected: false},
+                    data: {label: name, width: width, height: height, isSelected: false, modelName: modelName, id: id},
                     position: {x: 0, y: 0},
                     dragHandle: dragHandle,
                     style: style
