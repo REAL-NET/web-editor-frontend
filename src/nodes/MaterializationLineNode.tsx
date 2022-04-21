@@ -7,7 +7,9 @@ import './QueryNodes.css';
 const materializationLineNode: FC<NodeProps> = ({data}) => {
     return (
         <div className='materializationLineNode'>
-            <ResizableBox width={data.width} height={1} axis="x" handle={<div className='materializationLineNodeResizeHandle'></div>} draggableOpts={{ grid: [5, 5] }} minConstraints={[200, 1]}>
+            <ResizableBox width={data.width} height={1} axis="x"
+                          handle={<div className={`materializationLineNodeResizeHandle ${!data.isSelected ? 'hidden' : ''}`}></div>}
+                          draggableOpts={{ grid: [5, 5] }} minConstraints={[200, 1]}>
                 {/*<span>{data.label}</span>*/}
             </ResizableBox>
             <div className='materializationLineNodeHandle'></div>

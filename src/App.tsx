@@ -76,7 +76,7 @@ const OverviewFlow = () => {
                     id: `${id}`,
                     type: `${kind}Node`,
                     className: `${kind}Node`,
-                    data: {label: name, width: width, height: height},
+                    data: {label: name, width: width, height: height, isSelected: false},
                     position: {x: 0, y: 0},
                     dragHandle: dragHandle,
                     style: style

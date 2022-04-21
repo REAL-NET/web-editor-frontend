@@ -41,13 +41,13 @@
 
 .nodeResizeHandle {
     position: absolute;
-    bottom: -4px;
-    right: -4px;
-    width: 8px;
-    height: 8px;
-    background-color: #1153aa;
-    opacity: 0.75;
-    border-radius: 4px;
+    bottom: -3px;
+    right: -3px;
+    width: 6px;
+    height: 6px;
+    background-color: white;
+    border: 0.5px solid grey;
+    border-radius: 100%;
     cursor: se-resize;
 }
 
@@ -61,12 +61,12 @@
 
 .materializationLineNodeResizeHandle {
     position: absolute;
-    bottom: -1px;
-    right: -2px;
-    width: 2px;
-    height: 2px;
-    background-color: #1153aa;
-    opacity: 0.75;
-    border-radius: 4px;
-    cursor: se-resize;
+    bottom: -3px;
+    right: -3px;
+    width: 6px;
+    height: 6px;
+    background-color: white;
+    border: 0.5px solid grey;
+    border-radius: 100%;
+    cursor: ew-resize;
 }

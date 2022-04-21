@@ -1,4 +1,4 @@
-import React, {DragEvent, MouseEvent} from 'react';
+import React, {DragEvent, MouseEvent, useState} from 'react';
 import ReactFlow, {
     addEdge,
     applyEdgeChanges,
@@ -62,12 +62,33 @@ const Scene: React.FC<SceneProps> = ({
                                          modelName, metamodelName, nodes, edges, setNodes, setEdges, reactFlowInstance,
                                          setReactFlowInstance, setCurrentElementId, captureElementClick, checkErrorInfo, setCheckErrorInfo
                                      }) => {
+
+    const [selectedNodeId, setSelectedNodeId] = useState<string>('');
+
     const onNodeClick = (_: MouseEvent, node: Node) => {
         setCurrentElementId(node.id);
+        if (node.id !== selectedNodeId) {
+            const previousNode = nodes.find(nd => nd.id === selectedNodeId);
+            if (previousNode !== undefined) {
+                previousNode.data.isSelected = false;
+            }
+            const currentNode = nodes.find(nd => nd.id === node.id);
+            if (currentNode !== undefined) {
+                currentNode.data.isSelected = true;
+            }
+            setSelectedNodeId(node.id);
+        }
     };
 
     const onEdgeClick = (_: MouseEvent, edge: Edge) => {
         setCurrentElementId(edge.id);
+        if (selectedNodeId !== '') {
+            const previousNode = nodes.find(nd => nd.id === selectedNodeId);
+            if (previousNode !== undefined) {
+                previousNode.data.isSelected = false;
+            }
+            setSelectedNodeId('');
+        }
     };
 
     // Any node moving
@@ -247,7 +268,7 @@ const Scene: React.FC<SceneProps> = ({
             type: `${kind}Node`,
             className: `${kind}Node`,
             position: {x: xCoordinate, y: yCoordinate},
-            data: {label: `${name}`, width: width, height: height},
+            data: {label: `${name}`, width: width, height: height, isSelected: false},
             dragHandle: dragHandle,
             parentNode: parentNode,
             extent: extent,
