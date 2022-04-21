@@ -51,7 +51,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, nodes, edges, setNo
             else setEdgeType('undefined');
 
         }
-    }, [element]);
+    }, [idNumber]);
 
     useEffect(() => {
         setNodes((nodes: Node[]) =>
@@ -176,7 +176,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, nodes, edges, setNo
                 setNodeAttributes(attributeElements);
             });
         }
-    }, [element]);
+    }, [idNumber]);
 
     useEffect(() => {
         if (element !== undefined && isEdge(element)) {
@@ -200,7 +200,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, nodes, edges, setNo
                 setEdgeAttributes(attributeElements);
             });
         }
-    }, [element]);
+    }, [idNumber]);
 
     const CheckboxItem = (props: { label: string, value: boolean, setFunc: (isRequired: boolean) => void }) => {
         return (
