@@ -49,14 +49,16 @@ const Palette = (props: { metamodelName: string }) => {
     const PaletteItem = (props: { element: { id: number; name: string, kind: string } }) => {
         return (
             <div className={`paletteItem ${props.element.kind}Node`} key={props.element.id}
-                 onDragStart={(event: DragEvent) => onDragStart(event, props.element.kind, props.element.id)} draggable>
+                 onDragStart={(event: DragEvent) => onDragStart(event, props.element.kind, props.element.id)} draggable="true">
                 {props.element.kind !== 'materializationLine' ? props.element.name : ''}
             </div>
         );
     }
 
-    const positionalOperators = metamodel.filter((element) => element.kind === 'operator' && element.type === 'positional');
-    const tupleOperators = metamodel.filter((element) => element.kind === 'operator' && element.type === 'tuple');
+    const positionalOperators = metamodel.filter((element) => element.kind === 'operator' && element.type === 'positional').sort(
+        (x, y) => x.name.localeCompare(y.name));
+    const tupleOperators = metamodel.filter((element) => element.kind === 'operator' && element.type === 'tuple').sort(
+        (x, y) => x.name.localeCompare(y.name));
     const reader = metamodel.filter((element) => element.kind === 'reader');
     const operatorInternals = metamodel.filter((element) => element.kind === 'operatorInternals');
     const materializationLine = metamodel.filter((element) => element.kind === 'materializationLine');

@@ -225,8 +225,31 @@ const Scene: React.FC<SceneProps> = ({
     // Scene node stops being dragged/moved
     const onNodeDragStop = async (event: MouseEvent, node: Node) => {
         event.preventDefault();
-        await Promise.all([setAttributeValue(modelName, +node.id, 'xCoordinate', `${node.position.x}`),
-            setAttributeValue(modelName, +node.id, 'yCoordinate', `${node.position.y}`)]);
+        let xCoordinate = node.position.x;
+        let yCoordinate = node.position.y;
+        if (node.type !== 'materializationLineNode' && node.type !== 'operatorInternalsNode') {
+            const operatorInternalsNodes = nodes.filter(node => node.type === 'operatorInternalsNode');
+            for (const operatorInternalsNode of operatorInternalsNodes) {
+                // check if dropped node is inside operator internals node
+                if (yCoordinate >= operatorInternalsNode.position.y && (yCoordinate + node.data.height) <=
+                    (operatorInternalsNode.position.y + operatorInternalsNode.height!) &&
+                    xCoordinate >= operatorInternalsNode.position.x && (xCoordinate + node.data.width) <=
+                    (operatorInternalsNode.position.x + operatorInternalsNode.width!)) {
+                    node.parentNode = `${operatorInternalsNode.id}`;
+                    node.extent = 'parent';
+                    // position relative
+                    xCoordinate = xCoordinate - operatorInternalsNode.position.x;
+                    yCoordinate = yCoordinate - operatorInternalsNode.position.y;
+
+                    const newEdgeId = await addEdgeElement(metamodelName, modelName, +operatorInternalsNode.id, +node.id);
+                    if (newEdgeId !== undefined && newEdgeId !== '') {
+                        setAttributeValue(modelName, +newEdgeId, 'type', 'internals');
+                    }
+                }
+            }
+        }
+        await Promise.all([setAttributeValue(modelName, +node.id, 'xCoordinate', `${xCoordinate}`),
+            setAttributeValue(modelName, +node.id, 'yCoordinate', `${yCoordinate}`)]);
         check();
     };
 
