@@ -16,6 +16,34 @@ const errors = [
     {
         code: 3,
         description: "Tuple operator have a reader"
+    },
+    {
+        code: 4,
+        description: "Leaves must be DataSource operators"
+    },
+    {
+        code: 5,
+        description: "Join operators must have at least two readers"
+    },
+    {
+        code: 6,
+        description: "Last operator must be tuple"
+    },
+    {
+        code: 7,
+        description: "Tuple operators must have tuple children"
+    },
+    {
+        code: 8,
+        description: "Positional operators must have positional children"
+    },
+    {
+        code: 9,
+        description: "Materializing operators must have positional children"
+    },
+    {
+        code: 10,
+        description: "Materializing operators must have tuple parent"
     }
 ]
 
@@ -49,7 +77,7 @@ const CheckBar = (props: { checkErrorInfo: number[]} ) => {
 
     return (
         <div className={className}>
-            {errorsList}
+            {/*{errorsList}*/}
         </div>
     );
 };
