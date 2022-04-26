@@ -117,7 +117,9 @@ const OverviewFlow = () => {
                             source: `${newEdge.from.id}`,
                             target: `${newEdge.to.id}`,
                             // label: `${edge.name}`,
-                            type: 'straight'
+                            type: 'straight',
+                            sourceHandle: 'portBottom',
+                            targetHandle: 'portTop'
                         }
                     );
                 }

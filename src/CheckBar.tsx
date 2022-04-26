@@ -77,7 +77,7 @@ const CheckBar = (props: { checkErrorInfo: number[]} ) => {
 
     return (
         <div className={className}>
-            {/*{errorsList}*/}
+            {errorsList}
         </div>
     );
 };

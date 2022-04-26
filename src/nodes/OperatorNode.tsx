@@ -20,18 +20,32 @@ const operatorNode: FC<NodeProps> = ({data}) => {
     return (
         <div className='operatorNode'>
             <Handle
+                className="port"
                 type="source"
                 position={Position.Top}
-                id="portLeft"
+                id="portTop"
             />
+            {/*<Handle*/}
+            {/*    className="port"*/}
+            {/*    type="source"*/}
+            {/*    position={Position.Left}*/}
+            {/*    id="portLeft"*/}
+            {/*/>*/}
             <ResizableBox width={data.width} height={data.height}
                           handle={<div className={`nodeResizeHandle ${!data.isSelected ? 'hidden' : ''}`}></div>}
                           draggableOpts={{ grid: [5, 5] }} minConstraints={[80, 30]} onResizeStop={onResizeStop}>
                 <span className='label'>{data.label}</span>
             </ResizableBox>
+            <Handle
+                className="port"
+                type="source"
+                position={Position.Bottom}
+                id="portBottom"
+            />
             {/*<Handle*/}
+            {/*    className="port"*/}
             {/*    type="source"*/}
-            {/*    position={Position.Bottom}*/}
+            {/*    position={Position.Right}*/}
             {/*    id="portRight"*/}
             {/*/>*/}
             <div className='nodeHandle'></div>
