@@ -227,7 +227,7 @@ const Scene: React.FC<SceneProps> = ({
         event.preventDefault();
         let xCoordinate = node.position.x;
         let yCoordinate = node.position.y;
-        if (node.type !== 'materializationLineNode' && node.type !== 'operatorInternalsNode') {
+        if (node.type !== 'materializationLineNode' && node.type !== 'operatorInternalsNode' && node.parentNode === undefined) {
             const operatorInternalsNodes = nodes.filter(node => node.type === 'operatorInternalsNode');
             for (const operatorInternalsNode of operatorInternalsNodes) {
                 // check if dropped node is inside operator internals node
@@ -240,7 +240,10 @@ const Scene: React.FC<SceneProps> = ({
                     // position relative
                     xCoordinate = xCoordinate - operatorInternalsNode.position.x;
                     yCoordinate = yCoordinate - operatorInternalsNode.position.y;
-
+                    node.position = {x: xCoordinate, y: yCoordinate};
+                    var nodeCopy = Object.assign(Object.create(node), node);
+                    let changes: NodeChange[] = [{id: node.id, type: 'remove'}];
+                    setNodes((ns) => applyNodeChanges(changes, ns).concat(nodeCopy));
                     const newEdgeId = await addEdgeElement(metamodelName, modelName, +operatorInternalsNode.id, +node.id);
                     if (newEdgeId !== undefined && newEdgeId !== '') {
                         setAttributeValue(modelName, +newEdgeId, 'type', 'internals');
