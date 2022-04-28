@@ -1,9 +1,11 @@
 import api from './api';
 
+import {Node, Edge} from "../types";
+
 export const getEdge = async (modelName: string, id: number) => {
     try {
         const response = await api.get(`element/${modelName}/edge/${id}`);
-        return response.data;
+        return response.data as Edge;
     } catch (error) {
         console.log(error);
     }
@@ -12,7 +14,7 @@ export const getEdge = async (modelName: string, id: number) => {
 export const getNode = async (modelName: string, id: number) => {
     try {
         const response = await api.get(`element/${modelName}/node/${id}`);
-        return response.data;
+        return response.data as Node;
     } catch (error) {
         console.log(error);
     }
@@ -30,7 +32,7 @@ export const setElementName = async (modelName: string, id: number, value: strin
 export const addElement = async (modelName: string, parentId: number) => {
     try {
         const response = await api.post(`element/${modelName}/${parentId}`);
-        return response.data;
+        return response.data as number;
     } catch (error) {
         console.log(error);
     }

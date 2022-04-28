@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {applyNodeChanges, Edge, Node, NodeChange, ReactFlowInstance, ReactFlowProvider} from 'react-flow-renderer';
+import {Edge, Node, ReactFlowInstance, ReactFlowProvider} from 'react-flow-renderer';
 
 import PropertyBar from './PropertyBar'
 import Palette from './Palette';
@@ -8,7 +8,7 @@ import {getModelNodes, getModelEdges} from './requests/modelRequests';
 import {getEdge, getNode} from './requests/elementRequests';
 
 import './App.css';
-import {addAttribute, getAttributeValue} from "./requests/attributeRequests";
+import {addAttribute, getAttributeValue, getNodeAttributes} from "./requests/attributeRequests";
 import {Errors, queryCheckWithErrorInfo} from "./requests/сonstraintsCheckRequests";
 
 document.addEventListener('click', e => (e.target));
@@ -65,16 +65,16 @@ const OverviewFlow = () => {
     const getNodes = async (modelName: string, nodes: Array<{ id: number, name: string }>): Promise<Node[]> => {
         let currentNodes: Node[] = [];
         await Promise.all(nodes.map(async node => {
-            const data = await getNode(modelName, node.id);
-            if (data !== undefined) {
-                const id = +data.id;
-                const attributeValues = await Promise.all([getAttributeValue(modelName, id, 'xCoordinate'),
-                    getAttributeValue(modelName, id, 'yCoordinate'), getAttributeValue(modelName, id, 'kind'),
-                    getAttributeValue(modelName, id, 'width'), getAttributeValue(modelName, id, 'height')]);
-                const kind = attributeValues[2] ?? 'unknown';
-                const width = attributeValues[3] ?? (kind === 'operator' || kind === 'reader' ? 90 : 350);
-                const height = attributeValues[4] ?? (kind === 'operator' || kind === 'reader' ? 40 : 90);
-                const name = kind !== 'materializationLine' && kind !== 'operatorInternals' ? data.name : '';
+            const currentNode = await getNode(modelName, node.id);
+            if (currentNode !== undefined) {
+                const id = +currentNode.id;
+                const attributes = currentNode.attributes;
+                const xCoordinate = attributes.find(attribute => attribute.name === 'xCoordinate');
+                const yCoordinate = attributes.find(attribute => attribute.name === 'yCoordinate');
+                const kind = attributes.find(attribute => attribute.name === 'kind')?.stringValue ?? 'unknown';
+                const width = attributes.find(attribute => attribute.name === 'width')?.stringValue ?? (kind === 'operator' || kind === 'reader' ? 90 : 350);
+                const height = attributes.find(attribute => attribute.name === 'height')?.stringValue ?? (kind === 'operator' || kind === 'reader' ? 40 : 90);
+                const name = kind !== 'materializationLine' && kind !== 'operatorInternals' ? currentNode.name : '';
                 const dragHandle = kind === 'materializationLine' ? '.materializationLineNodeHandle' : '.nodeHandle';
                 const style = kind === 'materializationLine' ? {zIndex: 10} : kind === 'operatorInternals' ? {zIndex: -10} : {zIndex: 0};
                 const nds = kind === 'operatorInternals' ? nodesRef : undefined;
@@ -88,11 +88,12 @@ const OverviewFlow = () => {
                     dragHandle: dragHandle,
                     style: style
                 }
-                if (attributeValues[0] === undefined || attributeValues[0].length === 0 || attributeValues[1] === undefined || attributeValues[1].length === 0) {
+                if (xCoordinate === undefined || xCoordinate.stringValue.length === 0 ||
+                    yCoordinate === undefined || yCoordinate.stringValue.length === 0) {
                     addAttribute(modelName, id, 'xCoordinate', '0');
                     addAttribute(modelName, id, 'yCoordinate', '0');
                 } else {
-                    node.position = {x: attributeValues[0], y: attributeValues[1]};
+                    node.position = {x: +xCoordinate.stringValue, y: +yCoordinate.stringValue};
                 }
                 currentNodes.push(node);
             }
@@ -106,7 +107,7 @@ const OverviewFlow = () => {
         await Promise.all(edges.map(async edge => {
             const newEdge = await getEdge(modelName, edge.id);
             if (newEdge !== undefined) {
-                const type = await getAttributeValue(modelName, newEdge.id, 'type');
+                const type = newEdge.attributes.find(attribute => attribute.name === 'type')?.stringValue;
                 if (type === 'internals') {
                     setNodes((nodes: Node[]) =>
                         nodes.map((node) => {

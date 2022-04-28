@@ -1,30 +1,22 @@
 import api from './api'
 
-import {Attribute} from "../Attribute";
+import {Attribute} from "../types";
 import {getEdge, getNode} from "./elementRequests";
 
 export const getNodeAttributes = async (modelName: string, id: number) => {
-    let attributes: Array<Attribute> = [];
-    await getNode(modelName, id).then(data => {
-        if (data.attributes !== undefined) {
-            data.attributes.forEach((attribute: Attribute) => {
-                attributes.push(attribute);
-            });
-        }
-    });
-    return attributes;
+    const node = await getNode(modelName, id);
+    if (node !== undefined && node.attributes !== undefined) {
+        return node.attributes;
+    }
+    return undefined;
 }
 
 export const getEdgeAttributes = async (modelName: string, id: number) => {
-    let attributes: Array<Attribute> = [];
-    await getEdge(modelName, id).then(data => {
-        if (data.attributes !== undefined) {
-            data.attributes.forEach((attribute: Attribute) => {
-                attributes.push(attribute);
-            });
-        }
-    });
-    return attributes;
+    const edge = await getEdge(modelName, id);
+    if (edge !== undefined && edge.attributes !== undefined) {
+        return edge.attributes
+    }
+    return undefined;
 }
 
 export const getAttributeValue = async (modelName: string, id: number, attribute: string) => {

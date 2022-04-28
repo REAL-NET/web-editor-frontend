@@ -7,7 +7,7 @@ import './nodes/QueryNodes.css';
 
 // import ImageNodeList from './nodes/ImageNodeList';
 import {getModel} from './requests/modelRequests';
-import {getAttributeValue} from './requests/attributeRequests';
+import {getAttributeValue, getNodeAttributes} from './requests/attributeRequests';
 
 const onDragStart = (event: DragEvent, kind: string, id: number) => {
     event.dataTransfer.setData('application/reactflow', `${kind} ${id}`);
@@ -24,17 +24,26 @@ const Palette = (props: { metamodelName: string }) => {
             if (model !== undefined) {
                 await Promise.all(model.map(async (element: {id: number, name: string}) => {
                     if (element.name !== 'link' && element.name !== '') {
-                        const isAbstract = await getAttributeValue(props.metamodelName, element.id, 'isAbstract');
-                        if (isAbstract !== undefined && !isAbstract) {
-                            const kind = await getAttributeValue(props.metamodelName, element.id, 'kind');
-                            if (kind !== undefined) {
-                                if (kind === 'operator') {
-                                    const type = await getAttributeValue(props.metamodelName, element.id, 'type');
-                                    if (type !== undefined) {
-                                        newMetamodel.push({id: element.id, name: element.name, kind: kind, type: type});
+                        const attributes = await getNodeAttributes(props.metamodelName, element.id);
+                        if (attributes !== undefined) {
+                            const isAbstractAttribute = attributes.find(attribute => attribute.name === 'isAbstract');
+                            const isAbstract = isAbstractAttribute !== undefined ? isAbstractAttribute.stringValue === 'true' : undefined;
+                            if (isAbstract !== undefined && !isAbstract) {
+                                const kind = attributes.find(attribute => attribute.name === 'kind')?.stringValue;
+                                if (kind !== undefined) {
+                                    if (kind === 'operator') {
+                                        const type = attributes.find(attribute => attribute.name === 'type')?.stringValue;
+                                        if (type !== undefined) {
+                                            newMetamodel.push({
+                                                id: element.id,
+                                                name: element.name,
+                                                kind: kind,
+                                                type: type
+                                            });
+                                        }
+                                    } else {
+                                        newMetamodel.push({id: element.id, name: element.name, kind: kind, type: ''});
                                     }
-                                } else {
-                                    newMetamodel.push({id: element.id, name: element.name, kind: kind, type: ''});
                                 }
                             }
                         }

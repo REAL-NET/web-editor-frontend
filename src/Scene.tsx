@@ -157,10 +157,9 @@ const Scene: React.FC<SceneProps> = ({
 
     const onConnect = async (edgeParas: Edge | Connection) => {
         const newEdgeId = await addEdgeElement(metamodelName, modelName, edgeParas.source !== null ? +edgeParas.source : -1, edgeParas.target !== null ? +edgeParas.target : -1);
-        if (newEdgeId !== undefined && newEdgeId !== '') {
-            const newEdge = await getEdge(modelName, +newEdgeId);
+        if (newEdgeId !== undefined) {
             const newLink = {
-                id: `${newEdge.id}`,
+                id: `${newEdgeId}`,
                 source: `${edgeParas.source}`,
                 target: `${edgeParas.target}`,
                 // label: `${newEdge.name}`
@@ -225,8 +224,10 @@ const Scene: React.FC<SceneProps> = ({
             } else {
                 const parentsId = data[1];
                 const newNode = await addNodeElement(modelName, +parentsId, kind, position.x, position.y);
-                setNodes(nodes => nodes.concat(newNode));
-                check();
+                if (newNode !== undefined) {
+                    setNodes(nodes => nodes.concat(newNode));
+                    check();
+                }
             }
         }
     };
@@ -254,7 +255,7 @@ const Scene: React.FC<SceneProps> = ({
                     const changes: NodeChange[] = [{id: node.id, type: 'remove'}];
                     setNodes((nodes) => applyNodeChanges(changes, nodes).concat(nodeCopy));
                     const newEdgeId = await addEdgeElement(metamodelName, modelName, +operatorInternalsNode.id, +node.id);
-                    if (newEdgeId !== undefined && newEdgeId !== '') {
+                    if (newEdgeId !== undefined) {
                         setAttributeValue(modelName, +newEdgeId, 'type', 'internals');
                     }
                 }
@@ -267,61 +268,77 @@ const Scene: React.FC<SceneProps> = ({
 
     const addNodeElement = async (modelName: string, parentsId: number, kind: string, xCoordinate: number, yCoordinate: number) => {
         const newNodeId = await addElement(modelName, parentsId);
-        const newNode = await getNode(modelName, +newNodeId);
-        const name = kind !== 'materializationLine' && kind !== 'operatorInternals' ? newNode.name : '';
-        const dragHandle = kind === 'materializationLine' ? '.materializationLineNodeHandle' : '.nodeHandle';
-        const style = kind === 'materializationLine' ? {zIndex: 10} : kind === 'operatorInternals' ? {zIndex: -10} : {zIndex: 0};
-        let parentNode = undefined;
-        let extent: 'parent' | undefined = undefined;
-        if (kind !== 'materializationLine' && kind !== 'operatorInternals') {
-            const operatorInternalsNodes = nodes.filter(node => node.type === 'operatorInternalsNode');
-            for (const node of operatorInternalsNodes) {
-                // check if dropped node is inside operator internals node
-                if (yCoordinate >= node.position.y && (yCoordinate + 30) <= (node.position.y + node.height!) &&
-                    xCoordinate >= node.position.x && (xCoordinate + 80) <= (node.position.x + node.width!)) {
-                    parentNode = `${node.id}`;
-                    extent = 'parent';
-                    // position relative
-                    xCoordinate = xCoordinate - node.position.x;
-                    yCoordinate = yCoordinate - node.position.y;
+        if (newNodeId !== undefined) {
+            const newNode = await getNode(modelName, newNodeId);
+            if (newNode !== undefined) {
+                const name = kind !== 'materializationLine' && kind !== 'operatorInternals' ? newNode.name : '';
+                const dragHandle = kind === 'materializationLine' ? '.materializationLineNodeHandle' : '.nodeHandle';
+                const style = kind === 'materializationLine' ? {zIndex: 10} : kind === 'operatorInternals' ? {zIndex: -10} : {zIndex: 0};
+                let parentNode = undefined;
+                let extent: 'parent' | undefined = undefined;
+                if (kind !== 'materializationLine' && kind !== 'operatorInternals') {
+                    const operatorInternalsNodes = nodes.filter(node => node.type === 'operatorInternalsNode');
+                    for (const node of operatorInternalsNodes) {
+                        // check if dropped node is inside operator internals node
+                        if (yCoordinate >= node.position.y && (yCoordinate + 30) <= (node.position.y + node.height!) &&
+                            xCoordinate >= node.position.x && (xCoordinate + 80) <= (node.position.x + node.width!)) {
+                            parentNode = `${node.id}`;
+                            extent = 'parent';
+                            // position relative
+                            xCoordinate = xCoordinate - node.position.x;
+                            yCoordinate = yCoordinate - node.position.y;
 
-                    const newEdgeId = await addEdgeElement(metamodelName, modelName, +node.id, newNodeId);
-                    if (newEdgeId !== undefined && newEdgeId !== '') {
-                        setAttributeValue(modelName, +newEdgeId, 'type', 'internals');
+                            const newEdgeId = await addEdgeElement(metamodelName, modelName, +node.id, newNodeId);
+                            if (newEdgeId !== undefined) {
+                                setAttributeValue(modelName, +newEdgeId, 'type', 'internals');
+                            }
+                        }
                     }
                 }
+                const size = await Promise.all([getAttributeValue(modelName, newNodeId, 'width'),
+                    getAttributeValue(modelName, newNodeId, 'height'),
+                    setAttributeValue(modelName, +newNodeId, 'xCoordinate', `${xCoordinate}`),
+                    setAttributeValue(modelName, +newNodeId, 'yCoordinate', `${yCoordinate}`)]);
+                const width = size[0] ?? (kind === 'operator' || kind === 'reader' ? 90 : 350);
+                const height = size[1] ?? (kind === 'operator' || kind === 'reader' ? 40 : 90);
+                const nds = kind === 'operatorInternals' ? nodesRef : undefined;
+                const setNds = kind === 'operatorInternals' ? setNodes : undefined;
+                const node: Node = {
+                    id: `${newNodeId}`,
+                    type: `${kind}Node`,
+                    className: `${kind}Node`,
+                    position: {x: xCoordinate, y: yCoordinate},
+                    data: {
+                        label: `${name}`,
+                        width: width,
+                        height: height,
+                        isSelected: false,
+                        modelName: modelName,
+                        id: newNodeId,
+                        nodes: nds,
+                        setNodes: setNds
+                    },
+                    dragHandle: dragHandle,
+                    parentNode: parentNode,
+                    extent: extent,
+                    style: style
+                };
+                return node;
             }
         }
-        const size = await Promise.all([getAttributeValue(modelName, newNodeId, 'width'),
-            getAttributeValue(modelName, newNodeId, 'height'),
-            setAttributeValue(modelName, +newNodeId, 'xCoordinate', `${xCoordinate}`),
-            setAttributeValue(modelName, +newNodeId, 'yCoordinate', `${yCoordinate}`)]);
-        const width = size[0] ?? (kind === 'operator' || kind === 'reader' ? 90 : 350);
-        const height = size[1] ?? (kind === 'operator' || kind === 'reader' ? 40 : 90);
-        const nds = kind === 'operatorInternals' ? nodesRef : undefined;
-        const setNds = kind === 'operatorInternals' ? setNodes : undefined;
-        const node: Node = {
-            id: `${newNodeId}`,
-            type: `${kind}Node`,
-            className: `${kind}Node`,
-            position: {x: xCoordinate, y: yCoordinate},
-            data: {label: `${name}`, width: width, height: height, isSelected: false, modelName: modelName, id: newNodeId, nodes: nds, setNodes: setNds},
-            dragHandle: dragHandle,
-            parentNode: parentNode,
-            extent: extent,
-            style: style
-        };
-        return node;
+        return undefined;
     }
 
     const addEdgeElement = async (metamodelName: string, modelName: string, fromElementId: number, toElementId: number) => {
         const edgesArray: Array<{id: number, name: string}> = await getModelEdges(metamodelName);
         for (let i = 0, length = edgesArray.length; i < length; ++i) {
             if (edgesArray[i].name === 'link') {
-                const newEdgeId: string = await addElement(modelName, edgesArray[i].id);
-                setEdgeFromElement(modelName, +newEdgeId, fromElementId);
-                setEdgeToElement(modelName, +newEdgeId, toElementId);
-                return newEdgeId;
+                const newEdgeId = await addElement(modelName, edgesArray[i].id);
+                if (newEdgeId !== undefined) {
+                    setEdgeFromElement(modelName, newEdgeId, fromElementId);
+                    setEdgeToElement(modelName, newEdgeId, toElementId);
+                    return newEdgeId;
+                }
             }
         }
     }

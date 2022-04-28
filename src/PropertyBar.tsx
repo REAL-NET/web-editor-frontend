@@ -3,7 +3,7 @@ import {isNode, isEdge, Node, Edge} from 'react-flow-renderer';
 import {MenuItem, Select, Checkbox, TextField, InputLabel} from '@mui/material';
 
 import {getNodeAttributes, getEdgeAttributes, setAttributeValue} from './requests/attributeRequests';
-import {Attribute} from './Attribute';
+import {Attribute} from './types';
 import {setElementName} from './requests/elementRequests';
 
 import './PropertyBar.css';
