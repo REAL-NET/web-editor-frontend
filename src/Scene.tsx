@@ -296,8 +296,8 @@ const Scene: React.FC<SceneProps> = ({
             getAttributeValue(modelName, newNodeId, 'height'),
             setAttributeValue(modelName, +newNodeId, 'xCoordinate', `${xCoordinate}`),
             setAttributeValue(modelName, +newNodeId, 'yCoordinate', `${yCoordinate}`)]);
-        const width = size[0] ?? (kind === 'operator' || kind === 'reader' ? 80 : 350);
-        const height = size[1] ?? (kind === 'operator' || kind === 'reader' ? 50 : 80);
+        const width = size[0] ?? (kind === 'operator' || kind === 'reader' ? 90 : 350);
+        const height = size[1] ?? (kind === 'operator' || kind === 'reader' ? 40 : 90);
         const nds = kind === 'operatorInternals' ? nodesRef : undefined;
         const setNds = kind === 'operatorInternals' ? setNodes : undefined;
         const node: Node = {

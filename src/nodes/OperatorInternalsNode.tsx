@@ -89,7 +89,7 @@ const operatorInternalsNode: FC<NodeProps> = ({data}) => {
                           draggableOpts={{ grid: [5, 5] }} minConstraints={[120, 40]} onResizeStop={onResizeStop}>
                 {/*<span>{data.label}</span>*/}
             </ResizableBox>
-            <div className='resizeButton' onClick={() => fitNodes(data.id)}></div>
+            <div className={`resizeButton ${!data.isSelected ? 'hidden' : ''}`} onClick={() => fitNodes(data.id)}></div>
             <div className='nodeHandle'></div>
         </div>
     );

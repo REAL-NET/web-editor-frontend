@@ -72,8 +72,8 @@ const OverviewFlow = () => {
                     getAttributeValue(modelName, id, 'yCoordinate'), getAttributeValue(modelName, id, 'kind'),
                     getAttributeValue(modelName, id, 'width'), getAttributeValue(modelName, id, 'height')]);
                 const kind = attributeValues[2] ?? 'unknown';
-                const width = attributeValues[3] ?? (kind === 'operator' || kind === 'reader' ? 80 : 350);
-                const height = attributeValues[4] ?? (kind === 'operator' || kind === 'reader' ? 50 : 80);
+                const width = attributeValues[3] ?? (kind === 'operator' || kind === 'reader' ? 90 : 350);
+                const height = attributeValues[4] ?? (kind === 'operator' || kind === 'reader' ? 40 : 90);
                 const name = kind !== 'materializationLine' && kind !== 'operatorInternals' ? data.name : '';
                 const dragHandle = kind === 'materializationLine' ? '.materializationLineNodeHandle' : '.nodeHandle';
                 const style = kind === 'materializationLine' ? {zIndex: 10} : kind === 'operatorInternals' ? {zIndex: -10} : {zIndex: 0};
