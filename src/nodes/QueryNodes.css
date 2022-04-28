@@ -2,6 +2,7 @@
     border: 1px solid #b85450;
     background: #f8cecc;
 }
+
 .operatorNode .label {
     display: flex;
     justify-content: center;
@@ -15,6 +16,7 @@
     border-radius: 10%;
     background: #fff2cc;
 }
+
 .readerNode .label {
     display: flex;
     justify-content: center;

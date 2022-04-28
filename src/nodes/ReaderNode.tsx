@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import React, {FC} from 'react';
 import {Handle, NodeProps, Position} from 'react-flow-renderer';
-import { ResizableBox } from 'react-resizable';
+import {ResizableBox} from 'react-resizable';
 
 import './QueryNodes.css';
 import {setAttributeValue} from "../requests/attributeRequests";
@@ -35,7 +35,7 @@ const readerNode: FC<NodeProps> = ({data}) => {
             />
             <ResizableBox width={data.width} height={data.height}
                           handle={<div className={`nodeResizeHandle ${!data.isSelected ? 'hidden' : ''}`}></div>}
-                          draggableOpts={{ grid: [5, 5] }} minConstraints={[80, 30]} onResizeStop={onResizeStop}>
+                          draggableOpts={{grid: [5, 5]}} minConstraints={[80, 30]} onResizeStop={onResizeStop}>
                 <span className='label'>{data.label}</span>
             </ResizableBox>
             <Handle

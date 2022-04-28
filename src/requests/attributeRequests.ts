@@ -1,6 +1,5 @@
 import api from './api'
 
-import {Attribute} from "../types";
 import {getEdge, getNode} from "./elementRequests";
 
 export const getNodeAttributes = async (modelName: string, id: number) => {

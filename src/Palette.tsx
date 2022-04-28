@@ -22,7 +22,7 @@ const Palette = (props: { metamodelName: string }) => {
             let newMetamodel: Array<{ id: number, name: string, kind: string, type: string }> = [];
             const model = await getModel(props.metamodelName);
             if (model !== undefined) {
-                await Promise.all(model.map(async (element: {id: number, name: string}) => {
+                await Promise.all(model.map(async (element: { id: number, name: string }) => {
                     if (element.name !== 'link' && element.name !== '') {
                         const attributes = await getNodeAttributes(props.metamodelName, element.id);
                         if (attributes !== undefined) {
@@ -52,13 +52,15 @@ const Palette = (props: { metamodelName: string }) => {
                 setMetamodel(newMetamodel);
             }
         }
+
         getMetamodel();
     }, []);
 
     const PaletteItem = (props: { element: { id: number; name: string, kind: string } }) => {
         return (
             <div className={`paletteItem ${props.element.kind}Node`} key={props.element.id}
-                 onDragStart={(event: DragEvent) => onDragStart(event, props.element.kind, props.element.id)} draggable="true">
+                 onDragStart={(event: DragEvent) => onDragStart(event, props.element.kind, props.element.id)}
+                 draggable="true">
                 {props.element.kind !== 'materializationLine' ? props.element.name : ''}
             </div>
         );
@@ -74,7 +76,7 @@ const Palette = (props: { metamodelName: string }) => {
 
     const elementsToPaletteItems = (elements: { id: number; name: string, kind: string, type: string }[]) => {
         return elements.map(element => {
-            return <PaletteItem element={element} key={element.name + element.id} />
+            return <PaletteItem element={element} key={element.name + element.id}/>
         });
     }
 

@@ -257,7 +257,8 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, nodes, edges, setNo
             <div>
                 <label>Id: {idNumber}</label>
             </div>
-            <TextFieldItem label="Label" value={typeof element.label === 'string' ? element.label : ""} setFunc={setName}/>
+            <TextFieldItem label="Label" value={typeof element.label === 'string' ? element.label : ""}
+                           setFunc={setName}/>
             <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden}/>
             <CheckboxItem label="Animated" setFunc={setEdgeIsAnimated} value={edgeIsAnimated}/>
             <div>
