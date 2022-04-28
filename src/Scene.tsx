@@ -59,8 +59,18 @@ const nodeTypes = {
 };
 
 const Scene: React.FC<SceneProps> = ({
-                                         modelName, metamodelName, nodes, edges, setNodes, setEdges, reactFlowInstance,
-                                         setReactFlowInstance, setCurrentElementId, captureElementClick, checkErrorInfo, setCheckErrorInfo
+                                         modelName,
+                                         metamodelName,
+                                         nodes,
+                                         edges,
+                                         setNodes,
+                                         setEdges,
+                                         reactFlowInstance,
+                                         setReactFlowInstance,
+                                         setCurrentElementId,
+                                         captureElementClick,
+                                         checkErrorInfo,
+                                         setCheckErrorInfo
                                      }) => {
 
     const [selectedNodeId, setSelectedNodeId] = useState<string>('');
@@ -310,8 +320,8 @@ const Scene: React.FC<SceneProps> = ({
                     position: {x: xCoordinate, y: yCoordinate},
                     data: {
                         label: `${name}`,
-                        width: width,
-                        height: height,
+                        width: +width,
+                        height: +height,
                         isSelected: false,
                         modelName: modelName,
                         id: newNodeId,
@@ -330,7 +340,7 @@ const Scene: React.FC<SceneProps> = ({
     }
 
     const addEdgeElement = async (metamodelName: string, modelName: string, fromElementId: number, toElementId: number) => {
-        const edgesArray: Array<{id: number, name: string}> = await getModelEdges(metamodelName);
+        const edgesArray: Array<{ id: number, name: string }> = await getModelEdges(metamodelName);
         for (let i = 0, length = edgesArray.length; i < length; ++i) {
             if (edgesArray[i].name === 'link') {
                 const newEdgeId = await addElement(modelName, edgesArray[i].id);
@@ -364,7 +374,6 @@ const Scene: React.FC<SceneProps> = ({
                 onNodeClick={captureElementClick ? onNodeClick : undefined}
                 onEdgeClick={captureElementClick ? onEdgeClick : undefined}
                 connectionMode={ConnectionMode.Loose}
-                connectOnClick
             >
                 <Controls/>
                 <Background>

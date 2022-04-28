@@ -9,9 +9,11 @@ const operatorNode: FC<NodeProps> = ({data}) => {
     const onResizeStop = (event: any, {size}: any) => {
         if (data.id !== undefined && data.modelName !== undefined) {
             if (data.width !== size.width) {
+                data.width = size.width;
                 setAttributeValue(data.modelName, data.id, 'width', size.width);
             }
             if (data.height !== size.height) {
+                data.height = size.height;
                 setAttributeValue(data.modelName, data.id, 'height', size.height);
             }
         }
@@ -25,12 +27,12 @@ const operatorNode: FC<NodeProps> = ({data}) => {
                 position={Position.Top}
                 id="portTop"
             />
-            {/*<Handle*/}
-            {/*    className="port"*/}
-            {/*    type="source"*/}
-            {/*    position={Position.Left}*/}
-            {/*    id="portLeft"*/}
-            {/*/>*/}
+            <Handle
+                className="port"
+                type="source"
+                position={Position.Left}
+                id="portLeft"
+            />
             <ResizableBox width={data.width} height={data.height}
                           handle={<div className={`nodeResizeHandle ${!data.isSelected ? 'hidden' : ''}`}></div>}
                           draggableOpts={{ grid: [5, 5] }} minConstraints={[80, 30]} onResizeStop={onResizeStop}>
@@ -42,12 +44,12 @@ const operatorNode: FC<NodeProps> = ({data}) => {
                 position={Position.Bottom}
                 id="portBottom"
             />
-            {/*<Handle*/}
-            {/*    className="port"*/}
-            {/*    type="source"*/}
-            {/*    position={Position.Right}*/}
-            {/*    id="portRight"*/}
-            {/*/>*/}
+            <Handle
+                className="port"
+                type="source"
+                position={Position.Right}
+                id="portRight"
+            />
             <div className='nodeHandle'></div>
         </div>
     );

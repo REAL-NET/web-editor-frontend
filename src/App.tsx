@@ -8,7 +8,7 @@ import {getModelNodes, getModelEdges} from './requests/modelRequests';
 import {getEdge, getNode} from './requests/elementRequests';
 
 import './App.css';
-import {addAttribute, getAttributeValue, getNodeAttributes} from "./requests/attributeRequests";
+import {addAttribute} from "./requests/attributeRequests";
 import {Errors, queryCheckWithErrorInfo} from "./requests/сonstraintsCheckRequests";
 
 document.addEventListener('click', e => (e.target));
@@ -83,7 +83,16 @@ const OverviewFlow = () => {
                     id: `${id}`,
                     type: `${kind}Node`,
                     className: `${kind}Node`,
-                    data: {label: name, width: width, height: height, isSelected: false, modelName: modelName, id: id, nodes: nds, setNodes: setNds},
+                    data: {
+                        label: name,
+                        width: +width,
+                        height: +height,
+                        isSelected: false,
+                        modelName: modelName,
+                        id: id,
+                        nodes: nds,
+                        setNodes: setNds
+                    },
                     position: {x: 0, y: 0},
                     dragHandle: dragHandle,
                     style: style
@@ -133,7 +142,7 @@ const OverviewFlow = () => {
                 }
             }
         }));
-        
+
         return currentEdges;
     }
 

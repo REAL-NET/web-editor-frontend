@@ -9,9 +9,11 @@ const operatorInternalsNode: FC<NodeProps> = ({data}) => {
     const onResizeStop = (event: any, {size}: any) => {
         if (data.id !== undefined && data.modelName !== undefined) {
             if (data.width !== size.width) {
+                data.width = size.width;
                 setAttributeValue(data.modelName, data.id, 'width', size.width);
             }
             if (data.height !== size.height) {
+                data.height = size.height;
                 setAttributeValue(data.modelName, data.id, 'height', size.height);
             }
         }
