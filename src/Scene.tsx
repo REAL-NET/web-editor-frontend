@@ -1,4 +1,4 @@
-import React, {DragEvent, MouseEvent, useState} from 'react';
+import React, {DragEvent, MouseEvent, useEffect, useRef, useState} from 'react';
 import ReactFlow, {
     addEdge,
     applyEdgeChanges,
@@ -64,6 +64,11 @@ const Scene: React.FC<SceneProps> = ({
                                      }) => {
 
     const [selectedNodeId, setSelectedNodeId] = useState<string>('');
+    const nodesRef = useRef<Node[]>([])
+
+    useEffect(() => {
+        nodesRef.current = nodes;
+    }, [nodes]);
 
     const onNodeClick = (_: MouseEvent, node: Node) => {
         setCurrentElementId(node.id);
@@ -135,7 +140,7 @@ const Scene: React.FC<SceneProps> = ({
             }));
             check();
         }
-        setNodes((ns) => applyNodeChanges(changes, ns));
+        setNodes((nodes) => applyNodeChanges(changes, nodes));
     });
 
     const onEdgesChange = (async (changes: EdgeChange[]) => {
@@ -245,9 +250,9 @@ const Scene: React.FC<SceneProps> = ({
                     xCoordinate = xCoordinate - operatorInternalsNode.position.x;
                     yCoordinate = yCoordinate - operatorInternalsNode.position.y;
                     node.position = {x: xCoordinate, y: yCoordinate};
-                    var nodeCopy = Object.assign(Object.create(node), node);
-                    let changes: NodeChange[] = [{id: node.id, type: 'remove'}];
-                    setNodes((ns) => applyNodeChanges(changes, ns).concat(nodeCopy));
+                    const nodeCopy = Object.assign(Object.create(node), node);
+                    const changes: NodeChange[] = [{id: node.id, type: 'remove'}];
+                    setNodes((nodes) => applyNodeChanges(changes, nodes).concat(nodeCopy));
                     const newEdgeId = await addEdgeElement(metamodelName, modelName, +operatorInternalsNode.id, +node.id);
                     if (newEdgeId !== undefined && newEdgeId !== '') {
                         setAttributeValue(modelName, +newEdgeId, 'type', 'internals');
@@ -293,12 +298,14 @@ const Scene: React.FC<SceneProps> = ({
             setAttributeValue(modelName, +newNodeId, 'yCoordinate', `${yCoordinate}`)]);
         const width = size[0] ?? (kind === 'operator' || kind === 'reader' ? 80 : 350);
         const height = size[1] ?? (kind === 'operator' || kind === 'reader' ? 50 : 80);
+        const nds = kind === 'operatorInternals' ? nodesRef : undefined;
+        const setNds = kind === 'operatorInternals' ? setNodes : undefined;
         const node: Node = {
             id: `${newNodeId}`,
             type: `${kind}Node`,
             className: `${kind}Node`,
             position: {x: xCoordinate, y: yCoordinate},
-            data: {label: `${name}`, width: width, height: height, isSelected: false, modelName: modelName, id: newNodeId},
+            data: {label: `${name}`, width: width, height: height, isSelected: false, modelName: modelName, id: newNodeId, nodes: nds, setNodes: setNds},
             dragHandle: dragHandle,
             parentNode: parentNode,
             extent: extent,
@@ -340,6 +347,7 @@ const Scene: React.FC<SceneProps> = ({
                 onNodeClick={captureElementClick ? onNodeClick : undefined}
                 onEdgeClick={captureElementClick ? onEdgeClick : undefined}
                 connectionMode={ConnectionMode.Loose}
+                connectOnClick
             >
                 <Controls/>
                 <Background>

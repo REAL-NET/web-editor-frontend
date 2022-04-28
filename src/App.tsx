@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {Edge, Node, ReactFlowInstance, ReactFlowProvider} from 'react-flow-renderer';
+import React, {useState, useEffect, useRef} from 'react';
+import {applyNodeChanges, Edge, Node, NodeChange, ReactFlowInstance, ReactFlowProvider} from 'react-flow-renderer';
 
 import PropertyBar from './PropertyBar'
 import Palette from './Palette';
@@ -23,6 +23,11 @@ const OverviewFlow = () => {
     const [captureElementClick,] = useState<boolean>(true);
     const [currentElementId, setCurrentElementId] = useState<string>("");
     const [checkErrorInfo, setCheckErrorInfo] = useState<number[]>([]);
+    const nodesRef = useRef<Node[]>([])
+
+    useEffect(() => {
+        nodesRef.current = nodes;
+    }, [nodes]);
 
     // model
     useEffect(() => {
@@ -72,11 +77,13 @@ const OverviewFlow = () => {
                 const name = kind !== 'materializationLine' && kind !== 'operatorInternals' ? data.name : '';
                 const dragHandle = kind === 'materializationLine' ? '.materializationLineNodeHandle' : '.nodeHandle';
                 const style = kind === 'materializationLine' ? {zIndex: 10} : kind === 'operatorInternals' ? {zIndex: -10} : {zIndex: 0};
+                const nds = kind === 'operatorInternals' ? nodesRef : undefined;
+                const setNds = kind === 'operatorInternals' ? setNodes : undefined;
                 let node: Node = {
                     id: `${id}`,
                     type: `${kind}Node`,
                     className: `${kind}Node`,
-                    data: {label: name, width: width, height: height, isSelected: false, modelName: modelName, id: id},
+                    data: {label: name, width: width, height: height, isSelected: false, modelName: modelName, id: id, nodes: nds, setNodes: setNds},
                     position: {x: 0, y: 0},
                     dragHandle: dragHandle,
                     style: style
@@ -98,7 +105,7 @@ const OverviewFlow = () => {
         let currentEdges: Edge[] = [];
         await Promise.all(edges.map(async edge => {
             const newEdge = await getEdge(modelName, edge.id);
-            if (edge !== undefined) {
+            if (newEdge !== undefined) {
                 const type = await getAttributeValue(modelName, newEdge.id, 'type');
                 if (type === 'internals') {
                     setNodes((nodes: Node[]) =>
