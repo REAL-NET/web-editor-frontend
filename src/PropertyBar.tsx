@@ -219,8 +219,9 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, nodes, edges, setNo
         const [textFieldValue, setTextFieldValue] = useState(props.value);
 
         return (
-            <div>
+            <div className="textPropertyContainer">
                 <TextField
+                    variant="standard"
                     label={props.label + ': '}
                     value={textFieldValue}
                     onChange={(event) => setTextFieldValue(event.target.value)}
@@ -240,7 +241,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, nodes, edges, setNo
     if (element !== undefined && isNode(element)) return (
         <aside>
             <div className="description">Property bar</div>
-            <div>
+            <div className="textPropertyContainer">
                 <label>Id: {idNumber}</label>
             </div>
             <TextFieldItem label="Label" value={element.data.label} setFunc={setName}/>

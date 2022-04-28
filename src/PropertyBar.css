@@ -3,8 +3,13 @@ aside {
     padding: 5px 15px;
     background: #fcfcfc;
 }
+
 .description {
     padding-bottom: 10px;
     text-align: center;
     font-size: 20px;
+}
+
+.textPropertyContainer {
+    margin-bottom: 7px;
 }
