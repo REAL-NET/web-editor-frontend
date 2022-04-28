@@ -176,7 +176,12 @@ const Scene: React.FC<SceneProps> = ({
                 type: 'straight',
                 sourceHandle: edgeParas.sourceHandle,
                 targetHandle: edgeParas.targetHandle,
-
+            }
+            if (edgeParas.sourceHandle !== undefined && edgeParas.sourceHandle !== null) {
+                setAttributeValue(modelName, newEdgeId, 'sourcePort', edgeParas.sourceHandle.toLowerCase().slice(4))
+            }
+            if (edgeParas.targetHandle !== undefined && edgeParas.targetHandle !== null) {
+                setAttributeValue(modelName, newEdgeId, 'targetPort', edgeParas.targetHandle.toLowerCase().slice(4))
             }
             setEdges((edges: Edge[]) => addEdge(newLink, edges));
         }

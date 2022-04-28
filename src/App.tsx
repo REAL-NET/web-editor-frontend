@@ -128,6 +128,10 @@ const OverviewFlow = () => {
                         })
                     );
                 } else {
+                    let sourcePort = newEdge.attributes.find(attribute => attribute.name === 'sourcePort')?.stringValue;
+                    sourcePort = sourcePort !== undefined ? sourcePort.charAt(0).toUpperCase() + sourcePort.slice(1) : 'Bottom';
+                    let targetPort = newEdge.attributes.find(attribute => attribute.name === 'targetPort')?.stringValue;
+                    targetPort = targetPort !== undefined ? targetPort.charAt(0).toUpperCase() + targetPort.slice(1) : 'Top';
                     currentEdges.push(
                         {
                             id: `${newEdge.id}`,
@@ -135,8 +139,8 @@ const OverviewFlow = () => {
                             target: `${newEdge.to.id}`,
                             // label: `${edge.name}`,
                             type: 'straight',
-                            sourceHandle: 'portBottom',
-                            targetHandle: 'portTop'
+                            sourceHandle: `port${sourcePort}`,
+                            targetHandle: `port${targetPort}`
                         }
                     );
                 }
