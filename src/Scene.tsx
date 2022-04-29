@@ -113,6 +113,9 @@ const Scene: React.FC<SceneProps> = ({
         }
     };
 
+    const onNodeContextMenu = (event: React.MouseEvent, node: Node) => {
+    }
+
     // Any node moving
     const onDragOver = (event: DragEvent) => {
         event.preventDefault();
@@ -384,8 +387,10 @@ const Scene: React.FC<SceneProps> = ({
                 onDragOver={onDragOver}
                 onNodeDragStop={onNodeDragStop}
                 onNodeClick={captureElementClick ? onNodeClick : undefined}
+                onNodeContextMenu={onNodeContextMenu}
                 onEdgeClick={captureElementClick ? onEdgeClick : undefined}
                 connectionMode={ConnectionMode.Loose}
+                selectionKeyCode={'Shift'}
             >
                 <Controls/>
                 <Background>
