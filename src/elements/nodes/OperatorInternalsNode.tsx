@@ -1,11 +1,35 @@
-import React, { FC } from 'react';
+import React, {FC, useState} from 'react';
 import {applyNodeChanges, NodeChange, NodeProps, Node} from 'react-flow-renderer';
-import { ResizableBox } from 'react-resizable';
+import {ResizableBox} from 'react-resizable';
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 import '../QueryElements.css';
 import {setAttributeValue} from "../../requests/attributeRequests";
+import {deepDeleteElement} from "../../utils";
 
-const operatorInternalsNode: FC<NodeProps> = ({data}) => {
+const OperatorInternalsNode: FC<NodeProps> = ({data}) => {
+    const [contextMenu, setContextMenu] = useState<{
+        mouseX: number;
+        mouseY: number;
+    } | null>(null);
+
+    const handleContextMenu = (event: React.MouseEvent) => {
+        event.preventDefault();
+        setContextMenu(contextMenu === null ? {mouseX: event.clientX - 2, mouseY: event.clientY - 4} : null);
+    };
+
+    const handleClose = () => {
+        setContextMenu(null);
+    };
+
+    const onDelete = async () => {
+        let changes = await deepDeleteElement({id: `${data.id}`, type: 'remove'}, data.modelName, data.nodes.current);
+        changes = changes.concat({id: `${data.id}`, type: 'remove'});
+        data.setNodes((nodes: Node[]) => applyNodeChanges(changes, nodes));
+        setContextMenu(null);
+    };
+
     const onResizeStop = (event: any, {size}: any) => {
         if (data.id !== undefined && data.modelName !== undefined) {
             if (data.width !== size.width) {
@@ -19,11 +43,11 @@ const operatorInternalsNode: FC<NodeProps> = ({data}) => {
         }
     };
 
-    const fitNodes = async (id: number) => {
+    const fitNodes = async () => {
         if (data.id !== undefined && data.modelName !== undefined) {
-            const node = data.nodes.current.find((nd: Node) => nd.id === `${id}`);
+            const node = data.nodes.current.find((nd: Node) => nd.id === `${data.id}`);
             if (node !== undefined) {
-                const children = data.nodes.current.filter((nd: Node) => nd.parentNode === `${id}`);
+                const children = data.nodes.current.filter((nd: Node) => nd.parentNode === `${data.id}`);
                 if (children !== undefined && children.length > 0) {
                     let top = Number.MAX_VALUE;
                     let bottom = Number.MIN_VALUE;
@@ -85,16 +109,26 @@ const operatorInternalsNode: FC<NodeProps> = ({data}) => {
     }
 
     return (
-        <div className='operatorInternalsNode'>
-            <ResizableBox width={data.width} height={data.height}
-                          handle={<div className={`nodeResizeHandle ${!data.isSelected ? 'hidden' : ''}`}></div>}
-                          draggableOpts={{ grid: [5, 5] }} minConstraints={[120, 40]} onResizeStop={onResizeStop}>
-                {/*<span>{data.label}</span>*/}
-            </ResizableBox>
-            <div className={`resizeButton ${!data.isSelected ? 'hidden' : ''}`} onClick={() => fitNodes(data.id)}></div>
-            <div className='nodeHandle'></div>
+        <div onContextMenu={handleContextMenu} style={{cursor: 'context-menu'}}>
+            <div className='operatorInternalsNode'>
+                <ResizableBox width={data.width} height={data.height}
+                              handle={<div className={`nodeResizeHandle ${!data.isSelected ? 'hidden' : ''}`}></div>}
+                              draggableOpts={{grid: [5, 5]}} minConstraints={[120, 40]} onResizeStop={onResizeStop}>
+                    {/*<span>{data.label}</span>*/}
+                </ResizableBox>
+                <div className={`resizeButton ${!data.isSelected ? 'hidden' : ''}`} onClick={fitNodes}></div>
+                <div className='nodeHandle'></div>
+            </div>
+            <Menu
+                open={contextMenu !== null}
+                onClose={handleClose}
+                anchorReference="anchorPosition"
+                anchorPosition={contextMenu !== null ? {top: contextMenu.mouseY, left: contextMenu.mouseX} : undefined}
+            >
+                <MenuItem onClick={onDelete}>Delete</MenuItem>
+            </Menu>
         </div>
     );
 };
 
-export default operatorInternalsNode;
+export default OperatorInternalsNode;

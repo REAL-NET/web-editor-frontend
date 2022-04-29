@@ -77,8 +77,6 @@ const OverviewFlow = () => {
                 const name = kind !== 'materializationLine' && kind !== 'operatorInternals' ? currentNode.name : '';
                 const dragHandle = kind === 'materializationLine' ? '.materializationLineNodeHandle' : '.nodeHandle';
                 const style = kind === 'materializationLine' ? {zIndex: 10} : kind === 'operatorInternals' ? {zIndex: -10} : {zIndex: 0};
-                const nds = kind === 'operatorInternals' ? nodesRef : undefined;
-                const setNds = kind === 'operatorInternals' ? setNodes : undefined;
                 let node: Node = {
                     id: `${id}`,
                     type: `${kind}Node`,
@@ -90,8 +88,8 @@ const OverviewFlow = () => {
                         isSelected: false,
                         modelName: modelName,
                         id: id,
-                        nodes: nds,
-                        setNodes: setNds
+                        nodes: nodesRef,
+                        setNodes: setNodes
                     },
                     position: {x: 0, y: 0},
                     dragHandle: dragHandle,
@@ -140,6 +138,11 @@ const OverviewFlow = () => {
                             source: `${newEdge.from.id}`,
                             target: `${newEdge.to.id}`,
                             type: `${type}Edge`,
+                            data: {
+                                modelName: modelName,
+                                id: newEdge.id,
+                                setEdges: setEdges
+                            },
                             sourceHandle: `port${sourcePort}`,
                             targetHandle: `port${targetPort}`
                         }
