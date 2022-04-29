@@ -119,38 +119,6 @@ const Scene: React.FC<SceneProps> = ({
                 if (change.type === 'remove') {
                     const newChanges = await deepDeleteElement(change, modelName, nodes);
                     changes = changes.concat(newChanges);
-                    // const deletedNode = nodes.find(node => node.id === change.id);
-                    // if (deletedNode !== undefined && deletedNode.type === 'operatorInternalsNode') {
-                    //     const children = nodes.filter(node => node.parentNode === change.id);
-                    //     if (children.length > 0) {
-                    //         for (const child of children) {
-                    //             changes.push({type: 'remove', id: child.id});
-                    //             deleteElement(modelName, +child.id);
-                    //         }
-                    //         const edgesModel: Array<{ id: number, name: string }> = await getModelEdges(modelName);
-                    //         const childEdges: number[] = [];
-                    //         await Promise.all(edgesModel.map(async (edgeModel) => {
-                    //             const edge = await getEdge(modelName, +edgeModel.id);
-                    //             if (edge !== undefined) {
-                    //                 const source = children.find(child => +child.id === edge.from.id)
-                    //                 const target = children.find(child => +child.id === edge.to.id)
-                    //                 if (source !== undefined || target !== undefined) {
-                    //                     childEdges.push(edge.id);
-                    //                     deleteElement(modelName, edge.id);
-                    //                 } else {
-                    //                     const type = edge.attributes.find(attribute => attribute.name === 'type')?.stringValue ?? undefined;
-                    //                     if (type === 'internals') {
-                    //                         deleteElement(modelName, edge.id);
-                    //                     }
-                    //                 }
-                    //             }
-                    //         }));
-                    //         childEdges.forEach(childEdge => {
-                    //             changes.push({type: 'remove', id: `${childEdge}`});
-                    //         })
-                    //     }
-                    // }
-                    // deleteElement(modelName, +change.id);
                 }
             }));
             check(modelName, setCheckErrorInfo);
@@ -181,7 +149,8 @@ const Scene: React.FC<SceneProps> = ({
                 data: {
                     modelName: modelName,
                     id: newEdgeId,
-                    setEdges: setEdges
+                    setEdges: setEdges,
+                    setCheckErrorInfo: setCheckErrorInfo
                 },
                 sourceHandle: edgeParas.sourceHandle,
                 targetHandle: edgeParas.targetHandle,
@@ -325,7 +294,8 @@ const Scene: React.FC<SceneProps> = ({
                         modelName: modelName,
                         id: newNodeId,
                         nodes: nodesRef,
-                        setNodes: setNodes
+                        setNodes: setNodes,
+                        setCheckErrorInfo: setCheckErrorInfo
                     },
                     dragHandle: dragHandle,
                     parentNode: parentNode,

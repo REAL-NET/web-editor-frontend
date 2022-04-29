@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Edge, MarkerType, Node, ReactFlowInstance, ReactFlowProvider} from 'react-flow-renderer';
+import {Edge, Node, ReactFlowInstance, ReactFlowProvider} from 'react-flow-renderer';
 
 import PropertyBar from './PropertyBar'
 import Palette from './Palette';
@@ -29,7 +29,6 @@ const OverviewFlow = () => {
         nodesRef.current = nodes;
     }, [nodes]);
 
-    // model
     useEffect(() => {
         Promise.all([getModelNodes(modelName), getModelEdges(modelName)]).then(async data => {
             let nodesArray: Array<{ id: number, name: string }> = [];
@@ -89,7 +88,8 @@ const OverviewFlow = () => {
                         modelName: modelName,
                         id: id,
                         nodes: nodesRef,
-                        setNodes: setNodes
+                        setNodes: setNodes,
+                        setCheckErrorInfo: setCheckErrorInfo
                     },
                     position: {x: 0, y: 0},
                     dragHandle: dragHandle,
@@ -141,7 +141,8 @@ const OverviewFlow = () => {
                             data: {
                                 modelName: modelName,
                                 id: newEdge.id,
-                                setEdges: setEdges
+                                setEdges: setEdges,
+                                setCheckErrorInfo: setCheckErrorInfo
                             },
                             sourceHandle: `port${sourcePort}`,
                             targetHandle: `port${targetPort}`

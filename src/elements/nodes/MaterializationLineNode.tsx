@@ -6,7 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 
 import '../QueryElements.css';
 import {setAttributeValue} from "../../requests/attributeRequests";
-import {deepDeleteElement} from "../../utils";
+import {check, deepDeleteElement} from "../../utils";
 
 const MaterializationLineNode: FC<NodeProps> = ({data}) => {
     const [contextMenu, setContextMenu] = useState<{
@@ -27,6 +27,7 @@ const MaterializationLineNode: FC<NodeProps> = ({data}) => {
         let changes = await deepDeleteElement({id: `${data.id}`, type: 'remove'}, data.modelName, data.nodes.current);
         changes = changes.concat({id: `${data.id}`, type: 'remove'});
         data.setNodes((nodes: Node[]) => applyNodeChanges(changes, nodes));
+        check(data.modelName, data.setCheckErrorInfo);
         setContextMenu(null);
     };
 

@@ -5,6 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 
 import '../QueryElements.css';
 import {deleteElement} from "../../requests/elementRequests";
+import {check} from "../../utils";
 
 const LocalEdge: FC<EdgeProps> = ({
                                       id,
@@ -32,6 +33,7 @@ const LocalEdge: FC<EdgeProps> = ({
         deleteElement(data.modelName, +data.id);
         const changes: EdgeChange[] = [{id: `${data.id}`, type: 'remove'}];
         data.setEdges((edges: Edge[]) => applyEdgeChanges(changes, edges));
+        check(data.modelName, data.setCheckErrorInfo);
         setContextMenu(null);
     };
 
