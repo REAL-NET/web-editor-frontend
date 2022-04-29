@@ -11,11 +11,11 @@ const errors = [
     },
     {
         code: 2,
-        description: "Positional operator does not have any readers"
+        description: "Positional operators must have readers"
     },
     {
         code: 3,
-        description: "Tuple operator have a reader"
+        description: "Tuple operators must not have readers"
     },
     {
         code: 4,
