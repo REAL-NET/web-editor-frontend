@@ -16,12 +16,12 @@ import ReactFlow, {
 
 import './Scene.css'
 
-import OperatorNode from './nodes/OperatorNode';
-import OperatorInternalsNode from './nodes/OperatorInternalsNode';
-import ReaderNode from './nodes/ReaderNode';
-import MaterializationLineNode from './nodes/MaterializationLineNode';
-import ImageNode from './nodes/ImageNode';
-import RobotsModelNode from './nodes/RobotsModelNode';
+import OperatorNode from './elements/nodes/OperatorNode';
+import OperatorInternalsNode from './elements/nodes/OperatorInternalsNode';
+import ReaderNode from './elements/nodes/ReaderNode';
+import MaterializationLineNode from './elements/nodes/MaterializationLineNode';
+import ImageNode from './elements/nodes/ImageNode';
+import RobotsModelNode from './elements/nodes/RobotsModelNode';
 import {getAttributeValue, setAttributeValue} from './requests/attributeRequests';
 import {
     addElement, deleteElement,
@@ -33,6 +33,8 @@ import {
 import {getModelEdges} from "./requests/modelRequests";
 import CheckBar from "./CheckBar";
 import {Errors, queryCheckWithErrorInfo} from "./requests/сonstraintsCheckRequests";
+import LocalEdge from "./elements/edges/LocalEdge";
+import RemoteEdge from "./elements/edges/RemoteEdge";
 
 type SceneProps = {
     modelName: string
@@ -57,6 +59,11 @@ const nodeTypes = {
     robotsNode: RobotsModelNode,
     imageNode: ImageNode,
 };
+
+const edgeTypes = {
+    localEdge: LocalEdge,
+    remoteEdge: RemoteEdge,
+}
 
 const Scene: React.FC<SceneProps> = ({
                                          modelName,
@@ -172,8 +179,7 @@ const Scene: React.FC<SceneProps> = ({
                 id: `${newEdgeId}`,
                 source: `${edgeParas.source}`,
                 target: `${edgeParas.target}`,
-                // label: `${newEdge.name}`
-                type: 'straight',
+                type: 'localEdge',
                 sourceHandle: edgeParas.sourceHandle,
                 targetHandle: edgeParas.targetHandle,
             }
@@ -370,6 +376,7 @@ const Scene: React.FC<SceneProps> = ({
                 onInit={onInit}
                 onConnect={onConnect}
                 nodeTypes={nodeTypes}
+                edgeTypes={edgeTypes}
                 deleteKeyCode={'Delete'}
                 snapToGrid
                 snapGrid={snapGrid}

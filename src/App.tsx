@@ -1,10 +1,10 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {Edge, Node, ReactFlowInstance, ReactFlowProvider} from 'react-flow-renderer';
+import React, {useEffect, useRef, useState} from 'react';
+import {Edge, MarkerType, Node, ReactFlowInstance, ReactFlowProvider} from 'react-flow-renderer';
 
 import PropertyBar from './PropertyBar'
 import Palette from './Palette';
 import Scene from './Scene';
-import {getModelNodes, getModelEdges} from './requests/modelRequests';
+import {getModelEdges, getModelNodes} from './requests/modelRequests';
 import {getEdge, getNode} from './requests/elementRequests';
 
 import './App.css';
@@ -116,7 +116,8 @@ const OverviewFlow = () => {
         await Promise.all(edges.map(async edge => {
             const newEdge = await getEdge(modelName, edge.id);
             if (newEdge !== undefined) {
-                const type = newEdge.attributes.find(attribute => attribute.name === 'type')?.stringValue;
+                const attributes = newEdge.attributes;
+                const type = attributes.find(attribute => attribute.name === 'type')?.stringValue;
                 if (type === 'internals') {
                     setNodes((nodes: Node[]) =>
                         nodes.map((node) => {
@@ -128,17 +129,17 @@ const OverviewFlow = () => {
                         })
                     );
                 } else {
-                    let sourcePort = newEdge.attributes.find(attribute => attribute.name === 'sourcePort')?.stringValue;
+                    let sourcePort = attributes.find(attribute => attribute.name === 'sourcePort')?.stringValue;
                     sourcePort = sourcePort !== undefined ? sourcePort.charAt(0).toUpperCase() + sourcePort.slice(1) : 'Bottom';
-                    let targetPort = newEdge.attributes.find(attribute => attribute.name === 'targetPort')?.stringValue;
+                    let targetPort = attributes.find(attribute => attribute.name === 'targetPort')?.stringValue;
                     targetPort = targetPort !== undefined ? targetPort.charAt(0).toUpperCase() + targetPort.slice(1) : 'Top';
+                    const type = attributes.find(attribute => attribute.name === 'type')?.stringValue ?? 'local';
                     currentEdges.push(
                         {
                             id: `${newEdge.id}`,
                             source: `${newEdge.from.id}`,
                             target: `${newEdge.to.id}`,
-                            // label: `${edge.name}`,
-                            type: 'straight',
+                            type: `${type}Edge`,
                             sourceHandle: `port${sourcePort}`,
                             targetHandle: `port${targetPort}`
                         }
