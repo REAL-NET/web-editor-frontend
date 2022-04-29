@@ -245,8 +245,8 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, nodes, edges, setNo
                 <label>Id: {idNumber}</label>
             </div>
             <TextFieldItem label="Label" value={element.data.label} setFunc={setName}/>
-            <TextFieldItem label="Background" value={nodeBg} setFunc={setNodeBg}/>
-            <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden}/>
+            {/*<TextFieldItem label="Background" value={nodeBg} setFunc={setNodeBg}/>*/}
+            {/*<CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden}/>*/}
             <CheckboxItem label="Draggable" setFunc={setNodeIsDraggable} value={nodeIsDraggable}/>
             <CheckboxItem label="Connectable" setFunc={setNodeIsConnectable} value={nodeIsConnectable}/>
             {nodeAttributes}
@@ -257,23 +257,22 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, nodes, edges, setNo
             <div>
                 <label>Id: {idNumber}</label>
             </div>
-            <TextFieldItem label="Label" value={typeof element.label === 'string' ? element.label : ""}
-                           setFunc={setName}/>
-            <CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden}/>
-            <CheckboxItem label="Animated" setFunc={setEdgeIsAnimated} value={edgeIsAnimated}/>
-            <div>
-                <InputLabel>Type</InputLabel>
-                <Select
-                    id="edgeType"
-                    value={edgeType}
-                    onChange={(evt) => setEdgeType(evt.target.value as string)}
-                >
-                    <MenuItem value={'default'}>default</MenuItem>
-                    <MenuItem value={'straight'}>straight</MenuItem>
-                    <MenuItem value={'step'}>step</MenuItem>
-                    <MenuItem value={'smoothstep'}>smoothstep</MenuItem>
-                </Select>
-            </div>
+            {/*<TextFieldItem label="Label" value={typeof element.label === 'string' ? element.label : ""} setFunc={setName}/>*/}
+            {/*<CheckboxItem label="Hidden" setFunc={setIsHidden} value={isHidden}/>*/}
+            {/*<CheckboxItem label="Animated" setFunc={setEdgeIsAnimated} value={edgeIsAnimated}/>*/}
+            {/*<div>*/}
+            {/*    <InputLabel>Type</InputLabel>*/}
+            {/*    <Select*/}
+            {/*        id="edgeType"*/}
+            {/*        value={edgeType}*/}
+            {/*        onChange={(evt) => setEdgeType(evt.target.value as string)}*/}
+            {/*    >*/}
+            {/*        <MenuItem value={'default'}>default</MenuItem>*/}
+            {/*        <MenuItem value={'straight'}>straight</MenuItem>*/}
+            {/*        <MenuItem value={'step'}>step</MenuItem>*/}
+            {/*        <MenuItem value={'smoothstep'}>smoothstep</MenuItem>*/}
+            {/*    </Select>*/}
+            {/*</div>*/}
             {edgeAttributes}
         </aside>)
     else return (
