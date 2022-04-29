@@ -18,14 +18,15 @@ export const check = async (modelName: string, setCheckErrorInfo:  React.Dispatc
 }
 
 export const deepDeleteElement = async (change: NodeRemoveChange, modelName: string, nodes: Node[]) => {
-    const newChanges: NodeChange[] = []
+    const newChanges: NodeChange[] = [];
+    const promises: Promise<any>[] = [];
     const deletedNode = nodes.find(node => node.id === change.id);
     if (deletedNode !== undefined && deletedNode.type === 'operatorInternalsNode') {
         const children = nodes.filter(node => node.parentNode === change.id);
         if (children.length > 0) {
             for (const child of children) {
                 newChanges.push({type: 'remove', id: child.id});
-                deleteElement(modelName, +child.id);
+                promises.push(deleteElement(modelName, +child.id));
             }
             const edgesModel: Array<{ id: number, name: string }> = await getModelEdges(modelName);
             const childEdges: number[] = [];
@@ -36,11 +37,11 @@ export const deepDeleteElement = async (change: NodeRemoveChange, modelName: str
                     const target = children.find(child => +child.id === edge.to.id)
                     if (source !== undefined || target !== undefined) {
                         childEdges.push(edge.id);
-                        deleteElement(modelName, edge.id);
+                        promises.push(deleteElement(modelName, edge.id));
                     } else {
                         const type = edge.attributes.find(attribute => attribute.name === 'type')?.stringValue ?? undefined;
                         if (type === 'internals') {
-                            deleteElement(modelName, edge.id);
+                            promises.push(deleteElement(modelName, edge.id));
                         }
                     }
                 }
@@ -50,6 +51,6 @@ export const deepDeleteElement = async (change: NodeRemoveChange, modelName: str
             })
         }
     }
-    deleteElement(modelName, +change.id);
-    return newChanges;
+    promises.push(deleteElement(modelName, +change.id));
+    return {newChanges, promises};
 }

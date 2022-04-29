@@ -30,11 +30,11 @@ const LocalEdge: FC<EdgeProps> = ({
     };
 
     const onDelete = async () => {
-        deleteElement(data.modelName, +data.id);
         const changes: EdgeChange[] = [{id: `${data.id}`, type: 'remove'}];
         data.setEdges((edges: Edge[]) => applyEdgeChanges(changes, edges));
-        check(data.modelName, data.setCheckErrorInfo);
         setContextMenu(null);
+        await deleteElement(data.modelName, +data.id);
+        await check(data.modelName, data.setCheckErrorInfo);
     };
 
     const path = `M ${sourceX},${sourceY}L ${targetX},${targetY}`;

@@ -24,11 +24,13 @@ const ReaderNode: FC<NodeProps> = ({data}) => {
     };
 
     const onDelete = async () => {
-        let changes = await deepDeleteElement({id: `${data.id}`, type: 'remove'}, data.modelName, data.nodes.current);
+        const result = await deepDeleteElement({id: `${data.id}`, type: 'remove'}, data.modelName, data.nodes.current);
+        let changes = result.newChanges;
         changes = changes.concat({id: `${data.id}`, type: 'remove'});
         data.setNodes((nodes: Node[]) => applyNodeChanges(changes, nodes));
-        check(data.modelName, data.setCheckErrorInfo);
         setContextMenu(null);
+        await Promise.all(result.promises);
+        check(data.modelName, data.setCheckErrorInfo);
     };
 
     const onResizeStop = (event: any, {size}: any) => {

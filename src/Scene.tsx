@@ -114,16 +114,22 @@ const Scene: React.FC<SceneProps> = ({
     };
 
     const onNodesChange = (async (changes: NodeChange[]) => {
+        let promises: Promise<any>[] = [];
         if (changes.find(change => change.type === 'remove') !== undefined) {
             await Promise.all(changes.map(async (change) => {
                 if (change.type === 'remove') {
-                    const newChanges = await deepDeleteElement(change, modelName, nodes);
-                    changes = changes.concat(newChanges);
+                    const result = await deepDeleteElement(change, modelName, nodes);
+                    changes = changes.concat(result.newChanges);
+                    promises = promises.concat(result.promises);
                 }
             }));
+            setNodes((nodes) => applyNodeChanges(changes, nodes));
+            await Promise.all(promises);
             check(modelName, setCheckErrorInfo);
         }
-        setNodes((nodes) => applyNodeChanges(changes, nodes));
+        else {
+            setNodes((nodes) => applyNodeChanges(changes, nodes));
+        }
     });
 
     const onEdgesChange = (async (changes: EdgeChange[]) => {
@@ -132,8 +138,8 @@ const Scene: React.FC<SceneProps> = ({
                 await deleteElement(modelName, +change.id);
             }
         }));
-        check(modelName, setCheckErrorInfo);
         setEdges((es) => applyEdgeChanges(changes, es));
+        check(modelName, setCheckErrorInfo);
     });
 
     const onInit = (_reactFlowInstance: ReactFlowInstance) => setReactFlowInstance(_reactFlowInstance);
