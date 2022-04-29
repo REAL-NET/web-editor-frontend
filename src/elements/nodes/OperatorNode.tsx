@@ -1,11 +1,11 @@
-import React, {FC} from 'react';
-import {Handle, NodeProps, Position} from 'react-flow-renderer';
-import {ResizableBox} from 'react-resizable';
+import React, { FC } from 'react';
+import { Handle, Position, NodeProps } from 'react-flow-renderer';
+import { ResizableBox } from 'react-resizable';
 
-import './QueryNodes.css';
-import {setAttributeValue} from "../requests/attributeRequests";
+import '../QueryElements.css';
+import {setAttributeValue} from "../../requests/attributeRequests";
 
-const readerNode: FC<NodeProps> = ({data}) => {
+const operatorNode: FC<NodeProps> = ({data}) => {
     const onResizeStop = (event: any, {size}: any) => {
         if (data.id !== undefined && data.modelName !== undefined) {
             if (data.width !== size.width) {
@@ -20,7 +20,7 @@ const readerNode: FC<NodeProps> = ({data}) => {
     };
 
     return (
-        <div className='readerNode'>
+        <div className='operatorNode'>
             <Handle
                 className="port"
                 type="source"
@@ -35,7 +35,7 @@ const readerNode: FC<NodeProps> = ({data}) => {
             />
             <ResizableBox width={data.width} height={data.height}
                           handle={<div className={`nodeResizeHandle ${!data.isSelected ? 'hidden' : ''}`}></div>}
-                          draggableOpts={{grid: [5, 5]}} minConstraints={[80, 30]} onResizeStop={onResizeStop}>
+                          draggableOpts={{ grid: [5, 5] }} minConstraints={[80, 30]} onResizeStop={onResizeStop}>
                 <span className='label'>{data.label}</span>
             </ResizableBox>
             <Handle
@@ -55,4 +55,4 @@ const readerNode: FC<NodeProps> = ({data}) => {
     );
 };
 
-export default readerNode;
+export default operatorNode;

@@ -1,11 +1,11 @@
 import React, {DragEvent, useEffect, useState} from 'react';
 
 import './Palette.css';
-import './nodes/QueryNodes.css';
-// import './nodes/RobotsModelNode.css';
-// import './nodes/Nodes.css'
+import './elements/QueryElements.css';
+// import './elements/RobotsModelNode.css';
+// import './elements/Nodes.css'
 
-// import ImageNodeList from './nodes/ImageNodeList';
+// import ImageNodeList from './elements/ImageNodeList';
 import {getModel} from './requests/modelRequests';
 import {getAttributeValue, getNodeAttributes} from './requests/attributeRequests';
 

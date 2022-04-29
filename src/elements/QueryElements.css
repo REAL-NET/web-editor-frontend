@@ -50,11 +50,6 @@
     cursor: pointer;
 }
 
-.materializationLineNode {
-    height: 0;
-    border: 1px dashed #6d1f00;
-}
-
 .nodeHandle {
     position: absolute;
     width: 100%;
@@ -75,6 +70,11 @@
     cursor: se-resize;
 }
 
+.materializationLineNode {
+    height: 0;
+    border: 1px dashed #6d1f00;
+}
+
 .materializationLineNodeHandle {
     position: absolute;
     width: 100%;
@@ -93,4 +93,15 @@
     border: 0.5px solid grey;
     border-radius: 100%;
     cursor: ew-resize;
+}
+
+.localEdge {
+    stroke: #000000;
+    stroke-width: 1.5;
+}
+
+.remoteEdge {
+    stroke: #000000;
+    stroke-width: 1.5;
+    stroke-dasharray: 4;
 }

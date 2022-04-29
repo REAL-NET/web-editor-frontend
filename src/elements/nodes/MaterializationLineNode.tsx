@@ -2,8 +2,8 @@ import React, {FC} from 'react';
 import {NodeProps} from 'react-flow-renderer';
 import {ResizableBox} from 'react-resizable';
 
-import './QueryNodes.css';
-import {setAttributeValue} from "../requests/attributeRequests";
+import '../QueryElements.css';
+import {setAttributeValue} from "../../requests/attributeRequests";
 
 const materializationLineNode: FC<NodeProps> = ({data}) => {
     const onResizeStop = (event: any, {size}: any) => {
