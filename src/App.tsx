@@ -9,7 +9,7 @@ import {getEdge, getNode} from './requests/elementRequests';
 
 import './App.css';
 import {addAttribute} from "./requests/attributeRequests";
-import {Errors, queryCheckWithErrorInfo} from "./requests/сonstraintsCheckRequests";
+import {Errors, queryCheck} from "./requests/сonstraintsCheckRequests";
 
 document.addEventListener('click', e => (e.target));
 
@@ -48,7 +48,7 @@ const OverviewFlow = () => {
             const currentEdges = await getEdges(modelName, edgesArray);
             setEdges(currentEdges);
 
-            const checkResult = await queryCheckWithErrorInfo(modelName);
+            const checkResult = await queryCheck(modelName);
             if (checkResult !== undefined) {
                 if (!checkResult.result) {
                     let codes: number[] = [];

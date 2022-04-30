@@ -18,18 +18,4 @@ constraintsCheckRouter.get(`/queryCheck/:modelName`, function (req, res) {
         });
 });
 
-// Gets the result and error info of query strategy check
-constraintsCheckRouter.get('/queryCheckWithErrorInfo/:modelName', function (req, res) {
-    let modelName = req.params.modelName;
-    axios
-        .get(`${host}/ConstraintsCheck/queryCheckWithErrorInfo/${modelName}`)
-        .then(response => {
-            res.send(response.data)
-        })
-        .catch(error => {
-            console.log(error.message);
-            res.send([]);
-        });
-});
-
 export default constraintsCheckRouter;

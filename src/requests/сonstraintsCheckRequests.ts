@@ -20,12 +20,3 @@ export const queryCheck = async (modelName: string) => {
         console.log(error);
     }
 };
-
-export const queryCheckWithErrorInfo = async (modelName: string) => {
-    try {
-        const response = await api.get(`constraintsCheck/queryCheckWithErrorInfo/${modelName}`);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-    }
-};

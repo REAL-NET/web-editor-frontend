@@ -1,11 +1,11 @@
-import {Errors, queryCheckWithErrorInfo} from "./requests/сonstraintsCheckRequests";
+import {Errors, queryCheck} from "./requests/сonstraintsCheckRequests";
 import React from "react";
 import {Node, NodeChange, NodeRemoveChange} from "react-flow-renderer";
 import {deleteElement, getEdge} from "./requests/elementRequests";
 import {getModelEdges} from "./requests/modelRequests";
 
 export const check = async (modelName: string, setCheckErrorInfo:  React.Dispatch<React.SetStateAction<number[]>>) => {
-    const checkResult = await queryCheckWithErrorInfo(modelName);
+    const checkResult = await queryCheck(modelName);
     if (checkResult !== undefined) {
         if (!checkResult.result) {
             let codes: number[] = [];
