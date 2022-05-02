@@ -14,8 +14,8 @@ const onDragStart = (event: DragEvent, kind: string, id: number) => {
     event.dataTransfer.effectAllowed = 'move';
 };
 
-const onDragStartGroup = (event: DragEvent, kind: string, nodeId: number, groupId: number, childId: number) => {
-    event.dataTransfer.setData('application/reactflow', `${kind} ${nodeId} ${groupId} ${childId}`);
+const onDragStartGroup = (event: DragEvent, kind: string, name: string, nodeId: number, groupId: number, childId: number) => {
+    event.dataTransfer.setData('application/reactflow', `${kind} ${name} ${nodeId} ${groupId} ${childId}`);
     event.dataTransfer.effectAllowed = 'move';
 };
 
@@ -72,7 +72,7 @@ const Palette = (props: { metamodelName: string }) => {
                          name !== 'PosNOT') {
                          const operatorInternalsId = operatorInternals[0].id;
                          const readerId = reader[0].id;
-                         onDragStartGroup(event, props.element.kind, props.element.id, operatorInternalsId, readerId);
+                         onDragStartGroup(event, props.element.kind, props.element.name, props.element.id, operatorInternalsId, readerId);
                      } else {
                          onDragStart(event, props.element.kind, props.element.id);
                      }

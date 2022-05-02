@@ -242,16 +242,30 @@ const Scene: React.FC<SceneProps> = ({
                     }
                 }
                 if (!flag) {
-                    const nodeParentId = data[1];
-                    const groupParentId = data[2];
-                    const childParentId = data[3];
-                    const newElements = await addNodeWithGroupAndChild(modelName, +nodeParentId, +groupParentId, +childParentId, kind, position.x, position.y);
-                    if (newElements !== undefined) {
-                        setNodes(nodes => nodes.concat(newElements.newNodesArray));
-                        if (newElements.newEdge !== undefined) {
-                            setEdges((edges: Edge[]) => addEdge(newElements.newEdge, edges));
+                    const name = data[1];
+                    const nodeParentId = data[2];
+                    const groupParentId = data[3];
+                    const childParentId = data[4];
+                    if (name !== 'Join') {
+                        const newElements = await addNodeWithGroupAndChild(modelName, +nodeParentId, +groupParentId, +childParentId, kind, position.x, position.y);
+                        if (newElements !== undefined) {
+                            setNodes(nodes => nodes.concat(newElements.newNodesArray));
+                            if (newElements.newEdge !== undefined) {
+                                setEdges((edges: Edge[]) => addEdge(newElements.newEdge, edges));
+                            }
+                            check(modelName, setCheckErrorInfo);
                         }
-                        check(modelName, setCheckErrorInfo);
+                    } else {
+                        const newElements = await addNodeWithGroupAndTwoChildren(modelName, +nodeParentId, +groupParentId, +childParentId, kind, position.x, position.y);
+                        if (newElements !== undefined) {
+                            setNodes(nodes => nodes.concat(newElements.newNodesArray));
+                            if (newElements.newEdgesArray !== undefined) {
+                                for (const newEdge of newElements.newEdgesArray) {
+                                    setEdges((edges: Edge[]) => addEdge(newEdge, edges));
+                                }
+                            }
+                            check(modelName, setCheckErrorInfo);
+                        }
                     }
                 }
             } else {
@@ -429,6 +443,140 @@ const Scene: React.FC<SceneProps> = ({
                     setAttributeValue(modelName, newEdgeId, 'targetPort', defaultTargetPort);
 
                     return {newNodesArray, newEdge};
+                }
+
+                return {newNodesArray, undefined};
+            }
+        }
+
+        return undefined;
+    }
+
+    const addNodeWithGroupAndTwoChildren = async (modelName: string, nodeParentId: number, groupParentId: number, childParentId: number,
+                                            nodeKind: string, nodeXCoordinate: number, nodeYCoordinate: number) => {
+        const defaultNodeKind = 'operator';
+        const defaultGroupKind = 'operatorInternals';
+        const defaultChildKind = 'reader';
+
+        const newNodesId = await Promise.all([addElement(modelName, nodeParentId), addElement(modelName, groupParentId),
+            addElement(modelName, childParentId), addElement(modelName, childParentId)]);
+        const newNodeId = newNodesId[0];
+        const newGroupId = newNodesId[1];
+        const newChild1Id = newNodesId[2];
+        const newChild2Id = newNodesId[3];
+        if (newNodeId !== undefined && newGroupId !== undefined && newChild1Id !== undefined && newChild2Id !== undefined) {
+            const newNodes = await Promise.all([getNode(modelName, newNodeId), getNode(modelName, newGroupId),
+                getNode(modelName, newChild1Id), getNode(modelName, newChild2Id)]);
+            if (newNodes.every(newNode => newNode !== undefined)) {
+                let newNodesArray: Node[] = [];
+                let childrenCount = 0;
+                for (const newNode of newNodes) {
+                    if (newNode !== undefined) {
+                        const newNodeKind = newNode.attributes.find(attribute => attribute.name === 'kind')?.stringValue;
+                        const name = newNodeKind !== defaultGroupKind ? newNode.name : '';
+                        const dragHandle = '.nodeHandle';
+                        const style = newNodeKind === defaultGroupKind ? {zIndex: -10} : {zIndex: 0};
+                        let parentNode = undefined;
+                        let extent: 'parent' | undefined = undefined;
+                        const size = await Promise.all([getAttributeValue(modelName, newNode.id, 'width'),
+                            getAttributeValue(modelName, newNode.id, 'height')]);
+                        const width = size[0] ?? (newNodeKind === defaultNodeKind || newNodeKind === defaultChildKind ?
+                            defaultWidthSmallBlock : defaultWidthLargeBlock);
+                        const height = size[1] ?? (newNodeKind === defaultNodeKind || newNodeKind === defaultChildKind ?
+                            defaultHeightSmallBlock : defaultHeightLargeBlock);
+                        let currentXCoordinate = nodeXCoordinate;
+                        let currentYCoordinate = nodeYCoordinate;
+                        if (newNodeKind !== defaultGroupKind) {
+                            parentNode = `${newGroupId}`;
+                            extent = 'parent';
+                            // position relative
+                            if (newNodeKind === defaultChildKind)
+                            {
+                                if (childrenCount === 0) {
+                                    currentXCoordinate = (defaultWidthLargeBlock - 3 * defaultWidthSmallBlock) / 4;
+                                } else {
+                                    currentXCoordinate = defaultWidthLargeBlock - (defaultWidthLargeBlock - 3 * defaultWidthSmallBlock) / 4
+                                        - defaultWidthSmallBlock;
+                                }
+                                currentYCoordinate = (defaultHeightLargeBlock - defaultHeightSmallBlock) / 2;
+                                childrenCount += 1;
+                            } else if (newNodeKind === defaultNodeKind) {
+                                currentXCoordinate = 2 * (defaultWidthLargeBlock - 3 * defaultWidthSmallBlock) / 4 + defaultWidthSmallBlock;
+                                currentYCoordinate = (defaultHeightLargeBlock - defaultHeightSmallBlock) / 2;
+                            }
+                            const newEdgeId = await addEdgeElement(metamodelName, modelName, newGroupId, newNode.id);
+                            if (newEdgeId !== undefined) {
+                                setAttributeValue(modelName, +newEdgeId, 'type', 'internals');
+                            }
+                        }
+                        await Promise.all([setAttributeValue(modelName, newNode.id, 'xCoordinate', `${currentXCoordinate}`),
+                            setAttributeValue(modelName, newNode.id, 'yCoordinate', `${currentYCoordinate}`)]);
+                        const node: Node = {
+                            id: `${newNode.id}`,
+                            type: `${newNodeKind}Node`,
+                            className: `${newNodeKind}Node`,
+                            position: {x: currentXCoordinate, y: currentYCoordinate},
+                            data: {
+                                label: `${name}`,
+                                width: +width,
+                                height: +height,
+                                isSelected: false,
+                                modelName: modelName,
+                                id: newNode.id,
+                                nodes: nodesRef,
+                                setNodes: setNodes,
+                                setCheckErrorInfo: setCheckErrorInfo
+                            },
+                            dragHandle: dragHandle,
+                            parentNode: parentNode,
+                            extent: extent,
+                            style: style
+                        };
+                        if (newNodeKind === 'operatorInternals') {
+                            newNodesArray = [node].concat(newNodesArray);
+                        } else {
+                            newNodesArray.push(node);
+                        }
+                    }
+                }
+
+                const newEdgesId = await Promise.all([addEdgeElement(metamodelName, modelName, newNodeId, newChild1Id),
+                    addEdgeElement(metamodelName, modelName, newNodeId, newChild2Id)]);
+                if (newEdgesId.every(newEdgeId => newEdgeId !== undefined)) {
+                    let newEdgesArray: Edge[] = [];
+                    let childrenCount = 0;
+                    for (const newEdgeId of newEdgesId) {
+                        if (newEdgeId !== undefined) {
+                            let sourcePort = 'Left';
+                            let targetPort = 'Right';
+                            let newChildId = newChild1Id;
+                            if (childrenCount !== 0) {
+                                sourcePort = 'Right';
+                                targetPort = 'Left';
+                                newChildId = newChild2Id;
+                            }
+                            const edge = {
+                                id: `${newEdgeId}`,
+                                source: `${newNodeId}`,
+                                target: `${newChildId}`,
+                                type: 'localEdge',
+                                data: {
+                                    modelName: modelName,
+                                    id: newEdgeId,
+                                    setEdges: setEdges,
+                                    setCheckErrorInfo: setCheckErrorInfo
+                                },
+                                sourceHandle: `port${sourcePort}`,
+                                targetHandle: `port${targetPort}`,
+                            }
+                            setAttributeValue(modelName, newEdgeId, 'sourcePort', sourcePort);
+                            setAttributeValue(modelName, newEdgeId, 'targetPort', targetPort);
+                            newEdgesArray.push(edge);
+                            childrenCount += 1;
+                        }
+                    }
+
+                    return {newNodesArray, newEdgesArray};
                 }
 
                 return {newNodesArray, undefined};
