@@ -24,10 +24,6 @@ export const deepDeleteElement = async (change: NodeRemoveChange, modelName: str
     if (deletedNode !== undefined && deletedNode.type === 'operatorInternalsNode') {
         const children = nodes.filter(node => node.parentNode === change.id);
         if (children.length > 0) {
-            for (const child of children) {
-                newChanges.push({type: 'remove', id: child.id});
-                promises.push(deleteElement(modelName, +child.id));
-            }
             const edgesModel: Array<{ id: number, name: string }> = await getModelEdges(modelName);
             const childEdges: number[] = [];
             await Promise.all(edgesModel.map(async (edgeModel) => {
@@ -49,8 +45,13 @@ export const deepDeleteElement = async (change: NodeRemoveChange, modelName: str
             childEdges.forEach(childEdge => {
                 newChanges.push({type: 'remove', id: `${childEdge}`});
             })
+            for (const child of children) {
+                newChanges.push({type: 'remove', id: child.id});
+                promises.push(deleteElement(modelName, +child.id));
+            }
         }
     }
+    newChanges.push({type: 'remove', id: change.id})
     promises.push(deleteElement(modelName, +change.id));
     return {newChanges, promises};
 }
