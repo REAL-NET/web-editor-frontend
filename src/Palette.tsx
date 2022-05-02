@@ -14,6 +14,11 @@ const onDragStart = (event: DragEvent, kind: string, id: number) => {
     event.dataTransfer.effectAllowed = 'move';
 };
 
+const onDragStartGroup = (event: DragEvent, kind: string, nodeId: number, groupId: number, childId: number) => {
+    event.dataTransfer.setData('application/reactflow', `${kind} ${nodeId} ${groupId} ${childId}`);
+    event.dataTransfer.effectAllowed = 'move';
+};
+
 const Palette = (props: { metamodelName: string }) => {
     const [metamodel, setMetamodel] = useState<Array<{ id: number, name: string, kind: string, type: string }>>([]);
 
@@ -56,10 +61,22 @@ const Palette = (props: { metamodelName: string }) => {
         getMetamodel();
     }, []);
 
-    const PaletteItem = (props: { element: { id: number; name: string, kind: string } }) => {
+    const PaletteItem = (props: { element: { id: number; name: string, kind: string, type: string } }) => {
         return (
             <div className={`paletteItem ${props.element.kind}Node`} key={props.element.id}
-                 onDragStart={(event: DragEvent) => onDragStart(event, props.element.kind, props.element.id)}
+                 onDragStart={(event: DragEvent) => {
+                     const kind = props.element.kind;
+                     const type = props.element.type;
+                     const name = props.element.name;
+                     if (kind === 'operator' && type === 'positional' && name !== 'DS' && name !== 'PosAND' && name !== 'PosOR' &&
+                         name !== 'PosNOT') {
+                         const operatorInternalsId = operatorInternals[0].id;
+                         const readerId = reader[0].id;
+                         onDragStartGroup(event, props.element.kind, props.element.id, operatorInternalsId, readerId);
+                     } else {
+                         onDragStart(event, props.element.kind, props.element.id);
+                     }
+                 }}
                  draggable="true">
                 {props.element.kind !== 'materializationLine' ? props.element.name : ''}
             </div>
