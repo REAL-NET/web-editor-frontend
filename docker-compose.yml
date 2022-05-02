@@ -43,7 +43,7 @@ services:
 #    volumes:
 #      - type: bind
 #        source: ./Repo/serialized/
-#        target: ./Repo/serialized/
+#        target: /serialized/
     networks:
       - network-services
   storage:
@@ -54,7 +54,7 @@ services:
 #    volumes:
 #      - type: bind
 #        source: ./Storage/StorageDB.db
-#        target: ./Storage/StorageDB.db
+#        target: /StorageDB.db
     networks:
       - network-services
   generator:
