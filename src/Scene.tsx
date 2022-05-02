@@ -310,8 +310,8 @@ const Scene: React.FC<SceneProps> = ({
                 }
                 const size = await Promise.all([getAttributeValue(modelName, newNodeId, 'width'),
                     getAttributeValue(modelName, newNodeId, 'height')]);
-                await Promise.all([setAttributeValue(modelName, newNodeId, 'xCoordinate', `${xCoordinate}`),
-                    setAttributeValue(modelName, newNodeId, 'yCoordinate', `${yCoordinate}`)]);
+                setAttributeValue(modelName, newNodeId, 'xCoordinate', `${xCoordinate}`);
+                setAttributeValue(modelName, newNodeId, 'yCoordinate', `${yCoordinate}`);
                 const width = size[0] ?? (kind === 'operator' || kind === 'reader' ? defaultWidthSmallBlock : defaultWidthLargeBlock);
                 const height = size[1] ?? (kind === 'operator' || kind === 'reader' ? defaultHeightSmallBlock : defaultHeightLargeBlock);
                 const node: Node = {
@@ -390,8 +390,8 @@ const Scene: React.FC<SceneProps> = ({
                                 setAttributeValue(modelName, +newEdgeId, 'type', 'internals');
                             }
                         }
-                        await Promise.all([setAttributeValue(modelName, newNode.id, 'xCoordinate', `${currentXCoordinate}`),
-                            setAttributeValue(modelName, newNode.id, 'yCoordinate', `${currentYCoordinate}`)]);
+                        setAttributeValue(modelName, newNode.id, 'xCoordinate', `${currentXCoordinate}`);
+                        setAttributeValue(modelName, newNode.id, 'yCoordinate', `${currentYCoordinate}`);
                         const node: Node = {
                             id: `${newNode.id}`,
                             type: `${newNodeKind}Node`,
@@ -509,8 +509,8 @@ const Scene: React.FC<SceneProps> = ({
                                 setAttributeValue(modelName, +newEdgeId, 'type', 'internals');
                             }
                         }
-                        await Promise.all([setAttributeValue(modelName, newNode.id, 'xCoordinate', `${currentXCoordinate}`),
-                            setAttributeValue(modelName, newNode.id, 'yCoordinate', `${currentYCoordinate}`)]);
+                        setAttributeValue(modelName, newNode.id, 'xCoordinate', `${currentXCoordinate}`);
+                        setAttributeValue(modelName, newNode.id, 'yCoordinate', `${currentYCoordinate}`);
                         const node: Node = {
                             id: `${newNode.id}`,
                             type: `${newNodeKind}Node`,
