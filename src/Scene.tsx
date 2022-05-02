@@ -356,7 +356,7 @@ const Scene: React.FC<SceneProps> = ({
             const newNodes = await Promise.all([getNode(modelName, newNodeId), getNode(modelName, newGroupId), getNode(modelName, newChildId)]);
             if (newNodes.every(newNode => newNode !== undefined)) {
                 let newNodesArray: Node[] = [];
-                for (const newNode of newNodes) {
+                await Promise.all(newNodes.map(async newNode => {
                     if (newNode !== undefined) {
                         const newNodeKind = newNode.attributes.find(attribute => attribute.name === 'kind')?.stringValue;
                         const name = newNodeKind !== defaultGroupKind ? newNode.name : '';
@@ -419,7 +419,7 @@ const Scene: React.FC<SceneProps> = ({
                             newNodesArray.push(node);
                         }
                     }
-                }
+                }));
 
                 const newEdgeId = await addEdgeElement(metamodelName, modelName, newNodeId, newChildId);
                 const defaultSourcePort = 'Left';
@@ -470,7 +470,7 @@ const Scene: React.FC<SceneProps> = ({
             if (newNodes.every(newNode => newNode !== undefined)) {
                 let newNodesArray: Node[] = [];
                 let childrenCount = 0;
-                for (const newNode of newNodes) {
+                await Promise.all(newNodes.map(async newNode => {
                     if (newNode !== undefined) {
                         const newNodeKind = newNode.attributes.find(attribute => attribute.name === 'kind')?.stringValue;
                         const name = newNodeKind !== defaultGroupKind ? newNode.name : '';
@@ -538,14 +538,14 @@ const Scene: React.FC<SceneProps> = ({
                             newNodesArray.push(node);
                         }
                     }
-                }
+                }));
 
                 const newEdgesId = await Promise.all([addEdgeElement(metamodelName, modelName, newNodeId, newChild1Id),
                     addEdgeElement(metamodelName, modelName, newNodeId, newChild2Id)]);
                 if (newEdgesId.every(newEdgeId => newEdgeId !== undefined)) {
                     let newEdgesArray: Edge[] = [];
                     let childrenCount = 0;
-                    for (const newEdgeId of newEdgesId) {
+                    await Promise.all(newEdgesId.map(async newEdgeId => {
                         if (newEdgeId !== undefined) {
                             let sourcePort = 'Left';
                             let targetPort = 'Right';
@@ -574,7 +574,7 @@ const Scene: React.FC<SceneProps> = ({
                             newEdgesArray.push(edge);
                             childrenCount += 1;
                         }
-                    }
+                    }));
 
                     return {newNodesArray, newEdgesArray};
                 }
