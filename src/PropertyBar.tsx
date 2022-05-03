@@ -34,6 +34,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, nodes, edges, setNo
     //edge states
     const [edgeIsAnimated, setEdgeIsAnimated] = useState(false);
     const [edgeType, setEdgeType] = useState('');
+    const [edgeAccessType, setEdgeAccessType] = useState('');
     const [edgeAttributes, setEdgeAttributes] = useState<Array<JSX.Element>>([]);
 
     //common effects
@@ -149,12 +150,27 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, nodes, edges, setNo
         setEdges((edges: Edge[]) =>
             edges.map((edge) => {
                 if (edge.id === id) {
-                    edge.type = edgeType;
+                    edge = {
+                        ...edge,
+                        type: `${edgeAccessType}Edge`,
+                    };
+                    setAttributeValue(modelName, idNumber, 'type', edgeAccessType);
                 }
                 return edge;
             })
         );
-    }, [edgeType, setEdges]);
+    }, [edgeAccessType, setEdges]);
+
+    useEffect(() => {
+        setEdges((edges: Edge[]) =>
+            edges.map((edge) => {
+                if (edge.id === id) {
+                    edge.animated = edgeIsAnimated;
+                }
+                return edge;
+            })
+        );
+    }, [edgeIsAnimated, setEdges]);
 
     useEffect(() => {
         if (element !== undefined && isNode(element)) {
@@ -188,14 +204,22 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, nodes, edges, setNo
 
                 const attributeElements: Array<JSX.Element> = [];
                 attributes.forEach(attribute => {
-                    const setAttribute = (newValue: string) => {
-                        setAttributeValue(modelName, idNumber, attribute.name, newValue);
+                    if (attribute.name === 'type') {
+                        attributeElements.push(<SelectMenuItem
+                            key={attribute.name + attribute.stringValue}
+                            label={attribute.name} value={attribute.stringValue}
+                            setFunc={setEdgeAccessType} values={['local', 'remote']}
+                        />);
+                    } else {
+                        const setAttribute = (newValue: string) => {
+                            setAttributeValue(modelName, idNumber, attribute.name, newValue);
+                        }
+                        attributeElements.push(<TextFieldItem
+                            key={attribute.name + attribute.stringValue}
+                            label={attribute.name} value={attribute.stringValue}
+                            setFunc={setAttribute}
+                        />);
                     }
-                    attributeElements.push(<TextFieldItem
-                        key={attribute.name + attribute.stringValue}
-                        label={attribute.name} value={attribute.stringValue}
-                        setFunc={setAttribute}
-                    />);
                 });
                 setEdgeAttributes(attributeElements);
             });
@@ -222,7 +246,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, nodes, edges, setNo
             <div className="textPropertyContainer">
                 <TextField
                     variant="standard"
-                    label={props.label + ': '}
+                    label={props.label}
                     value={textFieldValue}
                     onChange={(event) => setTextFieldValue(event.target.value)}
                     onBlur={() => {
@@ -234,6 +258,29 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, nodes, edges, setNo
                         }
                     }}
                 />
+            </div>
+        );
+    }
+
+    const SelectMenuItem = (props: { label: string, value: string, setFunc: (newValue: string) => void, values: string[] }) => {
+        const [selectMenuValue, setSelectMenuValue] = useState(props.value);
+
+        return (
+            <div className="selectMenuContainer">
+                <InputLabel>Type</InputLabel>
+                <Select
+                    // id="edgeAccessType"
+                    label={props.label}
+                    value={selectMenuValue}
+                    onChange={(evt) => {
+                        setSelectMenuValue(evt.target.value as string);
+                        props.setFunc(evt.target.value as string);
+                    }}
+                >
+                    {props.values.map(value => {
+                        return <MenuItem key={value} value={value}>{value}</MenuItem>
+                    })}
+                </Select>
             </div>
         );
     }
