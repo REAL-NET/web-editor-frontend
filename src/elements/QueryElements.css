@@ -26,8 +26,8 @@
 }
 
 .port {
-    width: 4px;
-    height: 4px;
+    width: 6px;
+    height: 6px;
     background-color: dimgrey;
     border: 0.5px solid grey;
     border-radius: 100%;
