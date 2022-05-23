@@ -182,12 +182,14 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, nodes, edges, setNo
 
                 const attributeElements: Array<JSX.Element> = [];
                 attributes.forEach(attribute => {
-                    const setAttribute = (newValue: string) => {
-                        setAttributeValue(modelName, idNumber, attribute.name, newValue);
+                    if (attribute.name !== 'instanceMetatype' && attribute.name !== 'isAbstract' && attribute.name !== 'shape') {
+                        const setAttribute = (newValue: string) => {
+                            setAttributeValue(modelName, idNumber, attribute.name, newValue);
+                        }
+                        attributeElements.push(<TextFieldItem key={attribute.name + attribute.stringValue}
+                                                              label={attribute.name} value={attribute.stringValue}
+                                                              setFunc={setAttribute}/>);
                     }
-                    attributeElements.push(<TextFieldItem key={attribute.name + attribute.stringValue}
-                                                          label={attribute.name} value={attribute.stringValue}
-                                                          setFunc={setAttribute}/>);
                 });
                 setNodeAttributes(attributeElements);
             });
@@ -210,7 +212,7 @@ const PropertyBar: React.FC<PropertyBarProps> = ({modelName, nodes, edges, setNo
                             label={attribute.name} value={attribute.stringValue}
                             setFunc={setEdgeAccessType} values={['local', 'remote']}
                         />);
-                    } else {
+                    } else if (attribute.name !== 'instanceMetatype' && attribute.name !== 'isAbstract' && attribute.name !== 'shape') {
                         const setAttribute = (newValue: string) => {
                             setAttributeValue(modelName, idNumber, attribute.name, newValue);
                         }
