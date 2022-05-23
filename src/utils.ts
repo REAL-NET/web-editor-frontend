@@ -21,34 +21,51 @@ export const deepDeleteElement = async (change: NodeRemoveChange, modelName: str
     const newChanges: NodeChange[] = [];
     const promises: Promise<any>[] = [];
     const deletedNode = nodes.find(node => node.id === change.id);
-    if (deletedNode !== undefined && deletedNode.type === 'operatorInternalsNode') {
-        const children = nodes.filter(node => node.parentNode === change.id);
-        if (children.length > 0) {
+    if (deletedNode !== undefined) {
+        if (deletedNode.type === 'operatorInternalsNode') {
+            const children = nodes.filter(node => node.parentNode === change.id);
+            if (children.length > 0) {
+                const edgesModel: Array<{ id: number, name: string }> = await getModelEdges(modelName);
+                const childEdges: number[] = [];
+                await Promise.all(edgesModel.map(async (edgeModel) => {
+                    const edge = await getEdge(modelName, +edgeModel.id);
+                    if (edge !== undefined) {
+                        const source = children.find(child => +child.id === edge.from.id)
+                        const target = children.find(child => +child.id === edge.to.id)
+                        if (source !== undefined || target !== undefined) {
+                            childEdges.push(edge.id);
+                            promises.push(deleteElement(modelName, edge.id));
+                        } else {
+                            const type = edge.attributes.find(attribute => attribute.name === 'type')?.stringValue ?? undefined;
+                            if (type === 'internals') {
+                                promises.push(deleteElement(modelName, edge.id));
+                            }
+                        }
+                    }
+                }));
+                childEdges.forEach(childEdge => {
+                    newChanges.push({type: 'remove', id: `${childEdge}`});
+                })
+                for (const child of children) {
+                    newChanges.push({type: 'remove', id: child.id});
+                    promises.push(deleteElement(modelName, +child.id));
+                }
+            }
+        } else {
             const edgesModel: Array<{ id: number, name: string }> = await getModelEdges(modelName);
-            const childEdges: number[] = [];
+            const edgesToOrFromDeletedNode: number[] = [];
             await Promise.all(edgesModel.map(async (edgeModel) => {
                 const edge = await getEdge(modelName, +edgeModel.id);
                 if (edge !== undefined) {
-                    const source = children.find(child => +child.id === edge.from.id)
-                    const target = children.find(child => +child.id === edge.to.id)
-                    if (source !== undefined || target !== undefined) {
-                        childEdges.push(edge.id);
+                    if (edge.to.id === +deletedNode.id || edge.from.id === +deletedNode.id) {
+                        edgesToOrFromDeletedNode.push(edge.id);
                         promises.push(deleteElement(modelName, edge.id));
-                    } else {
-                        const type = edge.attributes.find(attribute => attribute.name === 'type')?.stringValue ?? undefined;
-                        if (type === 'internals') {
-                            promises.push(deleteElement(modelName, edge.id));
-                        }
                     }
                 }
             }));
-            childEdges.forEach(childEdge => {
+            edgesToOrFromDeletedNode.forEach(childEdge => {
                 newChanges.push({type: 'remove', id: `${childEdge}`});
             })
-            for (const child of children) {
-                newChanges.push({type: 'remove', id: child.id});
-                promises.push(deleteElement(modelName, +child.id));
-            }
         }
     }
     newChanges.push({type: 'remove', id: change.id})
