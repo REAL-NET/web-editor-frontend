@@ -1,1 +1,1 @@
-export const host = 'http://localhost:8000/api/Repo';
+export const host = 'https://query-editor-posdb-backend.herokuapp.com/api' // 'http://localhost:8000/api/Repo';

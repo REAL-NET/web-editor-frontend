@@ -1,5 +1,5 @@
 import axios from 'axios';
 
 export default axios.create({
-    baseURL: 'http://localhost:5000'
+    baseURL: 'https://query-editor-posdb-frontend.herokuapp.com' // http://localhost:5000'
 });

@@ -1,0 +1,14 @@
+.robotsNode {
+    border: 1px solid lightgrey;
+    padding: 10px;
+    background: yellow;
+    width: max-content;
+    height: max-content;
+}
+.robotsNodeHandle {
+    left: 50%;
+    borderRadius: 0%;
+    background: grey;
+    width: 7px;
+    height: 7px;
+}

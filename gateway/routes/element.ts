@@ -98,7 +98,7 @@ elementRouter.delete('/:modelName/:id', function (req, res) {
     let modelName = req.params.modelName;
     let id = req.params.id;
     axios
-        .delete(`${host}/api/Repo/Element/${modelName}/${id}`)
+        .delete(`${host}/Element/${modelName}/${id}`)
         .then(response => {
             res.send(`${response.status}`);
         })

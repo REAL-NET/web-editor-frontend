@@ -1,7 +1,7 @@
 services:
   web:
     container_name: web
-    image: yuniyakim/web-editor:latest
+    image: yuniyakim/web-editor:query
     ports:
       - "5000:5000"
     depends_on:
@@ -16,7 +16,7 @@ services:
       - network-services
   gateway:
     container_name: gateway
-    image: docker.pkg.github.com/real-net/web-editor-backend/gateway:master
+    image: docker.pkg.github.com/real-net/web-editor-backend/gateway:query
     ports:
       - "8000:80"
     depends_on:
@@ -26,7 +26,7 @@ services:
       - network-services
   auth:
     container_name: auth
-    image: docker.pkg.github.com/real-net/web-editor-backend/auth:master
+    image: docker.pkg.github.com/real-net/web-editor-backend/auth:query
     ports:
       - "8002:80"
     volumes:
@@ -37,18 +37,40 @@ services:
       - network-services
   repo:
     container_name: repo
-    image: docker.pkg.github.com/real-net/web-editor-backend/repo:master
+    image: docker.pkg.github.com/real-net/web-editor-backend/repo:query
     ports:
       - "8004:80"
+#    volumes:
+#      - type: bind
+#        source: ./Repo/serialized/
+#        target: /serialized/
     networks:
       - network-services
-  test:
-    container_name: test
-    image: docker.pkg.github.com/real-net/web-editor-backend/test:master
+  storage:
+    container_name: storage
+    image: docker.pkg.github.com/real-net/web-editor-backend/storage:query
     ports:
-      - "8099:80"
+      - "8006:80"
+#    volumes:
+#      - type: bind
+#        source: ./Storage/StorageDB.db
+#        target: /StorageDB.db
     networks:
       - network-services
+  generator:
+    container_name: test
+    image: docker.pkg.github.com/real-net/web-editor-backend/generator:query
+    ports:
+      - "8008:80"
+    networks:
+      - network-services
+#  test:
+#    container_name: test
+#    image: docker.pkg.github.com/real-net/web-editor-backend/test:query
+#    ports:
+#      - "8099:80"
+#    networks:
+#      - network-services
 networks:
   network-services:
     driver: bridge

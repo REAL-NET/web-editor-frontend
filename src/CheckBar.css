@@ -1,0 +1,21 @@
+aside {
+    font-size: 12px;
+}
+
+.alertContainer {
+    float: right;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+
+.alert {
+    width: 300px;
+    margin-bottom: 5px;
+}
+
+.hidden {
+    display: none;
+}
